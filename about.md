@@ -12,4 +12,4 @@ This blog is built using Jekyll and hosted on GitHub Pages, and has had its scaf
 
 ---
 
-*This site uses the Dinky theme for Jekyll.*
+*This site is powered by [GitHub Pages](https://pages.github.com) and uses the [Dinky theme](https://pages-themes.github.io/dinky/) for Jekyll.*

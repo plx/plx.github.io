@@ -38,23 +38,6 @@ header {
   border-bottom: 1px solid #e5e5e5;
 }
 
-/* Sidebar Footer Styles */
-.sidebar-footer {
-  padding: 20px;
-  border-top: 1px solid #e5e5e5;
-  font-size: 12px;
-  color: #666;
-  text-align: center;
-}
-
-.sidebar-footer a {
-  color: #666;
-  text-decoration: none;
-}
-
-.sidebar-footer a:hover {
-  color: #C30000;
-}
 
 .site-title {
   font-family: Arvo, Monaco, serif;
@@ -131,25 +114,120 @@ header {
 }
 
 
+/* Hide mobile elements on desktop */
+.menu-toggle,
+.mobile-header {
+  display: none;
+}
+
+/* Hamburger Menu Styles */
+.hamburger {
+  cursor: pointer;
+  padding: 10px;
+  display: inline-block;
+}
+
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 5px 0;
+  transition: 0.3s;
+}
+
+/* Hamburger animation when checked */
+.menu-toggle:checked ~ .mobile-header .hamburger span:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.menu-toggle:checked ~ .mobile-header .hamburger span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle:checked ~ .mobile-header .hamburger span:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .wrapper {
-    flex-direction: column;
+    display: block; /* Remove flex on mobile */
   }
   
   .sidebar {
-    position: relative;
+    position: fixed;
     width: 100%;
-    height: auto;
-    border-right: none;
+    height: 60px; /* Only show mobile header height */
+    border: none;
+    background: transparent; /* Remove background except for mobile header */
+    z-index: 1000;
+    flex-direction: column;
+    overflow: visible; /* Allow menu to extend beyond sidebar */
+  }
+  
+  /* Show mobile header */
+  .mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #FBFAF7;
     border-bottom: 1px solid #e5e5e5;
   }
   
+  .mobile-title {
+    font-family: Arvo, Monaco, serif;
+    font-size: 20px;
+    font-weight: normal;
+    color: #232323;
+    margin: 0;
+  }
+  
+  /* Hide sidebar content by default on mobile */
+  .sidebar-content {
+    position: fixed;
+    top: 60px; /* Height of mobile header */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background-color: #FBFAF7;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    z-index: 999;
+    visibility: hidden; /* Ensure it's not interactable when hidden */
+  }
+  
+  /* Show sidebar when menu is toggled */
+  .menu-toggle:checked ~ .sidebar-content {
+    transform: translateX(0);
+    visibility: visible;
+  }
+  
+  /* Hide desktop header on mobile */
+  .sidebar-header {
+    display: none;
+  }
+  
+  /* Adjust main content */
   .main-content {
-    margin-left: 0;
+    margin-left: 0 !important; /* Force override desktop margin */
+    padding: 80px 20px 20px; /* Add top padding for fixed header */
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Add padding to sidebar nav on mobile */
+  .sidebar-nav {
     padding: 20px;
   }
   
+  /* Ensure links are easily tappable on mobile */
+  .sidebar-nav a {
+    padding: 10px 0;
+  }
 }
 
 /* Note Summary Styles */
