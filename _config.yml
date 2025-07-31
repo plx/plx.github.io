@@ -1,0 +1,42 @@
+# Jekyll configuration for GitHub Pages
+title: Dispatches
+description: Remarks long-and-short.
+author: Your Name
+email: your-email@example.com
+
+# Theme
+theme: jekyll-theme-dinky
+
+# Permalink structure for nice URLs
+permalink: /:year/:month/:day/:title/
+
+# Collections
+collections:
+  posts:
+    output: true
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# Exclude files from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE
