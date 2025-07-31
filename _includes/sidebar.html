@@ -1,24 +1,29 @@
 <aside class="sidebar">
-  <div class="sidebar-header">
-    <h1 class="site-title">{{ site.title | default: site.github.repository_name }}</h1>
-    <p class="site-description">{{ site.description | default: site.github.project_tagline }}</p>
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <h1 class="site-title">{{ site.title | default: site.github.repository_name }}</h1>
+      <p class="site-description">{{ site.description | default: site.github.project_tagline }}</p>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="{{ '/' | relative_url }}">Posts</a></li>
+        <li><a href="{{ '/tags' | relative_url }}">Tags</a></li>
+        <li>
+          <a href="{{ '/notes' | relative_url }}">Notes</a>
+          {% assign sorted_notes = site.notes | sort: 'title' %}
+          {% if sorted_notes.size > 0 %}
+          <ul class="sub-nav">
+            {% for note in sorted_notes %}
+            <li><a href="{{ note.url | relative_url }}">{{ note.title }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </li>
+        <li><a href="{{ '/about' | relative_url }}">About</a></li>
+      </ul>
+    </nav>
   </div>
-  <nav class="sidebar-nav">
-    <ul>
-      <li><a href="{{ '/' | relative_url }}">Posts</a></li>
-      <li><a href="{{ '/tags' | relative_url }}">Tags</a></li>
-      <li>
-        <a href="{{ '/notes' | relative_url }}">Notes</a>
-        {% assign sorted_notes = site.notes | sort: 'title' %}
-        {% if sorted_notes.size > 0 %}
-        <ul class="sub-nav">
-          {% for note in sorted_notes %}
-          <li><a href="{{ note.url | relative_url }}">{{ note.title }}</a></li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </li>
-      <li><a href="{{ '/about' | relative_url }}">About</a></li>
-    </ul>
-  </nav>
+  <div class="sidebar-footer">
+    <a href="https://pages.github.com">GitHub Pages</a>; <a href="https://pages-themes.github.io/dinky/">Dinky Theme</a>
+  </div>
 </aside>

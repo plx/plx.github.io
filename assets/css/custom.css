@@ -14,13 +14,21 @@ header {
 .sidebar {
   width: 200px;
   background-color: #FBFAF7;
-  padding: 30px 20px;
+  padding: 0;
   position: fixed;
   height: 100%;
-  overflow-y: auto;
   left: 0;
   top: 0;
   border-right: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar Content Container */
+.sidebar-content {
+  flex: 1;
+  padding: 30px 20px;
+  overflow-y: auto;
 }
 
 /* Sidebar Header Styles */
@@ -28,6 +36,24 @@ header {
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid #e5e5e5;
+}
+
+/* Sidebar Footer Styles */
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid #e5e5e5;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+.sidebar-footer a {
+  color: #666;
+  text-decoration: none;
+}
+
+.sidebar-footer a:hover {
+  color: #C30000;
 }
 
 .site-title {
@@ -104,12 +130,6 @@ header {
   color: #C30000;
 }
 
-/* Footer adjustments */
-footer {
-  margin-left: 200px;
-  padding: 20px 40px;
-  border-top: 1px solid #e5e5e5;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -130,10 +150,6 @@ footer {
     padding: 20px;
   }
   
-  footer {
-    margin-left: 0;
-    padding: 20px;
-  }
 }
 
 /* Note Summary Styles */
