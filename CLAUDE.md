@@ -74,6 +74,16 @@ Notes should include front matter with:
 
 Notes are displayed alphabetically by title and do not support dates or tags.
 
+### Testing and QA
+
+The repository has Playwright browser automation available via MCP for testing and QA purposes. This enables:
+- Visual testing and screenshot capture
+- Navigation testing
+- Content verification
+- Browser automation tasks
+
+Note: the project has a dedicated QA-via-playwright agent named "web-qa-playwright".
+
 ## Architecture
 
 ### Directory Structure
