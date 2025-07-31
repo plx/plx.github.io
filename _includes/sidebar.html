@@ -1,4 +1,8 @@
 <aside class="sidebar">
+  <div class="sidebar-header">
+    <h1 class="site-title">{{ site.title | default: site.github.repository_name }}</h1>
+    <p class="site-description">{{ site.description | default: site.github.project_tagline }}</p>
+  </div>
   <nav class="sidebar-nav">
     <ul>
       <li><a href="{{ '/' | relative_url }}">Posts</a></li>
