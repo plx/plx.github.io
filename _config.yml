@@ -14,6 +14,9 @@ permalink: /:year/:month/:day/:title/
 collections:
   posts:
     output: true
+  notes:
+    output: true
+    permalink: /notes/:title/
 
 # Defaults
 defaults:
@@ -25,6 +28,11 @@ defaults:
   - scope:
       path: ""
       type: "pages"
+    values:
+      layout: "page"
+  - scope:
+      path: ""
+      type: "notes"
     values:
       layout: "page"
 
