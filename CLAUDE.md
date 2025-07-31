@@ -10,24 +10,45 @@ This is a Jekyll-based GitHub Pages site with a blog structure. The site uses th
 
 ### Local Development
 
-Since this is a GitHub Pages site without a local Gemfile, development is typically done by:
+The repository now includes a Gemfile and justfile for convenient local development:
 
-1. **Direct editing and GitHub Pages deployment**: Push changes to the main branch and GitHub Pages will automatically build and deploy
-2. **Local Jekyll setup** (if needed):
+1. **Initial setup** (one-time):
    ```bash
-   # Install Jekyll and bundler if not already installed
-   gem install jekyll bundler
-   
-   # Create a Gemfile for local development
-   echo "source 'https://rubygems.org'" > Gemfile
-   echo "gem 'github-pages', group: :jekyll_plugins" >> Gemfile
-   
-   # Install dependencies
-   bundle install
-   
-   # Run Jekyll locally
-   bundle exec jekyll serve
+   # Install dependencies to vendor/bundle (avoids sudo requirements)
+   bundle install --path vendor/bundle
    ```
+
+2. **Development commands** (via justfile):
+   ```bash
+   # Start Jekyll server for preview (default port 4000)
+   just preview
+   
+   # Start server and open in browser
+   just view
+   
+   # Stop the server
+   just shutdown
+   
+   # Open browser if server is already running
+   just open
+   
+   # Use custom port (all commands accept port argument)
+   just view 8080
+   just shutdown 8080
+   ```
+
+3. **Direct Jekyll commands** (if needed):
+   ```bash
+   # Run Jekyll server manually
+   bundle exec jekyll serve
+   
+   # Build site without serving
+   bundle exec jekyll build
+   ```
+
+4. **GitHub Pages deployment**: Push changes to the main branch and GitHub Pages will automatically build and deploy
+
+Note: The vendor/ directory is excluded from Jekyll builds via _config.yml to prevent processing of gem files.
 
 ### Creating New Posts
 
