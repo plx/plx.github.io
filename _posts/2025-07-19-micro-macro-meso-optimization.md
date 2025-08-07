@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The Importance of *Meso Optimization*"
+title: "The Importance of \"Meso Optimization\""
 date: 2025-07-19
 description: "A look at *meso-optimization*: optimizations that sit in-between close-to-the-machine *micro-optimization* and system-design-level *macro-optimization*."
 tags: [optimization, meso-optimization, swift, performance] 
