@@ -14,7 +14,7 @@ title: Home
       {% if post.tags.size > 0 %}
         <div class="post-tags">
           {% for tag in post.tags %}
-            {% include tag-link.html tag=tag %}{% unless forloop.last %}, {% endunless %}
+            {% include tag-link.html tag=tag %}
           {% endfor %}
         </div>
       {% endif %}

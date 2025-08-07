@@ -17,7 +17,7 @@ layout: default
       <div class="post-tags">
         <strong>Tags:</strong>
         {% for tag in page.tags %}
-          {% include tag-link.html tag=tag %}{% unless forloop.last %}, {% endunless %}
+          {% include tag-link.html tag=tag %}
         {% endfor %}
       </div>
     {% endif %}

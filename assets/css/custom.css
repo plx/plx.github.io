@@ -249,3 +249,51 @@ header {
   color: #666;
   margin: 0;
 }
+
+/* Tag Styles */
+.post-tags {
+  margin-top: 20px;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.post-tags strong {
+  display: inline-block;
+  margin-right: 8px;
+  color: #333;
+}
+
+.tag-badge {
+  display: inline-block;
+  margin-right: 8px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  padding: 4px 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.tag-badge a {
+  color: #555;
+  text-decoration: none;
+}
+
+.tag-badge a:hover {
+  color: #C30000;
+}
+
+/* Remove commas between tags since we're using badges */
+.post-tags .tag-badge + .tag-badge::before {
+  content: '';
+}
+
+/* Ensure tags wrap nicely on small screens */
+@media (max-width: 768px) {
+  .post-tags {
+    margin-top: 15px;
+  }
+  
+  .tag-badge {
+    margin-bottom: 5px;
+  }
+}
