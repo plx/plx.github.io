@@ -8,6 +8,6 @@ import react from "@astrojs/react";
 import expressiveCode from "astro-expressive-code";
 
 export default defineConfig({
-  site: "https://astro-nano-demo.vercel.app",
+  site: "https://plx.github.io",
   integrations: [sitemap(), tailwind(), react(), expressiveCode(), mdx()],
 });
