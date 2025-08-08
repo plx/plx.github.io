@@ -21,7 +21,7 @@ const briefs = defineCollection({
     draft: z.boolean().optional()
   }).transform((data) => ({
     ...data,
-    shortTitle: data.cardTitle ?? data.title
+    cardTitle: data.cardTitle ?? data.title
   }))
 });
 

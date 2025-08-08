@@ -47,14 +47,14 @@ When someone says an app feels "native" or "polished," they're often responding 
 
 [^1]: Many of the best "native apps" aren't even native—there's lots of world-class, incredibly-polished Reactive Native out there.
 
-The frustrating part? This stuff is hard to teach, hard to measure, and incredibly easy to break. One well-meaning refactor can silently undo a meso-optimization, or even several. [Your beautiful lazy sequence chains suddenly become eager](../briefs/lazy-sequences-decay-easily/index.md). Your carefully-managed view updates start firing twice. The app still works, all your tests pass, but somehow it doesn't feel quite as good anymore.
+The frustrating part? This stuff is hard to teach, hard to measure, and incredibly easy to break. One well-meaning refactor can silently undo a meso-optimization, or even several. [Your beautiful lazy sequence chains suddenly become eager](/briefs/lazy-sequences-decay-easily). Your carefully-managed view updates start firing twice. The app still works, all your tests pass, but somehow it doesn't feel quite as good anymore.
 
 ## The Point of All This
 
-Why invent terminology for something that's hard to define, harder to measure, and—bluntly—cringe-worthy to ue? Because I think we need to talk about it more. 
+Why invent terminology for something that's hard to define, harder to measure, and—bluntly—cringe-worthy to use? Because I think we need to talk about it more. 
 
 Too much performance discussion focuses on the extremes—either we're debating whether to use `structs` vs `classes` (micro) or whether to use REST vs GraphQL (macro). Meanwhile, the actual day-to-day performance characteristics of most apps are determined by this unnamed middle layer of decisions.
 
-Meso-optimization isn't the only thing I'll be writing about on this blog, but expect it to be a recurring topic: expect deep divces on patterns that work, traps to avoid, and ways to maintain these optimizations as your codebase evolves. 
+Meso-optimization isn't the only thing I'll be writing about on this blog, but expect it to be a recurring topic: expect deep dives on patterns that work, traps to avoid, and ways to maintain these optimizations as your codebase evolves. 
 
 None of this stuff is individually earth-shattering, and none of it is going to make anything "10x faster"...but they might just make your apps vibes 10x better.
