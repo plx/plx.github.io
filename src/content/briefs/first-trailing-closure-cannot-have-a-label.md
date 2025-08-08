@@ -1,5 +1,6 @@
 ---
-title: "First Trailing Closure Cannot Have a Label"
+title: "Swift's First Trailing Closure Cannot Have a Label"
+cardTitle: "First Trailing Closure Cannot Have a Label"
 description: "Swift forbids labeling the first trailing closure, which can be a surprising obstacle to idiomatic API design."
 category: "Swift Wart"
 date: "2025-07-16"
