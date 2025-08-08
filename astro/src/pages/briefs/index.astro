@@ -1,0 +1,87 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import BriefCard from "@components/BriefCard.astro";
+import { BRIEFS } from "@consts";
+
+const collection = (await getCollection("briefs"))
+  .filter(brief => !brief.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const briefs = await Promise.all(
+  collection.map(async (item) => {
+    const { Content } = await item.render();
+    return { ...item, Content };
+  })
+);
+
+type BriefList = CollectionEntry<"briefs">[];
+type Brief = CollectionEntry<"briefs">;
+
+type BriefsByCategory = {
+  [category: string]: BriefList;
+}
+
+const briefs_by_category: BriefsByCategory = briefs.reduce((acc: BriefsByCategory, brief) => {
+    const category = brief.data.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(brief);
+    return acc;
+  }, {});
+
+const brief_order_cheats: { [key: string]: number } = {
+  "Swift Wart": 3,
+  "Claude Code": 2,
+  "Meso-Optimization": 1,
+};
+
+const brief_categories = Object.keys(briefs_by_category)
+    .sort((a, b) => {
+      // 
+      const a_order = brief_order_cheats[a] || 0;
+      const b_order = brief_order_cheats[b] || 0;
+      if (a_order !== b_order) {
+        return b_order - a_order;
+      }
+      // alphabetic (ascending) as falback when there's no order-cheat
+      return a.localeCompare(b)
+    });
+
+---
+
+<PageLayout title={BRIEFS.TITLE} description={BRIEFS.DESCRIPTION}>
+  <Container>
+    <div class="space-y-10">
+      <div class="animate font-semibold text-black dark:text-white">
+        Work
+      </div>
+      <ul class="flex flex-col space-y-4">
+        { 
+          brief_categories.map(category => (
+            <li>
+              <h5 class="font-semibold text-black dark:text-white">
+                {category}
+              </h5>
+              <ul class="flex flex-col gap-4">
+                {
+                  briefs_by_category[category].map((brief: Brief) => (
+                    <li class="animate">
+                      <BriefCard entry={brief}/>
+                    </li>
+                  ))
+                }
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+<!-- 
+      <ul class="animate flex flex-col gap-4">
+
+      </ul> -->
+    </div>
+  </Container>
+</PageLayout>

@@ -252,9 +252,37 @@ header {
 
 /* Tag Styles */
 .post-tags {
-  margin-top: 20px;
+  margin-top: 30px;
   line-height: 1.8;
   font-size: 14px;
+  position: relative;
+  clear: both;
+}
+
+/* Ensure post footer doesn't float */
+.post-footer {
+  position: relative;
+  clear: both;
+  margin-top: 40px;
+}
+
+/* Ensure post content doesn't have layout issues */
+.post-content {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+/* Article container fixes */
+article.post {
+  position: relative;
+  overflow: visible;
+}
+
+/* Ensure proper spacing at the end of articles */
+article.post::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .post-tags strong {
@@ -271,6 +299,8 @@ header {
   padding: 4px 10px;
   font-size: 13px;
   white-space: nowrap;
+  position: relative;
+  z-index: 1;
 }
 
 .tag-badge a {
