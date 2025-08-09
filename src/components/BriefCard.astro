@@ -1,22 +1,24 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { renderInlineMarkdown } from "@lib/markdown";
 
 type Props = {
   entry: CollectionEntry<"briefs">
 }
 
 const { entry } = Astro.props;
+const displayTitle = entry.data.cardTitle || entry.data.title;
+const renderedTitle = renderInlineMarkdown(displayTitle);
+const renderedDescription = renderInlineMarkdown(entry.data.description);
 ---
 
 <a href={`/${entry.collection}/${entry.slug}`} class="relative group flex flex-nowrap py-3 px-4 pr-10 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
   <div class="flex flex-col flex-1 truncate">
     <div class="font-semibold">
       <span class="font-bold">{entry.data.category}:&nbsp;</span>
-      <span class="font-semibold">{entry.data.cardTitle}</span>
+      <span class="font-semibold" set:html={renderedTitle}></span>
     </div>
-    <div class="text-sm flex-wrap">
-      {entry.data.description}
-    </div>
+    <div class="text-sm flex-wrap" set:html={renderedDescription}></div>
   </div>
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
