@@ -51,7 +51,7 @@ const brief_categories = Object.keys(briefs_by_category)
       if (a_order !== b_order) {
         return b_order - a_order;
       }
-      // alphabetic (ascending) as falback when there's no order-cheat
+      // alphabetic (ascending) as fallback when there's no order-cheat
       return a.localeCompare(b)
     });
 
@@ -61,7 +61,7 @@ const brief_categories = Object.keys(briefs_by_category)
   <Container>
     <div class="space-y-10">
       <div class="animate font-semibold text-black dark:text-white">
-        Work
+        Briefs
       </div>
       <ul class="flex flex-col space-y-4">
         { 
