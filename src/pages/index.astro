@@ -2,8 +2,8 @@
 import { getCollection } from "astro:content";
 import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
-import ArrowCard from "@components/ArrowCard.astro";
-import BriefCard from "@components/BriefCard.astro";
+import ContentCard from "@components/ContentCard.astro";
+import { getArticleCardProps, getBriefCardProps } from "@lib/contentCardHelpers";
 import Link from "@components/Link.astro";
 // import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS } from "@consts";
@@ -59,7 +59,7 @@ const briefs = await Promise.all(
         <ul class="flex flex-col gap-4">
           {blog.map(post => (
             <li>
-              <ArrowCard entry={post} />
+              <ContentCard {...getArticleCardProps(post)} />
             </li>
           ))}
         </ul>
@@ -77,7 +77,7 @@ const briefs = await Promise.all(
         <ul class="flex flex-col space-y-4">
           {briefs.map(brief => (
             <li>
-              <BriefCard entry={brief} />
+              <ContentCard {...getBriefCardProps(brief, true)} />
             </li>
           ))}
         </ul>

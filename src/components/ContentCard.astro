@@ -1,24 +1,27 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import { renderInlineMarkdown } from "@lib/markdown";
 
 type Props = {
-  entry: CollectionEntry<"briefs">
+  titlePrefix?: string;
+  title: string;
+  subtitle: string;
+  link: string;
 }
 
-const { entry } = Astro.props;
-const displayTitle = entry.data.cardTitle || entry.data.title;
-const renderedTitle = renderInlineMarkdown(displayTitle);
-const renderedDescription = renderInlineMarkdown(entry.data.description);
+const { titlePrefix, title, subtitle, link } = Astro.props;
+const renderedTitle = renderInlineMarkdown(title);
+const renderedSubtitle = renderInlineMarkdown(subtitle);
 ---
 
-<a href={`/${entry.collection}/${entry.slug}`} class="relative group flex flex-nowrap py-3 px-4 pr-10 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
+<a href={link} class="relative group flex flex-nowrap py-3 px-4 pr-10 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
   <div class="flex flex-col flex-1 truncate">
     <div class="font-semibold">
-      <span class="font-bold">{entry.data.category}:&nbsp;</span>
+      {titlePrefix && (
+        <span class="font-bold">{titlePrefix}:&nbsp;</span>
+      )}
       <span class="font-semibold" set:html={renderedTitle}></span>
     </div>
-    <div class="text-sm flex-wrap" set:html={renderedDescription}></div>
+    <div class="text-sm flex-wrap" set:html={renderedSubtitle}></div>
   </div>
   <svg 
     xmlns="http://www.w3.org/2000/svg" 

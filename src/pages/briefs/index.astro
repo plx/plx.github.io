@@ -2,7 +2,8 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import BriefCard from "@components/BriefCard.astro";
+import ContentCard from "@components/ContentCard.astro";
+import { getBriefCardProps } from "@lib/contentCardHelpers";
 import { BRIEFS } from "@consts";
 
 const collection = (await getCollection("briefs"))
@@ -73,7 +74,7 @@ const brief_categories = Object.keys(briefs_by_category)
                 {
                   briefs_by_category[category].map((brief: Brief) => (
                     <li class="animate">
-                      <BriefCard entry={brief}/>
+                      <ContentCard {...getBriefCardProps(brief, false)}/>
                     </li>
                   ))
                 }
