@@ -38,6 +38,10 @@ const brief_order_cheats: { [key: string]: number } = {
   "Meso-Optimization": 1,
 };
 
+const brief_title_overrides: { [key: string]: string } = {
+  "Swift Wart": "Swift Warts"
+};
+
 const brief_categories = Object.keys(briefs_by_category)
     .sort((a, b) => {
       // 
@@ -63,7 +67,7 @@ const brief_categories = Object.keys(briefs_by_category)
           brief_categories.map(category => (
             <li>
               <h5 class="font-semibold text-black dark:text-white">
-                {category}
+                { brief_title_overrides[category] ?? category }
               </h5>
               <ul class="flex flex-col gap-4">
                 {
