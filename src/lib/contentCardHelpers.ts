@@ -3,8 +3,21 @@ import type { CollectionEntry } from "astro:content";
 /**
  * Transform a blog or project entry into ContentCard props
  */
-export function getArticleCardProps(entry: CollectionEntry<"blog"> | CollectionEntry<"projects">) {
-  const displayTitle = (entry.data as any).cardTitle || entry.data.title;
+export function getBlogCardProps(entry: CollectionEntry<"blog">) {
+  const displayTitle = entry.data.cardTitle || entry.data.title;
+  
+  return {
+    title: displayTitle,
+    subtitle: entry.data.description,
+    link: `/${entry.collection}/${entry.slug}`,
+  };
+}
+
+/**
+ * Transform a blog or project entry into ContentCard props
+ */
+export function getProjectCardProps(entry: CollectionEntry<"blog"> | CollectionEntry<"projects">) {
+  const displayTitle = entry.data.cardTitle || entry.data.title;
   
   return {
     title: displayTitle,

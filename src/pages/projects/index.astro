@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import ContentCard from "@components/ContentCard.astro";
-import { getArticleCardProps } from "@lib/contentCardHelpers";
+import { getProjectCardProps } from "@lib/contentCardHelpers";
 import { PROJECTS } from "@consts";
 
 const projects = (await getCollection("projects"))
@@ -21,7 +21,7 @@ const projects = (await getCollection("projects"))
         {
           projects.map((project) => (
             <li>
-              <ContentCard {...getArticleCardProps(project)}/>
+              <ContentCard {...getProjectCardProps(project)}/>
             </li>
           ))
         }
