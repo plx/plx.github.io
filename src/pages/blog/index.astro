@@ -43,7 +43,7 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
                 {
                   posts[year].map((post) => (
                     <li>
-                      <ContentCard {...getBlogCardProps(post)}/>
+                      <ContentCard {...getBlogCardProps(post, 3)}/>
                     </li>
                   ))
                 }

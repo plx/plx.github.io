@@ -21,7 +21,7 @@ const projects = (await getCollection("projects"))
         {
           projects.map((project) => (
             <li>
-              <ContentCard {...getProjectCardProps(project)}/>
+              <ContentCard {...getProjectCardProps(project, 3)}/>
             </li>
           ))
         }
