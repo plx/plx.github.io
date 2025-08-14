@@ -10,7 +10,6 @@ const __dirname = path.dirname(__filename);
 
 const DIST_DIR = path.join(__dirname, "..", "dist");
 const IGNORED_PATTERNS = [
-  /^#/, // Fragment-only links
   /^mailto:/, // Email links
   /^tel:/, // Phone links
   /^https?:\/\//, // External links (handle separately if needed)
@@ -21,8 +20,11 @@ class LinkValidator {
   constructor() {
     this.allLinks = new Map(); // link -> Set of pages containing it
     this.brokenLinks = new Map(); // link -> Set of pages containing it
+    this.fragmentLinks = new Map(); // fragment link -> Set of pages containing it
+    this.brokenFragments = new Map(); // broken fragment -> Set of pages containing it
     this.validPaths = new Set();
     this.htmlFiles = [];
+    this.pageIds = new Map(); // page path -> Set of IDs on that page
   }
 
   async findHtmlFiles(dir) {
@@ -46,6 +48,7 @@ class LinkValidator {
 
   extractLinks(html) {
     const links = new Set();
+    const fragmentLinks = new Set();
     
     // Match href attributes
     const hrefRegex = /href=["']([^"']+)["']/gi;
@@ -54,12 +57,18 @@ class LinkValidator {
     while ((match = hrefRegex.exec(html)) !== null) {
       const link = match[1];
       
+      // Handle fragment-only links separately
+      if (link.startsWith("#")) {
+        fragmentLinks.add(link);
+        continue;
+      }
+      
       // Skip ignored patterns
       if (IGNORED_PATTERNS.some(pattern => pattern.test(link))) {
         continue;
       }
       
-      // Only process internal links
+      // Process internal links (including those with fragments)
       if (link.startsWith("/")) {
         links.add(link);
       }
@@ -79,30 +88,69 @@ class LinkValidator {
       }
     }
     
-    return links;
+    return { links, fragmentLinks };
+  }
+
+  extractIds(html) {
+    const ids = new Set();
+    
+    // Match id attributes in HTML elements (not in comments)
+    // First, remove HTML comments to avoid false matches
+    const htmlWithoutComments = html.replace(/<!--[\s\S]*?-->/g, "");
+    
+    // Match id attributes in any element
+    const idRegex = /\sid=["']([^"']+)["']/gi;
+    let match;
+    
+    while ((match = idRegex.exec(htmlWithoutComments)) !== null) {
+      ids.add(match[1]);
+    }
+    
+    return ids;
   }
 
   async validateFile(filePath) {
     const content = await fs.readFile(filePath, "utf-8");
-    const links = this.extractLinks(content);
+    const { links, fragmentLinks } = this.extractLinks(content);
+    const ids = this.extractIds(content);
     const relativePath = path.relative(DIST_DIR, filePath);
     
+    // Store IDs for this page
+    this.pageIds.set("/" + relativePath.replace(/index\.html$/, ""), ids);
+    this.pageIds.set("/" + relativePath, ids);
+    
+    // Validate regular links
     for (const link of links) {
-      // Remove fragment identifier for validation
-      const linkWithoutFragment = link.split("#")[0];
+      // Split link and fragment
+      const [linkPath, fragment] = link.split("#");
       
-      if (!this.allLinks.has(linkWithoutFragment)) {
-        this.allLinks.set(linkWithoutFragment, new Set());
+      if (!this.allLinks.has(linkPath)) {
+        this.allLinks.set(linkPath, new Set());
       }
-      this.allLinks.get(linkWithoutFragment).add(relativePath);
+      this.allLinks.get(linkPath).add(relativePath);
       
-      // Check if link is valid
-      if (!this.isValidLink(linkWithoutFragment)) {
-        if (!this.brokenLinks.has(linkWithoutFragment)) {
-          this.brokenLinks.set(linkWithoutFragment, new Set());
+      // Check if link path is valid
+      if (!this.isValidLink(linkPath)) {
+        if (!this.brokenLinks.has(linkPath)) {
+          this.brokenLinks.set(linkPath, new Set());
         }
-        this.brokenLinks.get(linkWithoutFragment).add(relativePath);
+        this.brokenLinks.get(linkPath).add(relativePath);
+      } else if (fragment) {
+        // If the path is valid but has a fragment, validate the fragment later
+        const fullLink = link;
+        if (!this.fragmentLinks.has(fullLink)) {
+          this.fragmentLinks.set(fullLink, new Set());
+        }
+        this.fragmentLinks.get(fullLink).add(relativePath);
       }
+    }
+    
+    // Store fragment-only links for validation
+    for (const fragmentLink of fragmentLinks) {
+      if (!this.fragmentLinks.has(fragmentLink)) {
+        this.fragmentLinks.set(fragmentLink, new Set());
+      }
+      this.fragmentLinks.get(fragmentLink).add(relativePath);
     }
   }
 
@@ -137,6 +185,44 @@ class LinkValidator {
     }
   }
 
+  validateFragments() {
+    // Validate fragment links
+    for (const [link, pages] of this.fragmentLinks) {
+      if (link.startsWith("#")) {
+        // Fragment-only link - check if ID exists on the same page
+        const fragmentId = link.slice(1);
+        for (const page of pages) {
+          const pagePath = "/" + page.replace(/index\.html$/, "");
+          const pageIdSet = this.pageIds.get(pagePath) || this.pageIds.get("/" + page);
+          if (!pageIdSet || !pageIdSet.has(fragmentId)) {
+            // Create a unique key for this fragment on this specific page
+            const brokenKey = `${link} (on ${page})`;
+            if (!this.brokenFragments.has(brokenKey)) {
+              this.brokenFragments.set(brokenKey, new Set());
+            }
+            this.brokenFragments.get(brokenKey).add(page);
+          }
+        }
+      } else {
+        // Link with fragment - check if ID exists on the target page
+        const [targetPath, fragmentId] = link.split("#");
+        const targetPageIds = this.pageIds.get(targetPath) || 
+                             this.pageIds.get(targetPath + "/") ||
+                             this.pageIds.get(targetPath + "/index.html") ||
+                             this.pageIds.get(targetPath + ".html");
+        
+        if (!targetPageIds || !targetPageIds.has(fragmentId)) {
+          if (!this.brokenFragments.has(link)) {
+            this.brokenFragments.set(link, new Set());
+          }
+          for (const page of pages) {
+            this.brokenFragments.get(link).add(page);
+          }
+        }
+      }
+    }
+  }
+
   async validate() {
     console.log("🔍 Starting link validation...\n");
     
@@ -157,6 +243,9 @@ class LinkValidator {
       await this.validateFile(file);
     }
     
+    // Validate fragments after all IDs have been collected
+    this.validateFragments();
+    
     // Report results
     this.reportResults();
   }
@@ -164,14 +253,22 @@ class LinkValidator {
   reportResults() {
     const totalLinks = this.allLinks.size;
     const brokenCount = this.brokenLinks.size;
+    const totalFragments = this.fragmentLinks.size;
+    const brokenFragmentCount = this.brokenFragments.size;
     
     console.log(`📊 Link Validation Results`);
     console.log(`${"=".repeat(50)}`);
     console.log(`Total unique internal links: ${totalLinks}`);
     console.log(`Valid links: ${totalLinks - brokenCount}`);
-    console.log(`Broken links: ${brokenCount}\n`);
+    console.log(`Broken links: ${brokenCount}`);
+    console.log(`\nTotal fragment links: ${totalFragments}`);
+    console.log(`Valid fragments: ${totalFragments - brokenFragmentCount}`);
+    console.log(`Broken fragments: ${brokenFragmentCount}\n`);
+    
+    let hasErrors = false;
     
     if (brokenCount > 0) {
+      hasErrors = true;
       console.log("❌ Broken Links Found:\n");
       
       for (const [link, pages] of this.brokenLinks) {
@@ -185,10 +282,31 @@ class LinkValidator {
         }
         console.log();
       }
+    }
+    
+    if (brokenFragmentCount > 0) {
+      hasErrors = true;
+      console.log("❌ Broken Fragment Links Found:\n");
       
+      for (const [link, pages] of this.brokenFragments) {
+        // Extract the original link from the key (remove " (on page)" suffix if present)
+        const displayLink = link.includes(" (on ") ? link.split(" (on ")[0] : link;
+        console.log(`  ${displayLink}`);
+        const pageList = Array.from(pages).slice(0, 3);
+        for (const page of pageList) {
+          console.log(`    → Found in: ${page}`);
+        }
+        if (pages.size > 3) {
+          console.log(`    → And ${pages.size - 3} more files...`);
+        }
+        console.log();
+      }
+    }
+    
+    if (hasErrors) {
       process.exit(1);
     } else {
-      console.log("✅ All internal links are valid!");
+      console.log("✅ All internal links and fragments are valid!");
       process.exit(0);
     }
   }
