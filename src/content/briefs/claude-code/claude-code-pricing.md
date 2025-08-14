@@ -2,7 +2,6 @@
 title: "Claude Code's Subscription Pricing vs GPT-5"
 cardTitle: "Subscription Pricing vs GPT-5"
 description: "Anthropics subscriptions are economical, but so GPT-5."
-category: "Claude Code"
 date: "2025-08-08"
 ---
 

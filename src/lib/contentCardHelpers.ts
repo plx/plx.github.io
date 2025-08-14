@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+import { extractCategoryFromSlug, getCategory } from "./category";
 
 /**
  * Transform a blog or project entry into ContentCard props
@@ -36,8 +37,17 @@ export function getProjectCardProps(entry: CollectionEntry<"blog"> | CollectionE
 export function getBriefCardProps(entry: CollectionEntry<"briefs">, includeCategory = true, maxLines?: number | "none") {
   const displayTitle = entry.data.cardTitle || entry.data.title;
   
+  // Extract category from slug path
+  const categorySlug = extractCategoryFromSlug(entry.slug);
+  let categoryPrefix: string | undefined;
+  
+  if (includeCategory && categorySlug) {
+    const category = getCategory(categorySlug, `src/content/briefs/${categorySlug}`);
+    categoryPrefix = category.titlePrefix || category.displayName;
+  }
+  
   return {
-    titlePrefix: includeCategory ? entry.data.category : undefined,
+    titlePrefix: categoryPrefix,
     title: displayTitle,
     subtitle: entry.data.description,
     link: `/${entry.collection}/${entry.slug}`,

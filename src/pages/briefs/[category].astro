@@ -1,0 +1,79 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import ContentCard from "@components/ContentCard.astro";
+import { getBriefCardProps } from "@lib/contentCardHelpers";
+import { getCategory, extractCategoryFromSlug } from "@lib/category";
+import BackToPrev from "@components/BackToPrev.astro";
+
+export async function getStaticPaths() {
+  const allBriefs = (await getCollection("briefs"))
+    .filter(brief => !brief.data.draft);
+    
+  // Get unique categories from brief slugs
+  const categories = new Set<string>();
+  allBriefs.forEach(brief => {
+    const category = extractCategoryFromSlug(brief.slug);
+    if (category) {
+      categories.add(category);
+    }
+  });
+  
+  // Create paths for each category
+  return Array.from(categories).map(category => ({
+    params: { category },
+    props: {
+      category,
+      briefs: allBriefs
+        .filter(brief => extractCategoryFromSlug(brief.slug) === category)
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    }
+  }));
+}
+
+interface Props {
+  category: string;
+  briefs: CollectionEntry<"briefs">[];
+}
+
+const { category: categorySlug, briefs } = Astro.props;
+const categoryPath = `src/content/briefs/${categorySlug}`;
+const category = getCategory(categorySlug, categoryPath);
+
+const renderedBriefs = await Promise.all(
+  briefs.map(async (item) => {
+    const { Content } = await item.render();
+    return { ...item, Content };
+  })
+);
+---
+
+<PageLayout title={`${category.displayName} - Briefs`} description={category.description || `Briefs about ${category.displayName.toLowerCase()}`}>
+  <Container>
+    <div class="space-y-10">
+      <div class="animate">
+        <BackToPrev href="/briefs">
+          Back to all briefs
+        </BackToPrev>
+      </div>
+      <div class="space-y-2">
+        <h1 class="animate font-semibold text-black dark:text-white text-2xl">
+          {category.displayName}
+        </h1>
+        {category.description && (
+          <p class="animate text-gray-600 dark:text-gray-400">
+            {category.description}
+          </p>
+        )}
+      </div>
+      <ul class="animate flex flex-col gap-4">
+        {renderedBriefs.map((brief) => (
+          <li>
+            <ContentCard {...getBriefCardProps(brief, false, 3)} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Container>
+</PageLayout>

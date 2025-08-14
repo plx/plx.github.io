@@ -1,7 +1,6 @@
 ---
 title: "Lazy Sequences Lack Primary Associated Types"
 description: "You can write `Sequence<Element>` but not `LazySequenceProtocol<Element>`"
-category: "Swift Wart"
 date: "2025-07-18"
 ---
 
