@@ -2,7 +2,6 @@
 title: "Swift Cannot Express Generic Actor Isolation Parameters"
 cardTitle: "You Cannot Express Generic Actor Isolation Parameters"
 description: "Swift lets you write `@MainActor` and `@SomeOtherActor`, but not `@'A`, where `A` is a generic actor parameter."
-category: "Swift Wart"
 date: "2025-07-20"
 ---
 

@@ -1,0 +1,4 @@
+displayName: "Swift Warts"
+titlePrefix: "Swift Wart"
+description: "Briefs about unfortunate pain points in the Swift language and standard library"
+sortPriority: 3

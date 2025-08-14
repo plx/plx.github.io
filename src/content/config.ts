@@ -20,7 +20,6 @@ const briefs = defineCollection({
     title: z.string(),
     cardTitle: z.string().optional(),
     description: z.string(),
-    category: z.string(),
     date: z.coerce.date(),
     draft: z.boolean().optional()
   }).transform((data) => ({

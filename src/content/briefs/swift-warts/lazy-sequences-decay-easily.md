@@ -1,7 +1,6 @@
 ---
 title: "Lazy Sequences \"Decay\" Easily"
 description: "Swift's lazy functional API is elegant, but prone to silently decaying back to its eager equivalent."
-category: "Swift Wart"
 date: "2025-07-15"
 ---
 

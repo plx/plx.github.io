@@ -1,7 +1,6 @@
 ---
 title: "Never `compact`"
 description: "Claude Code's `/compact` command exists and seems useful, but should *rarely* be used."
-category: "Claude Code"
 date: "2025-07-25"
 ---
 

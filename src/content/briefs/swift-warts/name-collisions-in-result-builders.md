@@ -1,7 +1,6 @@
 ---
 title: "Name Collisions in Result Builders"
 description: "You get a `ForEach`, and you get a `ForEach`, and..."
-category: "Swift Wart"
 date: "2025-07-17"
 ---
 
