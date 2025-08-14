@@ -59,7 +59,7 @@ const briefs = await Promise.all(
         <ul class="flex flex-col gap-4">
           {blog.map(post => (
             <li>
-              <ContentCard {...getBlogCardProps(post)} />
+              <ContentCard {...getBlogCardProps(post, 2)} />
             </li>
           ))}
         </ul>
@@ -77,7 +77,7 @@ const briefs = await Promise.all(
         <ul class="flex flex-col space-y-4">
           {briefs.map(brief => (
             <li>
-              <ContentCard {...getBriefCardProps(brief, true)} />
+              <ContentCard {...getBriefCardProps(brief, true, 2)} />
             </li>
           ))}
         </ul>
@@ -95,7 +95,7 @@ const briefs = await Promise.all(
         <ul class="flex flex-col gap-4">
           {projects.map(project => (
             <li>
-              <ContentCard {...getProjectCardProps(project)} />
+              <ContentCard {...getProjectCardProps(project, 2)} />
             </li>
           ))}
         </ul>

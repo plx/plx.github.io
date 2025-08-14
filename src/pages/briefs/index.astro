@@ -74,7 +74,7 @@ const brief_categories = Object.keys(briefs_by_category)
                 {
                   briefs_by_category[category].map((brief: Brief) => (
                     <li class="animate">
-                      <ContentCard {...getBriefCardProps(brief, false)}/>
+                      <ContentCard {...getBriefCardProps(brief, false, 3)}/>
                     </li>
                   ))
                 }
