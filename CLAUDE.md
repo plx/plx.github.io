@@ -63,6 +63,21 @@ The repository includes a justfile for convenient local development:
 
 4. **GitHub Pages deployment**: Push changes to the main branch and GitHub Actions will automatically build and deploy via the `.github/workflows/deploy.yml` workflow
 
+### Code Style and Linting
+
+**IMPORTANT**: This project enforces strict linting rules via ESLint. Always run the linter before committing:
+
+```bash
+npm run lint        # Check for linting errors
+npm run lint:fix    # Auto-fix linting errors where possible
+```
+
+Key linting requirements:
+- **Use double quotes for strings** - NOT single quotes (TypeScript/JavaScript)
+- The project uses ESLint with strict quote rules
+- CI/CD will fail if linting errors are present
+- Always verify with `npm run lint` before pushing changes
+
 ### Content Structure
 
 #### Blog Posts
@@ -75,10 +90,13 @@ src/content/blog/my-new-post/
 Posts should include front matter with relevant metadata.
 
 #### Briefs (Short Notes)
-Create brief notes in `src/content/briefs/` as individual markdown files:
+Create brief notes in category subfolders within `src/content/briefs/`:
 ```
-src/content/briefs/my-brief.md
+src/content/briefs/swift-warts/my-swift-brief.md
+src/content/briefs/claude-code/my-claude-brief.md
 ```
+
+Categories are auto-discovered from folder names. To add a new category, simply create a new folder. You can optionally add a `category.yaml` file in the folder to customize the category metadata (display name, description, sort priority).
 
 #### Projects
 Create project pages in `src/content/projects/` as folders with an `index.md` file:
