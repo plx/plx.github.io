@@ -1,6 +1,6 @@
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
-import { parse } from 'yaml';
+import { readFileSync, existsSync } from "fs";
+import { join } from "path";
+import { parse } from "yaml";
 
 export interface BriefCategory {
   slug: string;
@@ -16,9 +16,9 @@ export interface BriefCategory {
  */
 function slugToDisplayName(slug: string): string {
   return slug
-    .split('-')
+    .split("-")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .join(" ");
 }
 
 /**
@@ -38,14 +38,14 @@ export function getCategoryFromSlug(slug: string): BriefCategory {
  * Load category overrides from a category.yaml file if it exists
  */
 export function loadCategoryOverrides(categoryPath: string): Partial<BriefCategory> | null {
-  const overridePath = join(categoryPath, 'category.yaml');
+  const overridePath = join(categoryPath, "category.yaml");
   
   if (!existsSync(overridePath)) {
     return null;
   }
   
   try {
-    const content = readFileSync(overridePath, 'utf-8');
+    const content = readFileSync(overridePath, "utf-8");
     return parse(content) as Partial<BriefCategory>;
   } catch (error) {
     console.warn(`Failed to parse category.yaml in ${categoryPath}:`, error);
@@ -76,7 +76,7 @@ export function getCategory(slug: string, categoryPath: string): BriefCategory {
  * e.g., "swift-warts/lazy-sequences" -> "swift-warts"
  */
 export function extractCategoryFromSlug(briefSlug: string): string | null {
-  const parts = briefSlug.split('/');
+  const parts = briefSlug.split("/");
   if (parts.length > 1) {
     return parts[0];
   }
@@ -88,9 +88,9 @@ export function extractCategoryFromSlug(briefSlug: string): string | null {
  * e.g., "swift-warts/lazy-sequences" -> "lazy-sequences"
  */
 export function extractBriefSlugFromPath(fullSlug: string): string {
-  const parts = fullSlug.split('/');
+  const parts = fullSlug.split("/");
   if (parts.length > 1) {
-    return parts.slice(1).join('/');
+    return parts.slice(1).join("/");
   }
   return fullSlug; // Uncategorized brief
 }
