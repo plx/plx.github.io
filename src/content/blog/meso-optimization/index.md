@@ -47,7 +47,7 @@ When someone says an app feels "native" or "polished," they're often responding 
 
 [^1]: Many of the best "native apps" aren't even native—there's lots of world-class, incredibly-polished Reactive Native out there.
 
-The frustrating part? This stuff is hard to teach, hard to measure, and incredibly easy to break. One well-meaning refactor can silently undo a meso-optimization, or even several. [Your beautiful lazy sequence chains suddenly become eager](/briefs/lazy-sequences-decay-easily). Your carefully-managed view updates start firing twice. The app still works, all your tests pass, but somehow it doesn't feel quite as good anymore.
+The frustrating part? This stuff is hard to teach, hard to measure, and incredibly easy to break. One well-meaning refactor can silently undo a meso-optimization, or even several. [Your beautiful lazy sequence chains suddenly become eager](/briefs/swift-warts/lazy-sequences-decay-easily). Your carefully-managed view updates start firing twice. The app still works, all your tests pass, but somehow it doesn't feel quite as good anymore.
 
 ## The Point of All This
 
