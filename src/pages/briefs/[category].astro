@@ -6,6 +6,7 @@ import ContentCard from "@components/ContentCard.astro";
 import { getBriefCardProps } from "@lib/contentCardHelpers";
 import { getCategory, extractCategoryFromSlug } from "@lib/category";
 import BackToPrev from "@components/BackToPrev.astro";
+import { getListOGData } from "@lib/opengraph";
 
 export async function getStaticPaths() {
   const allBriefs = (await getCollection("briefs"))
@@ -47,9 +48,18 @@ const renderedBriefs = await Promise.all(
     return { ...item, Content };
   })
 );
+
+const ogData = getListOGData(
+  `${category.displayName} Briefs`,
+  category.description || `Briefs about ${category.displayName.toLowerCase()}`,
+  "briefs",
+  briefs.length,
+  Astro.url.toString(),
+  Astro.site?.toString() || ""
+);
 ---
 
-<PageLayout title={`${category.displayName} - Briefs`} description={category.description || `Briefs about ${category.displayName.toLowerCase()}`}>
+<PageLayout title={`${category.displayName} - Briefs`} description={category.description || `Briefs about ${category.displayName.toLowerCase()}`} ogData={ogData}>
   <Container>
     <div class="space-y-10">
       <div class="animate">

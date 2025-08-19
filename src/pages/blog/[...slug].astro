@@ -5,6 +5,7 @@ import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
+import { getPostOGData } from "@lib/opengraph";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
@@ -19,9 +20,11 @@ type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+const ogData = getPostOGData(post, Astro.url.toString(), Astro.site?.toString() || "");
 ---
 
-<PageLayout title={post.data.title} description={post.data.description}>
+<PageLayout title={post.data.title} description={post.data.description} ogData={ogData}>
   <Container>
     <div class="animate">
       <BackToPrev href="/blog">
