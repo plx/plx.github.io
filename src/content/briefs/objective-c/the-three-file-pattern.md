@@ -169,10 +169,6 @@ Here's an example category on the base class:
     }
 }
 
-- (void)drawRect:(CGRect)rect {
-  // use _mat to draw
-}
-
 @end
 ```
 
