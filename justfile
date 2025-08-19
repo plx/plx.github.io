@@ -78,3 +78,27 @@ clean:
 # Install: installs dependencies
 install:
     npm install
+
+# Spellcheck: checks spelling in source files
+spellcheck:
+    npm run spellcheck
+
+# Spellcheck-html: checks spelling in built HTML output
+spellcheck-html:
+    npm run spellcheck:html
+
+# Spellcheck-all: full spellcheck workflow (source + build + html)
+spellcheck-all:
+    npm run spellcheck:all
+
+# Lint: runs ESLint on all files
+lint:
+    npm run lint
+
+# Lint-fix: auto-fixes ESLint issues where possible
+lint-fix:
+    npm run lint:fix
+
+# Validate: runs all validation checks (lint + spellcheck + build + links)
+validate:
+    npm run validate:all

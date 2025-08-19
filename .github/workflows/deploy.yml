@@ -32,8 +32,17 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       
+      - name: Run Linting
+        run: npm run lint
+      
+      - name: Run Spell Check (Source)
+        run: npm run spellcheck
+      
       - name: Build Site
         run: npm run build
+      
+      - name: Run Spell Check (HTML)
+        run: npm run spellcheck:html
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
