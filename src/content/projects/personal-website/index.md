@@ -21,7 +21,7 @@ I chose Astro because I couldn't find a satisfactory off-the-shelf platform or p
 - reasonably-flexible "information architecture"
 - high-quality accessibility support[^2]
 
-[^1]: In practice, this means either "paid blogging sytem" or "static site generator".
+[^1]: In practice, this means either "paid blogging system" or "static site generator".
 
 [^2]: Carrying over from my iOS work, I'm a big believer in the importance of accessibility. In particular, I think *implementing* it is good for users, and *contemplating* it is beneficial for developers—helps with really thinking-through a data model.
 
