@@ -9,5 +9,13 @@ import expressiveCode from "astro-expressive-code";
 
 export default defineConfig({
   site: "https://plx.github.io",
-  integrations: [sitemap(), tailwind(), react(), expressiveCode(), mdx()],
+  integrations: [
+    sitemap(), 
+    tailwind(), 
+    react(), 
+    expressiveCode({
+      themes: ["github-dark", "github-light"]
+    }), 
+    mdx()
+  ],
 });

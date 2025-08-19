@@ -43,6 +43,15 @@ article {
   @apply prose-headings:text-black prose-headings:dark:text-white;
 }
 
+/* Remove the backticks that Tailwind Typography adds to inline code */
+article :where(code)::before {
+  content: none;
+}
+
+article :where(code)::after {
+  content: none;
+}
+
 @layer utilities {
   article a {
     @apply font-sans text-current underline underline-offset-2;
