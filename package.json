@@ -44,6 +44,7 @@
     "yaml": "^2.8.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.2",
     "eslint-plugin-jsx-a11y": "^6.10.2"
   }
 }
