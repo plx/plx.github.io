@@ -5,6 +5,8 @@ import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import BackToPrev from "@components/BackToPrev.astro";
 import { extractCategoryFromSlug, getCategory } from "@lib/category";
+import { getBriefOGData } from "@lib/opengraph";
+import { renderInlineMarkdown } from "@lib/markdown";
 
 export async function getStaticPaths() {
   const briefs = (await getCollection("briefs"))
@@ -23,9 +25,11 @@ const { Content } = await brief.render();
 // Extract category from the slug
 const categorySlug = extractCategoryFromSlug(brief.slug);
 const category = categorySlug ? getCategory(categorySlug, `src/content/briefs/${categorySlug}`) : null;
+const ogData = getBriefOGData(brief, category, Astro.url.toString(), Astro.site?.toString() || "");
+const renderedTitlePrefix = category?.titlePrefix ? renderInlineMarkdown(category.titlePrefix) : null;
 ---
 
-<PageLayout title={brief.data.title} description={brief.data.description}>
+<PageLayout title={brief.data.title} description={brief.data.description} ogData={ogData}>
   <Container>
     <div class="animate">
       <BackToPrev href={categorySlug ? `/briefs/${categorySlug}` : "/briefs"}>
@@ -40,8 +44,7 @@ const category = categorySlug ? getCategory(categorySlug, `src/content/briefs/${
         {category && (
           <>
             &bull;
-            <div class="font-base text-sm">
-              {category.titlePrefix || category.displayName}
+            <div class="font-base text-sm" set:html={renderedTitlePrefix || category.displayName}>
             </div>
           </>
         )}

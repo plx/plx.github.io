@@ -1,0 +1,102 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "agentic",
+    "allwork",
+    "Anthropics",
+    "Astro",
+    "astrojs",
+    "autoclosure",
+    "Bandung",
+    "BGRA",
+    "briefs",
+    "Claude",
+    "Codegen",
+    "cplusplus",
+    "devcontainer",
+    "expressibility",
+    "frontmatter",
+    "justfile",
+    "linter",
+    "MDX",
+    "meso",
+    "Meso",
+    "metrids",
+    "mutatis",
+    "plx",
+    "Playwright",
+    "prb",
+    "ripgrep",
+    "sitemap",
+    "speedbump",
+    "subclassing",
+    "Tailwindcss",
+    "todolist",
+    "Typesafe",
+    "uncategorized",
+    "Uncategorized",
+    "webfetch",
+    "WWDC"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    ".git",
+    "*.min.js",
+    "*.min.css",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    ".astro",
+    "public/fonts/**"
+  ],
+  "dictionaries": [
+    "en-us",
+    "typescript",
+    "node",
+    "npm",
+    "html",
+    "css",
+    "software-terms",
+    "companies",
+    "misc"
+  ],
+  "import": [
+    "@cspell/dict-typescript/cspell-ext.json",
+    "@cspell/dict-npm/cspell-ext.json",
+    "@cspell/dict-html/cspell-ext.json",
+    "@cspell/dict-css/cspell-ext.json"
+  ],
+  "enableFiletypes": [
+    "astro",
+    "mdx"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.{ts,tsx,js,jsx,astro}",
+      "dictionaries": ["typescript", "node", "npm"],
+      "ignoreRegExpList": [
+        "/import .* from ['\"].*/g",
+        "/\\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\\b/g"
+      ]
+    },
+    {
+      "filename": "**/*.{md,mdx}",
+      "dictionaries": ["en-us", "software-terms"],
+      "ignoreRegExpList": [
+        "/```[\\s\\S]*?```/gm",
+        "/`[^`]+`/g"
+      ]
+    },
+    {
+      "filename": "dist/**/*.html",
+      "dictionaries": ["en-us", "html"],
+      "ignoreRegExpList": [
+        "/<script[\\s\\S]*?<\\/script>/gm",
+        "/<style[\\s\\S]*?<\\/style>/gm",
+        "/class=\"[^\"]*\"/g",
+        "/id=\"[^\"]*\"/g"
+      ]
+    }
+  ]
+}

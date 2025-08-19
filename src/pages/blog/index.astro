@@ -5,6 +5,7 @@ import Container from "@components/Container.astro";
 import ContentCard from "@components/ContentCard.astro";
 import { getBlogCardProps } from "@lib/contentCardHelpers";
 import { BLOG } from "@consts";
+import { getListOGData } from "@lib/opengraph";
 
 const data = (await getCollection("blog"))
   .filter(post => !post.data.draft)
@@ -23,10 +24,19 @@ const posts = data.reduce((acc: Acc, post) => {
     return acc;
   }, {});
 
-const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
+
+const ogData = getListOGData(
+  BLOG.TITLE,
+  BLOG.DESCRIPTION,
+  "blog",
+  data.length,
+  Astro.url.toString(),
+  Astro.site?.toString() || ""
+);
 ---
 
-<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
+<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION} ogData={ogData}>
   <Container>
     <div class="space-y-10">
       <div class="animate font-semibold text-black dark:text-white">

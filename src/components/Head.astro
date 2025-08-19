@@ -11,24 +11,57 @@ import lora600 from "@fontsource/lora/files/lora-latin-600-normal.woff2";
 
 import { ClientRouter } from "astro:transitions";
 import { SITE } from "@consts";
+import OpenGraphMeta from "@components/OpenGraphMeta.astro";
+import type { OpenGraphData } from "@lib/opengraph";
+import { generateTailgraphURL } from "@lib/opengraph";
 
 interface Props {
   title: string;
   description: string;
   image?: string;
+  ogData?: OpenGraphData;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = "/nano.png" } = Astro.props;
+const { title, description, image = "/Logo.jpg", ogData } = Astro.props;
+
+// Create default OG data if not provided
+const defaultOgData: OpenGraphData = ogData || {
+  title,
+  description,
+  type: "website",
+  url: canonicalURL.toString(),
+  siteName: SITE.NAME,
+  image: image.startsWith("http") ? image : generateTailgraphURL({
+    title,
+    theme: "dark",
+    backgroundImage: "gradient",
+    logo: `${Astro.site}favicon-light.svg`
+  }),
+  twitter: {
+    card: "summary_large_image"
+  }
+};
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/mstile-150x150.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Keep SVG favicons as fallback for those who have them -->
 <link rel="icon" type="image/svg+xml" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)">
 <link rel="icon" type="image/svg+xml" href="/favicon-light.svg" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/x-icon" href="/favicon-light.svg">
+
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
@@ -45,19 +78,12 @@ const { title, description, image = "/nano.png" } = Astro.props;
 <meta name="title" content={title} />
 <meta name="description" content={description} />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
-
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<!-- OpenGraph Meta Tags -->
+{ogData ? (
+  <OpenGraphMeta data={ogData} />
+) : (
+  <OpenGraphMeta data={defaultOgData} />
+)}
 
 <ClientRouter  />
 

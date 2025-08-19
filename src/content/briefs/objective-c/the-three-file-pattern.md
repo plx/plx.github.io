@@ -40,7 +40,7 @@ As an example illustrating both, let's say we're writing a class cluster that:
 In that case, our base class might look like this:
 
 
-```objc++
+```objective-cpp
 // OpenCVImage.h
 @interface OpenCVImage : NSObject 
 
@@ -99,7 +99,7 @@ As you can see, this:
 
 To see the latter point, here's a sample subclass:
 
-```objc++
+```objective-cpp
 // BGRAOpenCVImage.h
 
 // optional: mark this as a "final"-ish class (best we can do in Objective-C)
@@ -134,7 +134,7 @@ __attribute__((objc_subclassing_restricted))
 
 Here's an example category on the base class:
 
-```objc++
+```objective-cpp
 // OpenCVImage+Loading.h
 @interface OpenCVImage (Loading)
 

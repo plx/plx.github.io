@@ -7,7 +7,14 @@ const blog = defineCollection({
     cardTitle: z.string().optional(),
     description: z.string(),
     date: z.coerce.date(),
-    draft: z.boolean().optional()
+    draft: z.boolean().optional(),
+    // OpenGraph overrides
+    ogTitle: z.string().optional(),
+    ogDescription: z.string().optional(),
+    ogImage: z.string().optional(),
+    ogImageAlt: z.string().optional(),
+    noOgImage: z.boolean().optional(),
+    modifiedDate: z.coerce.date().optional()
   }).transform((data) => ({
     ...data,
     cardTitle: data.cardTitle ?? data.title
@@ -21,7 +28,14 @@ const briefs = defineCollection({
     cardTitle: z.string().optional(),
     description: z.string(),
     date: z.coerce.date(),
-    draft: z.boolean().optional()
+    draft: z.boolean().optional(),
+    // OpenGraph overrides
+    ogTitle: z.string().optional(),
+    ogDescription: z.string().optional(),
+    ogImage: z.string().optional(),
+    ogImageAlt: z.string().optional(),
+    noOgImage: z.boolean().optional(),
+    modifiedDate: z.coerce.date().optional()
   }).transform((data) => ({
     ...data,
     cardTitle: data.cardTitle ?? data.title
@@ -37,7 +51,14 @@ const projects = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     demoURL: z.string().optional(),
-    repoURL: z.string().optional()
+    repoURL: z.string().optional(),
+    // OpenGraph overrides
+    ogTitle: z.string().optional(),
+    ogDescription: z.string().optional(),
+    ogImage: z.string().optional(),
+    ogImageAlt: z.string().optional(),
+    noOgImage: z.boolean().optional(),
+    modifiedDate: z.coerce.date().optional()
   }).transform((data) => ({
     ...data,
     cardTitle: data.cardTitle ?? data.title
