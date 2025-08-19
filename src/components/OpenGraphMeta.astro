@@ -1,0 +1,51 @@
+---
+import { SEO } from "astro-seo";
+import type { OpenGraphData } from "@lib/opengraph";
+
+interface Props {
+  data: OpenGraphData;
+}
+
+const { data } = Astro.props;
+
+// Build OpenGraph tags
+const openGraph = {
+  basic: {
+    title: data.title,
+    type: data.type,
+    image: data.image || "",
+    url: data.url,
+  },
+  optional: {
+    description: data.description,
+    siteName: data.siteName,
+  },
+  image: data.image ? {
+    url: data.image,
+    alt: data.imageAlt || data.title,
+  } : undefined,
+  article: data.type === "article" && data.article ? {
+    publishedTime: data.article.publishedTime?.toISOString(),
+    modifiedTime: data.article.modifiedTime?.toISOString(),
+    authors: data.article.author ? [data.article.author] : undefined,
+    section: data.article.section,
+  } : undefined,
+};
+
+// Build Twitter Card tags
+const twitter = {
+  card: data.twitter?.card || "summary_large_image",
+  creator: data.twitter?.creator,
+  title: data.title,
+  description: data.description,
+  image: data.image,
+  imageAlt: data.imageAlt || data.title,
+};
+---
+
+<SEO
+  title={data.title}
+  description={data.description}
+  openGraph={openGraph}
+  twitter={twitter}
+/>
