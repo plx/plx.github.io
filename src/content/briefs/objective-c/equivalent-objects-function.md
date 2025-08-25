@@ -108,7 +108,7 @@ BOOL EquivalentObjects(id _Nullable lhs, id _Nullable rhs) {
 As such a simple function, there's not much to say about it beyond administrivia:
 
 - it's not a bad idea to put a namespace prefix on it
-- it's also not a bad idea to give it a hard-to-use Swift name (e.g. `NS_SWIFT_NAME(__dont_use_EquivalentObjects(_:_:)`)
+- it's also not a bad idea to give it a hard-to-use Swift name (e.g. `NS_SWIFT_NAME(__don't_use_EquivalentObjects(_:_:)`)
 - you can *consider* replacing it with a macro, but I wouldn't—it's trickier than it looks!
 - you want to make sure it's not visible-from/used-within your public headers[^5]
 

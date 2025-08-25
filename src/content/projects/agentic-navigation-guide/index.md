@@ -111,7 +111,7 @@ If you measure time-to-completion, I'd estimate I finished this 7x faster than I
 
 So, purely for speed, this was a big win.
 
-If you measure cognitive effort, the picture's a bit more nuanced: the cognitive effort *was* reduced, but it was also *compressed* and *front-loaded*—writing that psecification document was *a lot* of work!
+If you measure cognitive effort, the picture's a bit more nuanced: the cognitive effort *was* reduced, but it was also *compressed* and *front-loaded*—writing that specification document was *a lot* of work!
 
 Ordinarily, I use a process like this:
 
