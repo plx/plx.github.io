@@ -108,7 +108,16 @@ if: |
 
 ## Security Considerations
 
-- Deployment requires `pages: write` and `id-token: write` permissions
-- PR validation has minimal permissions (only `pull-requests: write` for comments)
+- Deployment requires `pages: write` and `id-token: write` permissions (only in deploy.yml)
+- PR validation has minimal permissions:
+  - `contents: read` for checking out code
+  - `pull-requests: write` for posting status comments
+  - No write access to Pages (follows principle of least privilege)
+- The `configure-pages` action was removed as it's not needed (we don't use its outputs)
 - Concurrency groups prevent race conditions during deployment
 - Branch protection rules should be configured to require PR validation before merge
+
+### Permission Model
+- **PR Validation**: Read-only access (can't modify repository or deploy)
+- **Deployment**: Write access only when pushing to main branch
+- **Manual Workflow**: Deployment only allowed from main branch with explicit flag

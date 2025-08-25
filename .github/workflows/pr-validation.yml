@@ -8,8 +8,6 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  pages: write
-  id-token: write
 
 jobs:
   validate:
@@ -19,8 +17,6 @@ jobs:
       checkout-ref: ${{ github.event.pull_request.head.sha }}
     permissions:
       contents: read
-      pages: write
-      id-token: write
   
   report-status:
     name: Report Validation Status
