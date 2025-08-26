@@ -100,7 +100,7 @@ func validateCodableRoundTrip<T: Equatable & Codable>(
 
 This project would have taken under a week, end-to-end, if done with full-time focus—it's a nice, self-contained task.
 
-### Suprise Gotcha: Expansion Testing
+### Surprise Gotcha: Expansion Testing
 
 The expansion tests proved harder to write than I thought b/c the macro-expansion helpers I was using don't fully account for whitespace within the macro expansion:
 

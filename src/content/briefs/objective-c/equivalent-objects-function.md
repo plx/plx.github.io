@@ -120,5 +120,5 @@ Once you have that function defined, the rest is just being consistent with usin
 My personal strategy for it is:
 
 - use it unconditionally for *all* equality checks *inside* methods like `isEqual:` (and type-specific helpers like `isEqualToProjectDescriptor:`)
-- use it *when appropriate* for checks impacting control flow (it's often more legible to include explict `!= nil` checks in those cases, however)
+- use it *when appropriate* for checks impacting control flow (it's often more legible to include explicit `!= nil` checks in those cases, however)
 

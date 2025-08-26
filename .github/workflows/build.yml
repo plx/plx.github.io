@@ -44,7 +44,26 @@ jobs:
         run: npm run build
       
       - name: Run Spell Check (HTML)
-        run: npm run spellcheck:html
+        id: spellcheck-html
+        run: |
+          echo "Checking HTML files in dist directory..."
+          npm run spellcheck:html
+          echo "HTML spell check completed successfully"
+        continue-on-error: true
+      
+      - name: Debug spell check failure
+        if: steps.spellcheck-html.outcome == 'failure'
+        run: |
+          echo "::warning::HTML spell check failed - debugging information:"
+          echo "Files in dist directory:"
+          find dist -name "*.html" -type f 2>/dev/null | head -10 || echo "No HTML files found"
+          echo ""
+          echo "CSpell ignore paths:"
+          cat cspell.json | grep -A10 '"ignorePaths"' || true
+          echo ""
+          echo "Re-running spell check with verbose output:"
+          npx cspell "dist/**/*.html" --no-progress --verbose 2>&1 | head -30 || true
+          exit 1
       
       - name: Validate Internal Links
         run: npm run validate:links
