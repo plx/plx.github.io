@@ -83,7 +83,7 @@ export function getPostOGData(
       author: "plx",
       theme: "dark",
       backgroundImage: "gradient",
-      logo: `${siteUrl}/favicon-light.svg`
+      logo: `${siteUrl}/default-og-image.jpg`
     });
   }
   
@@ -127,7 +127,7 @@ export function getBriefOGData(
       author: "plx",
       theme: "dark",
       backgroundImage: "gradient",
-      logo: `${siteUrl}/favicon-light.svg`
+      logo: `${siteUrl}/default-og-image.jpg`
     });
   }
   
@@ -170,7 +170,7 @@ export function getProjectOGData(
       author: "plx",
       theme: "dark",
       backgroundImage: "gradient",
-      logo: `${siteUrl}/favicon-light.svg`
+      logo: `${siteUrl}/default-og-image.jpg`
     });
   }
   
@@ -206,7 +206,7 @@ export function getListOGData(
     subtitle,
     theme: "dark",
     backgroundImage: "gradient",
-    logo: `${siteUrl}/favicon-light.svg`
+    logo: `${siteUrl}/default-og-image.jpg`
   });
   
   return {
@@ -235,7 +235,7 @@ export function getHomeOGData(
     subtitle: "Technical writing and projects",
     theme: "dark",
     backgroundImage: "gradient",
-    logo: `${siteUrl}/favicon-light.svg`
+    logo: `${siteUrl}/default-og-image.jpg`
   });
   
   return {
