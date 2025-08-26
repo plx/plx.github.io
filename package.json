@@ -15,7 +15,9 @@
     "spellcheck:html": "cspell \"dist/**/*.html\" --no-progress",
     "spellcheck:all": "npm run spellcheck && npm run build && npm run spellcheck:html",
     "validate:links": "node scripts/validate-links.js",
-    "validate:all": "npm run lint && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links"
+    "validate:all": "npm run lint && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links",
+    "test:ci": "npm run lint && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links",
+    "test:ci:verbose": "echo '🔍 Running CI validation locally...' && npm run lint && echo '✓ Linting passed' && npm run spellcheck && echo '✓ Source spell check passed' && npm run build && echo '✓ Build succeeded' && npm run spellcheck:html && echo '✓ HTML spell check passed' && npm run validate:links && echo '✓ Link validation passed' && echo '✅ All CI checks passed!'"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

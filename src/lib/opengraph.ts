@@ -80,7 +80,7 @@ export function getPostOGData(
         month: "long", 
         day: "numeric" 
       }),
-      author: "Paul R. Berman",
+      author: "plx",
       theme: "dark",
       backgroundImage: "gradient",
       logo: `${siteUrl}/favicon-light.svg`
@@ -98,12 +98,11 @@ export function getPostOGData(
     article: {
       publishedTime: post.data.date,
       modifiedTime: post.data.modifiedDate,
-      author: "Paul R. Berman",
+      author: "plx",
       section: "Blog"
     },
     twitter: {
-      card: "summary_large_image",
-      creator: "@plxgithub"
+      card: "summary_large_image"
     }
   };
 }
@@ -125,7 +124,7 @@ export function getBriefOGData(
     ogImage = generateTailgraphURL({
       title: brief.data.cardTitle || brief.data.title,
       subtitle: category?.titlePrefix || category?.displayName || "Brief",
-      author: "Paul R. Berman",
+      author: "plx",
       theme: "dark",
       backgroundImage: "gradient",
       logo: `${siteUrl}/favicon-light.svg`
@@ -143,12 +142,11 @@ export function getBriefOGData(
     article: {
       publishedTime: brief.data.date,
       modifiedTime: brief.data.modifiedDate,
-      author: "Paul R. Berman",
+      author: "plx",
       section: category?.displayName || "Briefs"
     },
     twitter: {
-      card: "summary_large_image",
-      creator: "@plxgithub"
+      card: "summary_large_image"
     }
   };
 }
@@ -169,7 +167,7 @@ export function getProjectOGData(
     ogImage = generateTailgraphURL({
       title: project.data.title,
       subtitle: "Project",
-      author: "Paul R. Berman",
+      author: "plx",
       theme: "dark",
       backgroundImage: "gradient",
       logo: `${siteUrl}/favicon-light.svg`
@@ -185,8 +183,7 @@ export function getProjectOGData(
     image: ogImage,
     imageAlt: project.data.ogImageAlt || `${ogTitle} - Project`,
     twitter: {
-      card: "summary_large_image",
-      creator: "@plxgithub"
+      card: "summary_large_image"
     }
   };
 }
@@ -221,8 +218,7 @@ export function getListOGData(
     image: ogImage,
     imageAlt: `${title} - ${SITE.NAME}`,
     twitter: {
-      card: "summary_large_image",
-      creator: "@plxgithub"
+      card: "summary_large_image"
     }
   };
 }
@@ -251,8 +247,7 @@ export function getHomeOGData(
     image: ogImage,
     imageAlt: SITE.NAME,
     twitter: {
-      card: "summary_large_image",
-      creator: "@plxgithub"
+      card: "summary_large_image"
     }
   };
 }
