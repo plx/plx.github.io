@@ -1,0 +1,4 @@
+displayName: "Testing"
+titlePrefix: "Testing"
+description: "Briefs about testing strategies, tools, and gotchas."
+sortPriority: 21
