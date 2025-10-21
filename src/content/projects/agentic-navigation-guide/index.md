@@ -44,7 +44,7 @@ The *tool*'s primary job is to check the guide against the state of the file-sys
 
 - it parses the content of the `<agentic-navigation-guide>` tag
 - it checks if each listed path actually exists
-- if the guide mentions non-existant files, it reports useful errors
+- if the guide mentions non-existent files, it reports useful errors
 
 You can use it yourself (e.g. as a pre-commit hook, etc.), if you like.
 You can also set it up as a "hook" for Claude Code, in which case:

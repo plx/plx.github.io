@@ -10,7 +10,7 @@ repoURL: "https://github.com/plx/hdxl-xctest-retrofit/"
 [`HDXLXCTestRetrofit`](https://github.com/plx/hdxl-xctest-retrofit/) is a small library of *macros* that you can use to adapt *most*[^1] existing [`XCTest`](https://developer.apple.com/documentation/xctest) unit tests to [Swift Testing](https://developer.apple.com/documentation/testing/) without having to substantively rewrite them:
 
 1. migrate from `XCTestCase` subclasses to `@Suite` structs
-2. apply `@Test` annotation to test functions[^1]
+2. apply `@Test` annotation to test functions[^2]
 2. prepend `#` to `XCTAssert*` calls
 
 [^1]: The primary gaps are around expectations, expected failures, and attachments—IMHO those don't map cleanly to Swift Testing's APIs, so they're currently unsupported.

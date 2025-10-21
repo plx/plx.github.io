@@ -4,6 +4,9 @@ dist/
 # generated types
 .astro/
 
+# conductor build artifacts
+.conductor/
+
 # dependencies
 node_modules/
 
