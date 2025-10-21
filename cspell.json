@@ -16,6 +16,7 @@
     "Claude",
     "Codegen",
     "cplusplus",
+    "cppreference",
     "decltype",
     "devcontainer",
     "doesn",
@@ -55,6 +56,8 @@
     "uncategorized",
     "Uncategorized",
     "webfetch",
+    "worktree",
+    "worktrees",
     "WWDC",
     "xctest"
   ],
