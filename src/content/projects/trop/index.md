@@ -11,7 +11,7 @@ draft: false
 Reservations are tied to file-system paths, which has several benefits:
 
 - `trop` is idempotent, and will return sticky/stable ports when invoked with the same path
-- `trop` can automatically cleanup reservations tied to no-longer-existant paths
+- `trop` can automatically cleanup reservations tied to no-longer-existent paths
 
 The intended use case was as a drop-in replacement for hard-coded port numbers in project automation scripts, e.g.:
 
@@ -83,7 +83,7 @@ I treated this project as another "vibe-coding experiment", with a couple meta-g
 
 In other words, I would *ideally* have been able to tell Claude "go implement phase 07" and then let Claude run attended until it opened a PR for "phase 07"; for this approach to work, the code Claude wrote would obviously also need to adhere to the spec and be fit-for-purpose.
 
-I'll save a detailed summary of my strategies for a separate article, but I'll give you some early take-aways now:
+I'll save a detailed summary of my strategies for a separate article, but I'll give you some early takeaways now:
 
 1. The workflow I came up with worked surprisingly well, but "go do phase 07" was too large for a single session. As such, I had to manually "puppet" Claude through the major workflow steps, although that was thankfully low-effort for me since each step was encapsulated into a custom slash command. To get that truly hands-off experience I would need to run Claude through an orchestration wrapper—will explore that another time.
 2. Relying on Claude to review Claude's work worked reasonably well, but with one troubling pattern: in some cases where the task seemed *too complex* for Claude to understand while implementing, it'd still pass "review", too. My *suspicion* here is that "if it's too complex for Claude to code, it's also too complex for the *reviewer* to understand"; this deserves a dedicated article.
