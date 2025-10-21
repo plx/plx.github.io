@@ -1,44 +1,20 @@
 ---
 title: "*Generic* Testing For Generic Swift Code"
 cardTitle: "Testing Generic Swift Code, *Generically*"
-description: "Options For Writing Generic Tests For Generic Code."
-date: "2025-08-26"
+description: "A practical approach to writing generic tests for generic Swift code."
+date: "2025-10-18"
+draft: true
 ---
 
-This article is a review of the available strategies for "generically testing generic code":
+## Introduction
 
-- you have some generic code that you want to test
-- you want to write tests that are themselves *generic*
-- you want to run those tests over multiple concrete types
+This article explores the concept of "generic testing"—writing test suites that are *themselves* generic, and can thus be evaluated against multiple concrete types. This is particularly important when testing generic code whose behavior subtly depends on the specific types being used, even when those dependencies aren't fully captured by the generic constraints.
 
-## The Problem
+### What Is Generic Testing?
 
-The situation in which we'd *want* to write "generic tests for generic code" are cases where we're not confident that the generic type bounds fully capture the behavior we're relying upon.
-The sources of this "low confidence" are varied, and often include some combination of things like:
+Generic testing is about writing tests that mirror the genericity of the code being tested. Instead of manually writing separate test functions for each concrete type you want to test, you write the test logic *once* as generic code, then arrange for that logic to be executed against each concrete type of interest.
 
-- relying on behavior not fully captured by the generic type bounds (e.g. physical representations, value-vs-reference types in Swift[^1], inexpressible semantic expectations)
-- relying on behavior that is subtle and complex (e.g. floating-point numerics)
-- dealing with implementations of questionable correctness (e.g. in-house components)
-
-[^1]: This perhaps deserves another "Swift Wart": there's currently no way to express "`T` must have value semantics" as a generic type constraint.
-
-In practice, this means that code like the below *probably* only needs to be tested with a specific choice of concrete types (e.g. `[Int]`):
-
-```swift
-extension Sequence where Element: Equatable {
-
-  func countElements(equalTo target: Element) -> Int {
-    var count = 0
-    for element in self where element == target {
-      count += 1
-    }
-    return count
-  }
-
-}
-```
-
-In contrast, consider a generic type like the below:
+Consider a generic type like `LinearSpan<Representation>`:
 
 ```swift
 struct LinearSpan<Representation> where Representation: BinaryFloatingPoint {
@@ -47,15 +23,45 @@ struct LinearSpan<Representation> where Representation: BinaryFloatingPoint {
   var length: Representation
   var upperBound: Representation { lowerBound + length }
 
+  var center: Representation { lowerBound + (length / 2) }
+
+  func contains(_ coordinate: Representation) -> Bool {
+    lowerBound <= coordinate && coordinate <= upperBound
+  }
+
   func translated(by offset: Representation) -> LinearSpan {
     LinearSpan(lowerBound: lowerBound + offset, length: length)
   }
 }
 ```
 
-This type's behavior is relying upon *generic* floating point arithmetic, which can be subtle and non-intuitive, particularly with lower-precision types—numerical surprises can arise even at "typical UI scales"[^2]. As such, this is a case where we'd want to write tests against as many concrete types as possible, but *without* writing quite as much boilerplate this:
+This type relies on generic floating-point arithmetic, which can be surprisingly subtle. With 16-bit floats (`Float16`), numerical surprises arise even at typical UI scales—for instance:
 
-[^2]: For example, in `Float16`, `2048 + 1 == 2048`.
+- ✅ `Float16(2048) - Float16(1) == Float16(2047)`: this works as-expected
+- ❌ `Float16(2048) + Float16(1) == Float16(2049)`: this fails b/c the next `Float16` after 2048 is `2050`
+
+...which can, in turn, lead to otherwise-correct looking code producing unexpected results.
+
+Consider the following test, which verifies a seemingly-trivial property of `LinearSpan`: "the center of a span with a non-zero length is not an endpoint":
+
+```swift
+import Testing
+
+@Test
+func `LinearSpan.center is not the endpoint`() {
+  let span = LinearSpan(lowerBound: 2048.0, length: 1) // inferred to be `LineraSpan<Double>`
+  // all of these pass for `Double`, but not for `Float16`:
+  #expect(span.lowerBound < span.upperBound)
+  #expect(span.lowerBound < span.center)
+  #expect(span.center < span.upperBound)
+}
+```
+
+Since this is an article about generic testing, we'll focus on testing: discovering this  won't dwell on the numerical aspects focus on the testing aspects. Since this isn't an article about floating-point numerics, I'm not going to dwell on the numerical aspects much further. 
+
+Instead, I'm go
+
+Without generic testing, we'd be stuck writing repetitive boilerplate like:
 
 ```swift
 @Test(arguments: [0.0, 0.01, 1.0])
@@ -77,612 +83,394 @@ func nonZeroLengthImpliesDistinctBounds_Float16(length: Float16) {
 }
 ```
 
-I hope the downsides of the above are clear: it's tedious to write, it won't scale beyond "a few functions with a few types", and it has maintainability challenges that'll become immediately obvious the first time you need to modify your "shared" test logic.
+This approach doesn't scale: it's tedious to write, difficult to maintain, and the duplication makes it easy for tests to drift out of sync when requirements change.
 
-Having said that, it's not *entirely* bad, either—the boilerplate above actually has very nice ergonomics for running and debugging tests, because each test for each concrete type gets its own test function[^3].
+### Desired Properties for Generic Testing
 
-[^3]: In "Swift Testing", we can even run and debug the test for specific choices of parameter values.
+An ideal generic testing strategy should have several key properties:
 
-As such, we'd like to find a solution that preserves those ergonomic benefits, without nearly as much boilerplate; here's our tentative list of desiderata:
+**Write tests generically:** Following the famous "M + N instead of M × N" principle from generic programming, we want to write M test functions that can work with N types, not M × N separate test implementations. 
 
-1. using native test frameworks (`XCTest`, "Swift Testing")
-2. each pair of test-and-type shuold be individually runnable and debuggable (from GUI and CLI)
-3. minimal boilerplate:
-    - test *logic* should be written once (not once per type)
-    - test *invocation* should be minimal and scale nicely[^4]
+**Minimal invocation boilerplate:** While classic generic programming is about *writing* M algorithms for N types, testing requires actually *invoking* each of the M × N test-type pairs. Our case deviates from the classic formulation because we need some mechanism to trigger execution of each combination, but we want this overhead to be as lightweight as possible.
 
-[^4]: Scaling nicely, here, means "more like `M + N` than `M * N`", keeping in mind that testing is a bit different from the classic formulation of the "M + N" problem: the original formulation is just about *writing* "M algorithms" that can be used with "N types", whereas here we're writing-and-invoking "M tests" on "N types", which is inherently a bit more "M * N"-ish.
+**Standard framework integration:** The solution should work within vanilla XCTest or Swift Testing, not require a complex custom framework layered on top. Each test-type pair should be individually runnable and debuggable from both Xcode's GUI and the command line.
 
-## The Solutions
+### Overview of Topics
 
-Now that we've laid out the problem, we'll spend the rest of this article exploring our options. 
-It would be great to have multiple solutions, that satisfy all of our desiderata, but unfortunately the overall situation is more mixed:
+We'll explore three interconnected topics in this article:
 
-- we have a partial solution that work in both `XCTest` and "Swift Testing"
-- we have a complete, nearly-ideal solution that is `XCTest`-specific
-- we have *ideas* for future directions in "Swift Testing", but no complete solutions
+1. **The XCTest strategy:** Using generic test-case base classes that get subclassed for each concrete type—a solution that satisfies all our requirements
+2. **Improvement techniques:** Ways to enhance the XCTest approach through better value provisioning and validation helper functions
+3. **Swift Testing limitations:** Why there's currently no equivalently satisfactory approach for Swift Testing, despite it being more modern
 
-As such, final take
-If you just want the punchline, *if* you need to write generic tests for generic Swift, you should use `XCTest` *unless* you're at such a small scale that the boilerplate won't be a material issue.
+## The XCTest Strategy
 
-### Partial Solution: Validation Helpers
+XCTest provides an elegant solution to generic testing through class inheritance. The approach involves creating a generic base test class containing all test methods, then creating lightweight concrete subclasses for each type you want to test.
 
-The simplest solution is to admit defeat and settle for only a partial solution: we can stick with "copy and paste" as our strategy, but make it a lot less boilerplate by doing the following:
+### Basic Implementation
 
-1. put core test logic into generic validation helpers
-2. use protocols or constants for frequently-reused test values
-3. write concrete tests that call those helpers
-
-Despite being only a partial solution, this approach has many benefits:
-
-- it's adaptable to both `XCTest` and "Swift Testing"
-- it's "conceptually incremental": you can start with a single concrete type, and add more as needed
-- it winds up resembling property-based testing, which is itself advantageous
-- it scales *almost* nicely:
-  - the core logic has the "M + N" property
-  - the test invocations still scale like "M * N", but in a lightweight way
-
-As such, I suggest thinking of this approach as an intermediate step towards a more-ideal solution. Keeping that in mind, let's see it in action.
-
-#### Put Core Test Logic Into Generic Validation Helpers
-
-The first step is to pull our core test logic into generic validation helpers. 
-Writing "validation helpers" is, itself, a pretty involved topic; in thi article, I'll be writing them as free functions. 
-
-Here's what our "non-zero length implies distinct bounds" implication looks like when extracted to a stand-alone validation function:
+Let's start with a simple example testing `LinearSpan`. First, we create a generic base class:
 
 ```swift
-func validateNonZeroLengthBoundsImplications<Representation: BinaryFloatingPoint>(
-  span: LinearSpan<Representation>,
-  sourceLocation: SourceLocation = #_sourceLocation
-) {
-  // treat cases separately for better error messages
-  switch span.length > 0.0 {
-  case true:
-    #expect(
-      span.lowerBound < span.upperBound,
-      "Non-zero length should imply different bounds", 
-      sourceLocation: sourceLocation
-    )
-  case false:
-    #expect(
-      span.lowerBound < span.upperBound,
-      "(Effectively) zero length should imply equal lower and upper bounds", 
-      sourceLocation: sourceLocation
-    )
-  }  
-}
-```
+class LinearSpanTests<Representation>: XCTestCase where Representation: BinaryFloatingPoint {
 
-As an additional, more-fully-developed example, here's a validation function validating the behavior of `LinearSpan.translated(by:)`:
-
-```swift
-func validateTranslatedBy<Representation: BinaryFloatingPoint>(
-  span: LinearSpan<Representation>,
-  offset: Representation,
-  sourceLocation: SourceLocation = #_sourceLocation
-) {
-  let translated = span.translated(by: offset)
-  #expect(translated.length == span.length)  
-  #expect(translated.lowerBound == span.lowerBound + offset)
-  #expect(translated.upperBound == span.upperBound + offset)
-  // double-check our relative positioning relationships hold up:
-  if offset < 0.0 {
-    #expect(translated.lowerBound < span.lowerBound)
-  } else if offset > 0.0 {
-    #expect(translated.lowerBound > span.lowerBound)
+  // Abstract method for subclasses to provide test values
+  func representativeSpans() -> [LinearSpan<Representation>] {
+    // Base implementation returns empty array
+    // Subclasses must override to provide actual test data
+    return []
   }
-}
-```
-
-The examples above are written with "Swift Testing" in mind, but could easily be adapted to work with `XCTest`, as well—this is a very general approach.
-
-In any case, once we have these written, our tests become a bit friendlier to copy-and-paste:
-
-#### Put Frequently Reused Test Values Into Protocols Or Constants
-
-The next step is to make our test values obtainable in a way that's copy-and-paste friendly.
-As with the validation functions in the previous section, the result of this initiative is going to resemble what you'd need to do property-based testing.
-
-The minimum version of this is to define static variables in appropriate places, e.g.:
-
-```swift
-// somewhere in our test target
-extension LinearSpan {
-  static var exampleLowerBounds: [Representation] { 
-    [-10.0, -1.0, -0.1, 0.0, 0.1, 1.0, 10.0] // or whatever
-  }
-
-  static var exampleLengths: [Representation] {
-    [0.0, 0.01, 1.0] // etc.
-  }
-
-  static var exampleOffsets: [Representation] {
-    [-10.0, -1.0, -0.1, 0.0, 0.1, 1.0, 10.0] // or whatever
-  }
-
-  static var examples: [Self] {
-    var result: [Self] = [] //
-    for lowerBound in Representation.exampleLinearSpanLowerBounds {
-      for exampleLength in Representation.exampleLinearSpanLengths {
-        result.append(
-          Self(
-            lowerBound: lowerBound,
-            length: length
-          )
-        )
-      }
-    }
-  }
-}
-```
-
-In my experience, this approach of "static variables on the type" works fine for *almost* all cases. The rare exceptions are things like:
-
-- you're already doing property-based testing, and want to lean on whatever protocols you're using for that
-- you're going to re-use the same "component values" for many different types
-- it's challenging to construct examples of your subcomponents unless they adopt some kind of example-providing protocol 
-
-When those apply, a more-sophisticated approach may be beneficial, but mostly for cleanliness reasons—the end result will still be about the same.
-
-#### Write Concrete Tests That Call Those Helpers
-
-We've now reached the part we can't quite avoid: we need to write some concrete tests that call our generic validation helpers, and this is going to look like copy-and-paste—just a bit nicer.
-
-Since we've been definining everything as static properties on the type we'll be testing, we've arrived at a place that's a bit more copy-and-paste friendly:
-
-```swift
-@Test(arguments: LinearSpan<Double>.examples)
-func nonZeroLengthImpliesDistinctBounds_Double(example: LinearSpan<Double>) {
-  validateNonZeroLengthBoundsImplications(span: example)
-}
-
-@Test(arguments: LinearSpan<Float>.examples)
-func nonZeroLengthImpliesDistinctBounds_Float(example: LinearSpan<Float>) {
-  validateNonZeroLengthBoundsImplications(span: example)
-}
-
-@Test(arguments: LinearSpan<Float16>.examples)
-func nonZeroLengthImpliesDistinctBounds_Float(example: LinearSpan<Float16>) {
-  validateNonZeroLengthBoundsImplications(span: example)
-}
-```
-
-This isn't great—and is *never* going to be great—but it's a bit better than it was.
-
-TODO: check the fileprivate typealias works
-
-In any case, that's the end of this first, partial approach: it's very much *not* the complete solution we're hoping for, but it *is* a surprisingly-feasible approach at smaller scales.
-
-### Solving It Directly In `XCTest`
-
-If we're willing to stick with `XCTest`, there's a somewhat-obscure technique that will yield a *complete* solution for our problem:
-
-1. write your generic tests in a generic subclass of `XCTTestCase`
-2. create non-generic subclasses for the concrete types you want tested
-
-Let's go through this step-by-step.
-
-#### Write Generic Subclass of `XCTestCase`
-
-The first step is to write a generic "test case class" roughly like so:
-
-```swift
-class LinearSpanTests<Representation: BinaryFloatingPoint> : XCTestCase {
-
-  var spans: [LinearSpan<Representation>] {
-    LinearSpan<Representation>.examples
-  }
-
-  var offsets: [Representation] {
-    LinearSpan<Representation>.exampleOffsets
-  }
-
-  func testNonEmptySpanImplications() {
+  
+  // Generic test checking point containment
+  func testPointContainment() {
+    let spans = representativeSpans()
+    XCTAssertFalse(spans.isEmpty, "Subclass must provide test spans")
+    
     for span in spans {
-      if span.length == 0 {
-        XCTAssertEqual(
-          span.lowerBound,
-          span.upperBound,
-          "(Effectively) zero length should imply equal lower and upper bounds"
-        )
-      } else {
-        XCTAssertNotEqual(
-          span.lowerBound,
-          span.upperBound,
-          "Non-zero length should imply different bounds"
-        )
+      // Points that should be inside
+      XCTAssertTrue(span.contains(span.lowerBound), "Lower bound should be contained")
+      XCTAssertTrue(span.contains(span.upperBound), "Upper bound should be contained")
+      
+      // Calculate midpoint (being careful about overflow)
+      let center = span.lowerBound + (span.length / 2)
+      if span.lowerBound < span.upperBound {
+        XCTAssertTrue(span.contains(center), "Center should be contained")
+      }
+      
+      // Points that should be outside
+      let before = span.lowerBound - abs(span.length)
+      let after = span.upperBound + abs(span.length)
+      XCTAssertFalse(span.contains(before), "Point before span shouldn't be contained")
+      XCTAssertFalse(span.contains(after), "Point after span shouldn't be contained")
+    }
+  }
+}
+```
+
+Then we create concrete subclasses for each type we want to test:
+
+```swift
+final class DoubleLinearSpanTests: LinearSpanTests<Double> {
+  override func representativeSpans() -> [LinearSpan<Double>] {
+    return [
+      LinearSpan(lowerBound: 0, length: 1),
+      LinearSpan(lowerBound: -100, length: 200),
+      LinearSpan(lowerBound: 1e-10, length: 1e-8)
+    ]
+  }
+}
+
+final class FloatLinearSpanTests: LinearSpanTests<Float> {
+  override func representativeSpans() -> [LinearSpan<Float>] {
+    return [
+      LinearSpan(lowerBound: 0, length: 1),
+      LinearSpan(lowerBound: -100, length: 200),
+      LinearSpan(lowerBound: 1e-6, length: 1e-4)  // Adjusted for Float precision
+    ]
+  }
+}
+
+final class Float16LinearSpanTests: LinearSpanTests<Float16> {
+  override func representativeSpans() -> [LinearSpan<Float16>] {
+    return [
+      LinearSpan(lowerBound: 0, length: 1),
+      LinearSpan(lowerBound: -100, length: 200),
+      LinearSpan(lowerBound: 0.001, length: 0.1)  // Much coarser due to Float16 limits
+    ]
+  }
+}
+```
+
+### Xcode Quirks and Caveats
+
+While this technique works well, Xcode sometimes exhibits quirky behavior with generic test classes:
+
+- The test navigator may occasionally show the generic base class as runnable (it shouldn't be)
+- Test discovery might briefly fail to recognize new concrete subclasses until you build
+- Error messages in failed assertions sometimes show the base class name rather than the concrete subclass
+
+None of these issues affect the actual execution of tests, but they can be momentarily confusing during development.
+
+### Why This Approach Is Satisfactory
+
+The XCTest strategy meets all our desired criteria:
+
+**Truly generic test logic:** The test methods in the base class are written once and contain no type-specific code. All type-specific behavior is isolated to the concrete subclasses.
+
+**Minimal dispatch overhead:** Creating a new test target requires only:
+- Declaring a subclass (one line of code)
+- Overriding methods to provide test values (typically just a few lines)
+
+Each concrete subclass automatically inherits all test methods from the base class, and XCTest's runtime handles test discovery and execution. The result is that adding a new type to test requires minimal boilerplate while maintaining full integration with Xcode's test runner.
+
+## Improving the XCTest Approach
+
+While the basic XCTest strategy works well, we can enhance it in two key ways: using protocols for systematic value provisioning and extracting validation logic into helper functions.
+
+### Generic Protocols for Test Values
+
+Rather than having each subclass independently implement `representativeSpans()`, we can use protocols to systematize how test values are provided:
+
+```swift
+protocol LinearSpanTestValueProviding: BinaryFloatingPoint {
+  static var representativeSpanParameters: [(lowerBound: Self, length: Self)] { get }
+  static var boundaryCases: [Self] { get }
+  static var typicalValues: [Self] { get }
+}
+
+// Provide conformances for our test types
+extension Double: LinearSpanTestValueProviding {
+  static let representativeSpanParameters = [
+    (lowerBound: 0.0, length: 1.0),
+    (lowerBound: -100.0, length: 200.0),
+    (lowerBound: 1e-10, length: 1e-8),
+    (lowerBound: .leastNormalMagnitude, length: .ulpOfOne)
+  ]
+  
+  static let boundaryCases = [0.0, .infinity, -.infinity, .nan]
+  static let typicalValues = [0.0, 1.0, -1.0, 42.0, 1e10, 1e-10]
+}
+
+extension Float16: LinearSpanTestValueProviding {
+  static let representativeSpanParameters = [
+    (lowerBound: Float16(0), length: Float16(1)),
+    (lowerBound: Float16(-100), length: Float16(200)),
+    (lowerBound: Float16(0.001), length: Float16(0.1))  // Coarser values
+  ]
+  
+  static let boundaryCases = [Float16(0), .infinity, -.infinity, .nan]
+  static let typicalValues = [Float16(0), Float16(1), Float16(-1), Float16(42)]
+}
+```
+
+Now our base test class can be even more generic:
+
+```swift
+class LinearSpanTests<Representation>: XCTestCase 
+  where Representation: BinaryFloatingPoint & LinearSpanTestValueProviding {
+  
+  func testPointContainment() {
+    for (lowerBound, length) in Representation.representativeSpanParameters {
+      let span = LinearSpan(lowerBound: lowerBound, length: length)
+      // ... test logic using span
+    }
+  }
+  
+  func testBoundaryBehavior() {
+    for value in Representation.boundaryCases {
+      // Test behavior with boundary values
+      let span = LinearSpan(lowerBound: value, length: 1)
+      // ... assertions about boundary behavior
+    }
+  }
+}
+```
+
+This approach starts to resemble property-based testing, where we're testing properties that should hold across a range of inputs, but with more control over the specific values used.
+
+### Validation Helper Functions
+
+Extracting test logic into validation helpers provides two major benefits: increased semantic clarity in tests and reusability across similar test contexts.
+
+Consider this validation helper for span ordering:
+
+```swift
+func verify<R: BinaryFloatingPoint>(
+  span: LinearSpan<R>,
+  isStrictlyBefore other: LinearSpan<R>,
+  sourceLocation: StaticString = #filePath,
+  line: UInt = #line
+) {
+  XCTAssertLessThan(
+    span.upperBound, other.lowerBound,
+    "Span \(span) should be strictly before \(other)",
+    file: sourceLocation, line: line
+  )
+  
+  // Additional semantic checks
+  XCTAssertFalse(
+    span.overlaps(with: other),
+    "Strictly ordered spans should not overlap",
+    file: sourceLocation, line: line
+  )
+}
+
+func verifyConsistentOrdering<T: Comparable>(
+  _ values: [T],
+  sourceLocation: StaticString = #filePath,
+  line: UInt = #line
+) {
+  for i in 0..<values.count {
+    for j in 0..<values.count {
+      let vi = values[i]
+      let vj = values[j]
+      
+      // Verify ordering is internally consistent
+      if i < j {
+        XCTAssertLessThanOrEqual(vi, vj, file: sourceLocation, line: line)
+      }
+      if i == j {
+        XCTAssertEqual(vi, vj, file: sourceLocation, line: line)
+      }
+      if i > j {
+        XCTAssertGreaterThanOrEqual(vi, vj, file: sourceLocation, line: line)
+      }
+      
+      // Verify Comparable laws
+      if vi < vj {
+        XCTAssertFalse(vj < vi, "Comparable antisymmetry violated", 
+                       file: sourceLocation, line: line)
       }
     }
   }
+}
+```
 
-  func testTranslatedBy() {
-    for span in spans {
-      for offset in offset {
-        let translated = span.translated(by: offset)
-        XCTAssertEqual(translated.length, span.length)
-        XCTAssertEqual(translated.lowerBound, span.lowerBound + offset)
-        XCTAssertEqual(translated.upperBound, span.upperBound + offset)
-        if offset < 0.0 {
-          XCTAssertLessThan(translated.lowerBound, span.lowerBound)
-        } else if offset > 0.0 {
-          XCTAssertGreaterThan(translated.lowerBound, span.lowerBound)
-        }
-      }
-    }
+These helpers can be reused across different test contexts. For example, `verifyConsistentOrdering` is useful for testing any custom `Comparable` conformance, while `verify(span:isStrictlyBefore:)` encapsulates domain-specific invariants about span relationships.
+
+Here's a more complete example showing validation helpers in action:
+
+```swift
+func validateTranslatedBy<R: BinaryFloatingPoint>(
+  original: LinearSpan<R>,
+  offset: R,
+  sourceLocation: StaticString = #filePath,
+  line: UInt = #line
+) {
+  let translated = original.translated(by: offset)
+  
+  // Length should be preserved
+  XCTAssertEqual(
+    translated.length, original.length,
+    "Translation should preserve span length",
+    file: sourceLocation, line: line
+  )
+  
+  // Bounds should be shifted by offset
+  let expectedLower = original.lowerBound + offset
+  let expectedUpper = original.upperBound + offset
+  
+  // Use appropriate comparison for floating point
+  if offset.isFinite && original.lowerBound.isFinite {
+    XCTAssertEqual(
+      translated.lowerBound, expectedLower,
+      accuracy: R.ulpOfOne * max(abs(expectedLower), 1),
+      "Lower bound should be translated by offset",
+      file: sourceLocation, line: line
+    )
   }
-
+  
+  // Verify containment relationships are preserved
+  let testPoint = original.lowerBound + (original.length / 2)
+  if original.contains(testPoint) && offset.isFinite {
+    XCTAssertTrue(
+      translated.contains(testPoint + offset),
+      "Translated span should contain translated points",
+      file: sourceLocation, line: line
+    )
+  }
 }
 ```
 
-In other words: you're writing a generic base class that includes generic unit tests. Note that to make this work, you'll need a generic way to obtain your example values—this will look *a lot* like what we just did for the partial solution based on validation functions. Also note that for larger test suites, you'll probably want to do two more things:
+Validation helpers make tests more semantic and help identify exactly what property is being tested. They're particularly valuable when testing numerical code where the same mathematical properties need to be verified across multiple scenarios.
 
-- to make tests halt immediately on the first error (e.g. via `continueAfterFailure`)
-- to have test-specific shorthands for iteration (`forEachSpan`, `forEachSpanAndOffset`, etc.) 
+## Swift Testing Limitations
 
-#### Create Non-Generic Subclasses of Your Base Class
+Despite Swift Testing being the more modern framework with better Swift integration in many ways, it currently lacks any satisfactory approach for generic testing comparable to what we've achieved with XCTest.
 
-Now that we have our base class ready, how are we doing?
+### No Generic Test-Case Classes
 
-The good news is that we're a lot closer to our goal: we've written our generic tests once, generically, rather than via copy-and-paste.
+Swift Testing doesn't have test-case classes at all—tests are just functions, potentially organized within structs annotated with `@Suite`. This fundamental architectural difference means the XCTest inheritance strategy has no direct equivalent.
 
-The bad news is that we don't (yet) have any runnable tests[^5]. To have *runnable* tests we need to create some non-generic subclasses of our base class, but this is thankfully very, very easy:
+### Test Functions Cannot Be Generic
 
-[^5]: Conceptually it makes sense that these aren't runnable in generic form; mechanically, they're not runnable because (a) `XCTest` needs to create an instance of the class to run its tests, (b) there's no way to instantiate an instance of a generic class without specifying concrete choices for the type parameters, and (c) there's no direct way to *tell* `XCTest` to instantiate such-and-such generic test-case class with such-and-such concrete type parameters.
-
+You might hope to write something like:
 
 ```swift
-class LinearSpanTests_Double : LinearSpanTests<Double> {}
-class LinearSpanTests_Float : LinearSpanTests<Float> {}
-class LinearSpanTests_Float16 : LinearSpanTests<Float16> {}
-```
-
-That's it, actually! With those in place, we'll now have a complete solution in place:
-
-- we've written our generic tests once, generically
-- we're invoking our tests on each concrete type we care about
-- we have *very* minimal per-type boilerplate
-
-#### Advice: Validation Helpers Are Still Useful
-
-In the example above, I inlined all the generic test logic into the test methods in our generic base test class.
-
-This works and is helpful for *illustration*, but *in real life* I'd still encourage factoring the generic logic into validation helpers whenever possible. The benefits of doing so are the same as always: 
-
-- you can reuse consistent assertion patterns in multiple tests
-- you get "economies of scale" that help write really-thorough tests
-- you get some future flexibility (e.g. it's easier to migrate to alternative organizational patterns)
-
-This is also why I started with the validation-function based partial solution—this `XCTest` based solution can be seen as building on top of that foundation.
-
-#### Warning: Expect Xcode Quirks
-
-In my experience, this technique has always fallen into an unusual limbo:
-
-- *`XCTest`* understands the technique and runs everything as expected
-- *Xcode* doesn't understand the technique, and acts a bit quirky
-
-In our example above, what we'd want to see from Xcode's test UI is:
-
-- `LinearSpanTests_Double`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-- `LinearSpanTests_Float`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-- `LinearSpanTests_Float16`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-
-In practice, we're probably going to see something else, but the details vary by Xcode version.
-
-In more-recent Xcode versions, you'll probably see something like this:
-
-- `LinearSpanTests`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-- `LinearSpanTests_Double`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-- `LinearSpanTests_Float`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-- `LinearSpanTests_Float16`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-
-The entries for `LinearSpanTests` are essentially "phantoms": Xcode thinks they're real, includes them in its test counts, and lets you "run" them, but this is an illusion—they're not runnable, they won't actually run, and they'll never "go green". A bit strange, but thankfully just a moderately-confusing, GUI-level annoyance—there's no *functional* issue.
-
-In older Xcode versions, the behavior is even stranger: when you *first* opened the project, you'd see a hierarchy with a lot of empty test-case classes, like this:
-
-- `LinearSpanTests`
-- `LinearSpanTests_Double`
-- `LinearSpanTests_Float`
-- `LinearSpanTests_Float16`
-
-*After* the first time you ran the tests, however, the hierarchy would get filled out to look like this:
-
-- `LinearSpanTests`
-- `LinearSpanTests_Double`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-- `LinearSpanTests_Float`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-- `LinearSpanTests_Float16`
-  - `testNonEmptySpanImplications`
-  - `testTranslatedBy`
-
-This makes sense if you think about the implementation: 
-
-- `XCTest` uses runtime introspection to *discover* the test case classes and their test methods
-- Xcode *presumptively* uses a two-phase approach:
-  - *during editing*, it relies on heuristics to identify tests in the source
-  - *after running tests*, it incorporates information produced by `XCTest` during execution
-
-Still a bit quirky and confusing to see, but seemingly a thing of the past.
-
-### Solving It In *Swift Testing*
-
-Whereas `XCTest` provides us with a *complete* solution, *Swift Testing* does not: on the one hand, the technique I just illustrated relies on inheritance between test-case classes, which has no equivalent in *Swift Testing*; on the other hand, there's seemingly no straightforward way to may to achieve the same outcome, either.
-
-More-precisely, there's a large number of concepts that *almost* work, but fail due to some subtle, blocking flaw.
-
-#### Passing Metatype Values
-
-Conceptually it'd be nice if we could do this:
-
-```swift
-// pass the types to check into our test function:
-@Test(arguments: [Int.self, Int8.self, Int16.self])
-func additionIsCumulative(type: (any Equatable & AdditiveArithmetic & ExpressibleByIntegerLiteral).Type) {
-  // hop over to a generic validation helper to perform the test:
-  verifyCommutativeAddition(forType: type)
-}
-
-private func verifyCommutativeAddition<T>(forType type: T.Type) where T: Equatable & AdditiveArithmetic & ExpressibleByIntegerLiteral {
-  let a = 1 as T
-  let b = 2 as T
-  #expect(a + b == b + a)
-}
-```
-
-Unfortunately, this doesn't quite work because the metatype *values* don't conform to the relevant protocols (e.g. a *value* of `any (Equatable & AdditiveArithmetic & ExpressibleByIntegerLiteral).Type` doesn't "count" as conforming to `Equatable & AdditiveArithmetic & ExpressibleByIntegerLiteral`).
-
-#### Using Parameter Packs
-
-A related concept that comes a bit *closer* to working is to use parameter packs like so:
-
-```swift
-// types no longer passed into test function:
 @Test
-func variadicCommutivity() {
-  verifyCommutativeAddition(Float.self, Float16.self, Double.self)
-}
-
-// variadic outer helper:
-private func verifyCommutativeAddition<each T: AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral>(
-  _ types: repeat (each T).Type,
-  sourceLocation: SourceLocation = #_sourceLocation
-) {
-  for type in repeat each types {
-    verifyCommutativeAddition(forType: type, sourceLocation: sourceLocation)
-  }
-}
-
-// generic inner helper (unchanged from before):
-private func verifyCommutativeAddition<T: AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral>(
-  forType type: T.Type,
-  sourceLocation: SourceLocation = #_sourceLocation
-) {
-  let a: T = 1
-  let b: T = 2
-  #expect(a + b == b + a, sourceLocation: sourceLocation)
+func testSpanTranslation<T: BinaryFloatingPoint>() {
+  let span = LinearSpan<T>(lowerBound: 0, length: 1)
+  // ... test logic
 }
 ```
 
-The *good news* is this approach actually (a) compiles and (b) works as expected—we really are passing in a list of metatypes and then running our generic tests over each one. The *bad news* is that this pattern strongly resists any attempt to make it more generic and reusable, because doing so falls outside the scope of what's currently expressible within Swift's type system.
+But this isn't supported—test functions in Swift Testing cannot have generic parameters. The framework needs to know all test functions at compile time with concrete signatures.
 
-Here's a quick gallery of what doesn't work:
+### Failed Approach: Metatypes and Parameter Packs
 
-```swift
-// doesn't work b/c you can't express `T: TypeConcept` if `TypeConcept` is a type parameter
-func forEachMetatype<TypeConcept, each T: TypeConcept>(
-  _ types: repeat (each T).Type,
-  body: (TypeConcept.Type) -> Void
-) {
-  for type in repeat each types {
-    body(type)
-  }
-}
-
-// won't work even if we are ok writing one of these per "concept"?
-func forEachAdditiveArithmeticType<each T: AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral>(
-  _ types: repeat (each T).Type,
-  body: (any (AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral).Type) -> Void
-) {
-  for type in repeat each types {
-    // doesn't work b/c the compiler doesn't think `type` is convertible to `any (AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral)`    
-    body(type) // won't work even with explicit `as any (AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral).Type`    
-  }
-}
-
-// still won't work even if we force-cast: this function now compiles,
-// but you can't use it at the call site b/c of the issue with metatypes we 
-// were seeing *before* we started using parameter packs
-func forEachAdditiveArithmeticType<each T: AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral>(
-  _ types: repeat (each T).Type,
-  body: (any (AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral).Type) -> Void
-) {
-  for type in repeat each types {
-    body(type as! any (AdditiveArithmetic & Equatable & ExpressibleByIntegerLiteral).Type)
-  }
-}
-```
-
-
-
-```swift
-func forEachFloating
-
-1. Swift doesn't allow you to pass a "concrete 
-
-- you can't 
-
-
-- provide a generic 
-
-*At time of writing*, the *Swift Testing* framework has no direct equivalent to the technique I just outlined for doing generic testing via `XCTest`: the `XCTest` strategy inherently relies on inheritance relationships between test-case classes, which doesn't even exist as a concept in *Swift Testing*.
-
-### Quick Approach: Copy & Paste
-
-If you *must* use "Swift Testing", have a small number of generic tests to write, and don't want to over-invest in these capabilities, I'd suggest just optimizing for copy-and-paste:
-
-- write a generic validation function suitable for use as the body of a test
-- write an easily-editable concrete test that calls that validation function
-- copy-and-paste it for each concrete type of interest
-
-Far from exciting, but often the best choice *when* your situation is simple.
-Here's what it looks like "in action", taking advantage of `Swift Testing`'s support for parameterized tests so as to have the capability to run against multiple test-value lists:
-
-```swift
-// concrete tests, designed to be copy-and-paste friendly:
-@Test
-func testPushAndPop_Int() {
-  validatedPushAndPop(valueType: Int.self)
-}
-
-@Test
-func testPushAndPop_String() {
-  validatedPushAndPop(valueType: String.self)
-}
-
-@Test
-func testPushAndPop_Double() {
-  validatedPushAndPop(valueType: Double.self)
-}
-
-// generic validation helper, with heavyweight validation logic:
-func validatedPushAndPop<T: Equatable & TestValueProviding>(
-  valueType: T.Type,
-  sourceLocation: SourceLocation = #_sourceLocation
-) {
-  let values = T.testValues
-  let valueCount = values.count
-  // check we have usable test values:
-  #expect(valueCount > 0, "We need at least one value in `distinctValuesForTesting()`", sourceLocation: sourceLocation)
-
-  var stack = Stack<T>()
-  // stack starts empty
-  #expect(stack.count == 0, "Stack should be empty to start", sourceLocation: sourceLocation)
-
-  // push values in, one by one
-  for (index, value) in values.enumerated() {
-    #expect(!stack.contains(value), "Stack shouldn't have the value yet.", sourceLocation: sourceLocation)
-    #expect(stack.count == index, "Stack count should match the number of values pushed", sourceLocation: sourceLocation)
-    stack.push(value)
-    #expect(stack.contains(value), "Stack should have the value after it's been pushed.", sourceLocation: sourceLocation)
-  }
-
-  // verify count is what it should be:
-  #expect(stack.count == valueCount, "Stack count should match the number of values pushed", sourceLocation: sourceLocation)
-
-  // pop values out, verify the order is what we expected
-  for (index, value) in values.reversed().enumerated() {
-    #expect(stack.count ==  valueCount - index, "Stack count should match the number of values remaining to pop", sourceLocation: sourceLocation)
-    #expect(stack.contains(value), "Stack should contain the value until we've popped it.", sourceLocation: sourceLocation)
-    #expect(stack.pop() == value, "Found an inconsistent order while popping", sourceLocation: sourceLocation)
-    #expect(!stack.contains(value), "Stack shouldn't have the value after we've popped it.", sourceLocation: sourceLocation)
-  }
-  #expect(nil == stack.pop(), "Popping an empty stack should return `nil`", sourceLocation: sourceLocation)
-  #expect(0 == stack.count, "Stack should be empty after popping all values", sourceLocation: sourceLocation)
-}
-```
-
-### An Approach That Doesn't Work: Metatype Arguments
-
-Seeing the above, you might think you use *Swift Testing*'s data-driven test capability to do better, e.g. something like this:
+One might attempt to use Swift Testing's parameterized test feature with metatypes:
 
 ```swift
 @Test(
   arguments: [
-    Half.self as (Sendable & BinaryFloatingPoint).Type,
-    Float.self as (Sendable & BinaryFloatingPoint).Type,
-    Double.self as (Sendable & BinaryFloatingPoint).Type,
+    Float16.self as any BinaryFloatingPoint.Type,
+    Float.self as any BinaryFloatingPoint.Type,
+    Double.self as any BinaryFloatingPoint.Type
   ]
 )
-func zeroPlusZeroIsZero(metatype: (any Sendable & BinaryFloatingPoint).Type) {
-  // *do something here to check `0 == 0 + 0`
+func testWithMetatype(type: any BinaryFloatingPoint.Type) {
+  // Attempt to use 'type' to perform generic testing...
 }
 ```
 
-If you try to make it work, you'll quickly hit numerous seemingly-impassable issues, because what you can do with protocol-metatype values is *extremely limited*. If there is some clever way to make this actually work, it'd be cool to find out what it is!
+Unfortunately, this approach quickly hits fundamental limitations. What you can do with protocol-metatype values is extremely limited—you can't use them to instantiate generic types or call generic functions in any useful way. Parameter packs don't help here either, as they solve a different problem (variadic generic parameters) and still require compile-time resolution.
 
-### Future Approach: Macros?
+### Macro-Based Solutions: A Future Possibility?
 
-The approach above works, but is only really feasible for small-scale test suites—once we have a large number of tests, the copy-and-paste overhead will quickly become untenable. *At time of writing*, the only feasible solution appears to be writing a suite of custom macros, but I consider this speculative:
-
-- there's a large "design space" for how such macros might work
-- I haven't *personally* experimented with implementing them
-- some of the tools we might need are still behind feature flags (body macros, code-block macros, etc.)
-- IMHO we'd want to have careful support for both parameterized and ordinary tests
-
-Having said all that, I have some strong intuitions for the general shape I'd want, which is roughly like this:
+The most promising future direction appears to be custom macros that could generate the necessary boilerplate. Imagine something like:
 
 ```swift
-@Suite("Stack<T>")
-@GenerateTestSpecializations(types: Int.self, String.self, Double.self)
-struct StackTests {
-
-  // simple example
-  @GenericTestTemplate("Empty Stack ({{typename}})")
-  private func _verifyEmptyStack<T: Equatable>(type: T.Type, sourceLocation: SourceLocation = #_sourceLocation) {
-    validateEmptyStack(of: type)
-  }
-
-  // expands to something like these:
-  @Test
-  func `Empty Stack (Int)`() {
-    _verifyEmptyStack(type: Int.self)
-  }
-
-  @Test
-  func `Empty Stack (String)`() {
-    _verifyEmptyStack(type: String.self)
-  }
-
-  @Test
-  func `Empty Stack (Double)`() {
-    _verifyEmptyStack(type: String.self)
+@Suite("LinearSpan<T>")
+@GenerateTestSpecializations(types: Float16.self, Float.self, Double.self)
+struct LinearSpanTests {
+  
+  @GenericTestTemplate("Translation preserves length ({{typename}})")
+  private func _testTranslation<T: BinaryFloatingPoint>(type: T.Type) {
+    let span = LinearSpan<T>(lowerBound: 0, length: 1)
+    let translated = span.translated(by: 10)
+    #expect(translated.length == span.length)
   }
 }
 ```
 
-...except with a lot more rigor around:
+This would expand to create individual test functions for each type. However, this remains speculative—at time of writing, the necessary macro capabilities are either unavailable or still behind feature flags. Additionally, designing such a system well would require careful consideration of parameterized tests, multiple generic parameters, and how to specify type-dependent test metadata.
 
-- handling *multiple* generic parameters 
-- generating parameterized tests (e.g. to emit specialized test functions that take arguments)
-- clarifying what values are available for the `{{...}}` blocks in the above (or finding some other scheme for specifying generic-parameter-dependent values like test names)
-- generating test tags, documentation comments, and other test nice-to-haves in a reusable, expressive way (including in particular some way of specifying generic-parameter-dependent values)
+### Current Recommendation: Stick with XCTest
 
-That's a lot! Generally my instinct is to be skeptical of feature creep, but in this specific case my intuition is that the fully-operational solution would be *actually usable* in a way that a feature-limited "MVP" just wouldn't be. That's a suspicion I'd like to be wrong about, but for now it's my best guess vis-a-vis this set of features.
+Given these limitations, if you need to write generic tests for generic Swift code at any non-trivial scale, XCTest remains the better choice. While you could write validation helpers and copy-paste concrete test functions in Swift Testing, this approach only works for very small test suites.
 
-Additionally, I am curious to see if (and *when*) the Swift Testing maintainers pursue anything in this direction; it feels like an obvious gap, but it's potentially-also an obvious gap without a single obvious "right answer". It also feels like something that will benefit from waiting some other features stabilize (body and code-block macros no longer behind feature flags, further capabilities for parameter packs, etc.)—it's definitely something to keep an eye on!
+For simple cases with just a few tests and types, the copy-paste approach with validation helpers is acceptable:
 
-## Remarks
+```swift
+// Validation helper
+func validateStackBehavior<T: Equatable>(type: T.Type, values: [T]) {
+  var stack = Stack<T>()
+  for value in values {
+    stack.push(value)
+  }
+  for value in values.reversed() {
+    #expect(stack.pop() == value)
+  }
+}
 
-We've now reached the end of this "brief".
+// Concrete tests (copy-pasted)
+@Test func testStack_Int() {
+  validateStackBehavior(type: Int.self, values: [1, 2, 3])
+}
 
-When I started out writing this, I legitimately thought it would be a brief: "here's a useful test pattern that works in `XCTest` and has no equivalent in Swift Testing (and *despite* Swift Testing being so much friendlier to advanced Swift features, etc.).
+@Test func testStack_String() {
+  validateStackBehavior(type: String.self, values: ["a", "b", "c"])
+}
+```
 
-That's still an interesting facet of the topic, but not the only interesting angle on this topic—whence the very elaborate "brief" you see here.
+But this doesn't scale—once you have dozens of tests across multiple types, the maintenance burden becomes untenable.
 
-## Appendix: Motivating Generic Testing
+## Conclusion
 
-As noted above, I used `Stack<T>` as our example due to its familiarity: I can safely assume my readers *almost surely* need to explanation for what it is and how it should behave. As also noted, however, it's unfortunately an uninteresting example to *motivate* the need for generic testing, because the behavior of any reasonable implementation will truly be, well, *generic*—the specifics of `T` just aren't involved in any meaningful way.
+Generic testing—writing test suites that are themselves generic—is a powerful technique for validating generic Swift code, particularly when that code's correctness depends on subtle properties of the concrete types being used. This is especially important for numerical and algorithmic code, where behaviors can vary significantly between types like `Float16`, `Float`, and `Double`.
 
-As a better example, consider something like a binary 
+The XCTest-based approach using generic base classes provides an excellent solution that meets all our requirements: truly generic test logic, minimal invocation overhead, and full integration with standard tooling. Combined with validation helpers and systematic value provisioning through protocols, it creates a robust testing strategy that scales well.
 
-Testing your generics becomes more critical the more the correctness of the generic code depends on the specifics being abstracted into generics. In my experience, this can be particularly the case even for simple-looking code generic involving floating-point types: it's natural to write that type of code as-if you're dealing with arbitary-precision real numbers, only to wind up with lots of small "surprises" due to differences in precision between `Float`, `Double`, and now also `Half`. 
+While it's somewhat ironic that the older XCTest framework handles this advanced use case better than the more modern Swift Testing, the current reality is clear: if you need generic testing capabilities, XCTest is the way to go. Swift Testing may eventually grow to support these use cases—perhaps through macros or other language features—but for now, the situation is what it is.
 
-For example, 
+The good news is that the XCTest solution works well. It's battle-tested, integrates perfectly with Xcode, and provides all the flexibility needed to thoroughly test generic code. For those working on libraries with complex generic algorithms or numerical code with multiple floating-point types, mastering this pattern is well worth the investment.
