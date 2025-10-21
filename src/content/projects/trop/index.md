@@ -77,16 +77,16 @@ This pattern *greatly* increases testability, and has additional side benefits (
 I treated this project as another "vibe-coding experiment", with a couple meta-goals; my desired workflow was:
 
 - spend a lot of time on the specification
-- have Claude decompose it into a phased implemention plan
+- have Claude decompose it into a phased implementation plan
 - have Claude Code write *all* the code
 - operate Claude Code in a "high-autonomy, hands-off" mode
 
 In other words, I would *ideally* have been able to tell Claude "go implement phase 07" and then let Claude run attended until it opened a PR for "phase 07"; for this approach to work, the code Claude wrote would obviously also need to adhere to the spec and be fit-for-purpose.
 
-I'll save a detailed summary of my strategies for a separate article, but I'll give you some early takeways now:
+I'll save a detailed summary of my strategies for a separate article, but I'll give you some early take-aways now:
 
 1. The workflow I came up with worked surprisingly well, but "go do phase 07" was too large for a single session. As such, I had to manually "puppet" Claude through the major workflow steps, although that was thankfully low-effort for me since each step was encapsulated into a custom slash command. To get that truly hands-off experience I would need to run Claude through an orchestration wrapper—will explore that another time.
-2. Relying on Claude to review Claude's work worked reasonably well, but with one troubling pattern: in some cases where the task seemed *too complex* for Claude to understand while implementing, it'd still pass "review", too. My *susicion* here is that "if it's too complex for Claude to code, it's also too complex for the *reviewer* to understand"; this deserves a dedicated article.
+2. Relying on Claude to review Claude's work worked reasonably well, but with one troubling pattern: in some cases where the task seemed *too complex* for Claude to understand while implementing, it'd still pass "review", too. My *suspicion* here is that "if it's too complex for Claude to code, it's also too complex for the *reviewer* to understand"; this deserves a dedicated article.
 3. Towards the end I had to bring in ChatGPT's Codex, which proved *invaluable*. Another "needs an article" topic, but the highlights are:
     - Claude is like an artificial, highly-steerable "team member"
     - Codex is more like an "oracle": consistently provides correct answers to challenging tasks, but isn't as (obviously) steerable (TBD)

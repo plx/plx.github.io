@@ -20,7 +20,7 @@ draft: true
    - Language style guides, file organization guides, etc.
 3. Create 
 4. Use slash commands to compress delegation to subagents:
-   - Protect main agent context by letting it use slash commands when dispatching sub-agents "run the /foo:bar command on $quxx").
+   - Protect main agent context by letting it use slash commands when dispatching sub-agents "run the /foo:bar command on $quux").
 
 
 Here's something that's been bothering me: we have great terminology for performance work at the extremes, but there's no agreed-upon shorthand for all the little details that actually makes apps feel fast.
