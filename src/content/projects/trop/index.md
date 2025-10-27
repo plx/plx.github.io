@@ -58,6 +58,56 @@ Easy to see how things could go sideways here: in the best outcome, agent burns 
 Note that `trop` is purely a local system, and is very much *not* meant to handle large-and-complex scenarios—you won't need `trop` if you're already using kubernetes.
 It's also not meant to handle the even-more-advanced practice of having multiple concurrent agents in the same worktree—`trop`'s design is only intended for the "one agent per worktree" strategy.
 
+## Update: "Why Not Just..."
+
+A common bit of feedback I've received on this project is that `trop` is redundant:
+
+- why not just use `netstat` and `grep`?
+- why not just use `lsof` and `awk`?
+- doesn't *some web framework*'s preview server *automatically* find a free port?
+- can't you just bind to port 0?
+
+Since these points are *accurate*, I've added a section better illustrating the value `trop` adds above-and-beyond any of the above.
+
+### Port Stability
+
+Using `trop` to associate reservations with worktrees guarantees reasonable stability of each worktree's port reservations.
+This, in turn, makes it easy for the human operator to "check in" on each worktree's activity in a browser, since the port-to-worktree mapping will *generally* remain stable for the worktree's lifetime.
+In other words, it makes it a lot easier to keep track of things:
+
+- localhost:4000: change categories to tags
+- localhost:4001: fix bullet-point formatting
+- localhost:4002: correct subtitle markdown rendering
+- localhost:4003: address ARIA problems in article listing
+
+### Token Efficiency
+
+Since `trop` can be used as a drop-in substitute for hardcoded port numbers, it makes *launching servers* a bit more token-efficient: 
+
+- the agent knows the port it should use
+- it directly invokes the server at that port
+- upon success, server is at expected port
+
+Nothing magic, but reduces the need to burn tokens either (a) identifying a port to use or (b) figuring out the port to-which server wound up bound.
+
+### Cross-File Consistency
+
+I think this is the strongest benefit for `trop`, and it's something I didn't anticipate when I started the project: 
+
+- `trop reserve` is idempotent(ish) vis-a-vis the invocation path
+- coding agents are (usually) invoked from the worktree root
+- ergo, `trop reserve` will provide consistent results:
+  - when invoked from within a justfile
+  - when invoked from within a slash command (etc.)
+
+As such, you can use `trop` for additional token efficiency like so:
+
+- use it in the justfile to obtain the port used for the preview server
+- also use it in, say, a slash command to tell Claude what port to expect (e.g. `- preview-server port: !\`trop reserve\``)
+- keep the preview command's output *quiet*, reducing the token cost of launching it
+
+Nothing *earth-shattering*, but still a useful capability to help with token-efficiency.
+
 ## Implementation Remarks
 
 The CLI is implemented in Rust, and uses SQLite for two distinct purposes:

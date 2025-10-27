@@ -14,15 +14,21 @@ The repository includes a justfile for convenient local development:
 
 1. **Initial setup** (one-time):
    ```bash
+   # Install trop (port reservation tool)
+   # Required for automatic port management when running multiple repo checkouts
+   cargo install trop-cli
+
    # Install dependencies
    npm install
    # OR using justfile
    just install
    ```
 
+   **About trop**: This project uses [trop](https://github.com/plx/trop) for automatic port management. When you run `just preview`, trop automatically assigns a unique port for each repository checkout directory. This allows you to run multiple checkouts simultaneously without port conflicts. Each directory gets the same port consistently (idempotent), so your bookmarks and workflows remain stable.
+
 2. **Development commands** (via justfile):
    ```bash
-   # Start Astro dev server for preview (default port 4000)
+   # Start Astro dev server for preview (port automatically allocated by trop)
    just preview
    
    # Start server and open in browser
