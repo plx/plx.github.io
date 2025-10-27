@@ -1,7 +1,7 @@
 # Astro development commands
 
-# Default port
-port := "4000"
+# Default port (automatically allocated by trop per-directory)
+port := `trop reserve`
 
 # Build: builds the site for production
 build:

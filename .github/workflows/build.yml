@@ -30,7 +30,16 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-      
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: true
+
+      - name: Install trop
+        run: cargo install trop-cli --locked
+
       - name: Install Dependencies
         run: npm ci
       
