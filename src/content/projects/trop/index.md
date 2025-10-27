@@ -67,9 +67,11 @@ A common bit of feedback I've received on this project is that `trop` is redunda
 - doesn't *some web framework*'s preview server *automatically* find a free port?
 - can't you just bind to port 0?
 
-Since these points are *accurate*, I've added a section better illustrating the value `trop` adds above-and-beyond any of the above.
+Since these points are *accurate*, I've added a section better illustrating the value `trop` adds above-and-beyond any of the above. Keep in mind that the truth is this tool exists *in no small part* purely as an exercise in "vibe coding", but it's not purely an exercise—it does have some benefits vis-a-vis other solutions.
 
-### Port Stability
+### Specific Benefits
+
+#### Port Stability
 
 Using `trop` to associate reservations with worktrees guarantees reasonable stability of each worktree's port reservations.
 This, in turn, makes it easy for the human operator to "check in" on each worktree's activity in a browser, since the port-to-worktree mapping will *generally* remain stable for the worktree's lifetime.
@@ -80,7 +82,7 @@ In other words, it makes it a lot easier to keep track of things:
 - localhost:4002: correct subtitle markdown rendering
 - localhost:4003: address ARIA problems in article listing
 
-### Token Efficiency
+#### Token Efficiency
 
 Since `trop` can be used as a drop-in substitute for hardcoded port numbers, it makes *launching servers* a bit more token-efficient: 
 
@@ -90,7 +92,7 @@ Since `trop` can be used as a drop-in substitute for hardcoded port numbers, it 
 
 Nothing magic, but reduces the need to burn tokens either (a) identifying a port to use or (b) figuring out the port to-which server wound up bound.
 
-### Cross-File Consistency
+#### Cross-File Consistency
 
 I think this is the strongest benefit for `trop`, and it's something I didn't anticipate when I started the project: 
 
@@ -107,6 +109,10 @@ As such, you can use `trop` for additional token efficiency like so:
 - keep the preview command's output *quiet*, reducing the token cost of launching it
 
 Nothing *earth-shattering*, but still a useful capability to help with token-efficiency.
+
+### Overall Justification
+
+The tl;dr, here is that the tool is solving an easily-solvable, "already-solved" problem, but in a way that's particularly-helpful when using worktrees and agentic coding assistants. 
 
 ## Implementation Remarks
 
