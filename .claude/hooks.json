@@ -1,0 +1,18 @@
+{
+  "hooks": [
+    {
+      "name": "spellcheck-markdown",
+      "description": "Run spellcheck on modified markdown files",
+      "event": "edit",
+      "filePattern": "**/*.{md,mdx}",
+      "command": "npx cspell --no-progress \"${file}\""
+    },
+    {
+      "name": "spellcheck-markdown-write",
+      "description": "Run spellcheck on newly written markdown files",
+      "event": "write",
+      "filePattern": "**/*.{md,mdx}",
+      "command": "npx cspell --no-progress \"${file}\""
+    }
+  ]
+}
