@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "user-post-edit": {
+      "command": "npm run lint:fix -- \"$FILE_PATH\"",
+      "patterns": [
+        "**/*.js",
+        "**/*.ts",
+        "**/*.jsx",
+        "**/*.tsx"
+      ]
+    }
+  }
+}
