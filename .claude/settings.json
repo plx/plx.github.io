@@ -1,13 +1,7 @@
 {
   "hooks": {
-    "user-post-edit": {
-      "command": "npm run lint:fix -- \"$FILE_PATH\"",
-      "patterns": [
-        "**/*.js",
-        "**/*.ts",
-        "**/*.jsx",
-        "**/*.tsx"
-      ]
+    "PostToolUse": {
+      "script": ".claude/hooks/lint_js_ts.py"
     }
   }
 }
