@@ -1,5 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { SITE } from "@consts";
+import { stripMarkdown } from "./markdown";
 
 export interface OpenGraphData {
   title: string;
@@ -68,17 +69,17 @@ export function getPostOGData(
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  const ogTitle = post.data.ogTitle || post.data.title;
+  const ogTitle = stripMarkdown(post.data.ogTitle || post.data.title);
   const ogDescription = post.data.ogDescription || post.data.description;
-  
+
   let ogImage = post.data.ogImage;
   if (!ogImage && !post.data.noOgImage) {
     ogImage = generateTailgraphURL({
-      title: post.data.cardTitle || post.data.title,
-      subtitle: post.data.date.toLocaleDateString("en-US", { 
-        year: "numeric", 
-        month: "long", 
-        day: "numeric" 
+      title: stripMarkdown(post.data.cardTitle || post.data.title),
+      subtitle: post.data.date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
       }),
       author: "plx",
       theme: "dark",
@@ -86,7 +87,7 @@ export function getPostOGData(
       logo: `${siteUrl}/default-og-image.jpg`
     });
   }
-  
+
   return {
     title: ogTitle,
     description: ogDescription,
@@ -116,21 +117,21 @@ export function getBriefOGData(
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  const ogTitle = brief.data.ogTitle || brief.data.title;
+  const ogTitle = stripMarkdown(brief.data.ogTitle || brief.data.title);
   const ogDescription = brief.data.ogDescription || brief.data.description;
-  
+
   let ogImage = brief.data.ogImage;
   if (!ogImage && !brief.data.noOgImage) {
     ogImage = generateTailgraphURL({
-      title: brief.data.cardTitle || brief.data.title,
-      subtitle: category?.titlePrefix || category?.displayName || "Brief",
+      title: stripMarkdown(brief.data.cardTitle || brief.data.title),
+      subtitle: stripMarkdown(category?.titlePrefix || category?.displayName || "Brief"),
       author: "plx",
       theme: "dark",
       backgroundImage: "gradient",
       logo: `${siteUrl}/default-og-image.jpg`
     });
   }
-  
+
   return {
     title: ogTitle,
     description: ogDescription,
@@ -159,13 +160,13 @@ export function getProjectOGData(
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  const ogTitle = project.data.ogTitle || project.data.title;
+  const ogTitle = stripMarkdown(project.data.ogTitle || project.data.title);
   const ogDescription = project.data.ogDescription || project.data.description;
-  
+
   let ogImage = project.data.ogImage;
   if (!ogImage && !project.data.noOgImage) {
     ogImage = generateTailgraphURL({
-      title: project.data.title,
+      title: stripMarkdown(project.data.title),
       subtitle: "Project",
       author: "plx",
       theme: "dark",
@@ -173,7 +174,7 @@ export function getProjectOGData(
       logo: `${siteUrl}/default-og-image.jpg`
     });
   }
-  
+
   return {
     title: ogTitle,
     description: ogDescription,
