@@ -6,7 +6,6 @@ import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
 import { getPostOGData } from "@lib/opengraph";
-import { renderInlineMarkdown } from "@lib/markdown";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
@@ -23,7 +22,6 @@ const post = Astro.props;
 const { Content } = await post.render();
 
 const ogData = getPostOGData(post, Astro.url.toString(), Astro.site?.toString() || "");
-const renderedTitle = renderInlineMarkdown(post.data.title);
 ---
 
 <PageLayout title={post.data.title} description={post.data.description} ogData={ogData}>
@@ -43,7 +41,9 @@ const renderedTitle = renderInlineMarkdown(post.data.title);
           {readingTime(post.body)}
         </div>
       </div>
-      <h1 class="animate text-2xl font-semibold text-black dark:text-white" set:html={renderedTitle}></h1>
+      <div class="animate text-2xl font-semibold text-black dark:text-white">
+        {post.data.title}
+      </div>
     </div>
     <article class="animate">
       <Content />

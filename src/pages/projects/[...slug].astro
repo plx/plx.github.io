@@ -7,7 +7,6 @@ import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
 import Link from "@components/Link.astro";
 import { getProjectOGData } from "@lib/opengraph";
-import { renderInlineMarkdown } from "@lib/markdown";
 
 export async function getStaticPaths() {
   const projects = (await getCollection("projects"))
@@ -24,7 +23,6 @@ const project = Astro.props;
 const { Content } = await project.render();
 
 const ogData = getProjectOGData(project, Astro.url.toString(), Astro.site?.toString() || "");
-const renderedTitle = renderInlineMarkdown(project.data.title);
 ---
 
 <PageLayout title={project.data.title} description={project.data.description} ogData={ogData}>
@@ -44,7 +42,9 @@ const renderedTitle = renderInlineMarkdown(project.data.title);
           {readingTime(project.body)}
         </div>
       </div>
-      <h1 class="animate text-2xl font-semibold text-black dark:text-white" set:html={renderedTitle}></h1>
+      <div class="animate text-2xl font-semibold text-black dark:text-white">
+        {project.data.title}
+      </div>
       {(project.data.demoURL || project.data.repoURL) && (
         <nav class="animate flex gap-1">
           {project.data.demoURL && (
