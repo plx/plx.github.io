@@ -35,7 +35,10 @@
     "MDX",
     "meso",
     "Meso",
+    "metatype",
+    "metatypes",
     "metrids",
+    "microbenchmarks",
     "msapplication",
     "mstile",
     "mutatis",
@@ -62,6 +65,7 @@
     "worktree",
     "worktrees",
     "WWDC",
+    "Xcodes",
     "xctest"
   ],
   "ignorePaths": [

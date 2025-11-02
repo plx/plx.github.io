@@ -43,7 +43,7 @@ The short answer is that this is directionally correct, but there's some nuance:
 - sometimes types don't *fully* satisfy their API contract (often in subtle ways)[^3]
 
 [^1]: The relationship between e.g. `Numeric`, `Comparable`, and the floating-point numbers is an example: reasoning "mathematically" you might expect `a + b > b` when `b > 0`, for example, but...that's not actually a semantic guarantee you can *fully* rely upon. This is far more salient with low-precision types like `Float16`, but it's applicable to the other floating-point types, too.
-[^2]: The easy example here is something like, say, conforming a `class` to `SetAlgebra` and then using it with generic `SetAlgrebra` code that assumes value semantics (e.g. `var original = foo; foo.formIntersection(with: bar)`). 
+[^2]: The easy example here is something like, say, conforming a `class` to `SetAlgebra` and then using it with generic `SetAlgebra` code that assumes value semantics (e.g. `var original = foo; foo.formIntersection(with: bar)`). 
 [^3]: A typical example here is something like `Collection`, which has a large, "multi-type" API contract—the API contract has invariants spanning the collection, its index, its slice type, and so on. In such scenarios, it's easy to get a type to a state where it compiles and works for "easy cases", but has some subtle issues that only manifest under more-intensive usage.
 
 To help make this more concrete, I'll walk through a concrete scenario.
@@ -266,7 +266,7 @@ extension LinearSpan where Representation: LinearSpanTestValueProviding {
   static var exampleLengths: [Representation] { Representation.exampleLengths }
   static var exampleTranslations: [Representation] { Representation.exampleTranslations }
 
-  // include derived things as-before, e.g. exapmle spans, etc.
+  // include derived things as-before, e.g. example spans, etc.
 }
 ```
 
@@ -437,7 +437,7 @@ These examples are somewhat little contrived, but illustrate the general concept
 
 Although there's an appeal to having test logic captured into reusable helpers like this, for this use case I consider that a secondary benefit. The *primary* benefit, here, is as follows:
 
-- we're testing against programmatically-generated exapmle values (and probably *a lot* of them)
+- we're testing against programmatically-generated example values (and probably *a lot* of them)
 - if we have any failures, we're probably going to have *lots of them*
 - compared to hand-written tests, we have much less context available about the values and specifics[^7]
 
@@ -558,7 +558,7 @@ func validateSpanBehavior<T: BinaryFloatingPoint>(type: T.Type) {
 
 func validateSpans<each T: BinaryFloatingPoint>(types: repeat (each T.Type)) {
   for type in types {
-    // this actuall works!
+    // this actually works!
     validateSpanBehavior(type: type)
   }
 }
