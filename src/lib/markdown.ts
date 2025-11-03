@@ -34,10 +34,10 @@ export function renderInlineMarkdown(text: string): string {
       result += `<del>${escapeHtml(match[8] ?? "")}</del>`;
     } else if (match[9]) {
       // *italic*
-      result += `<em>${escapeHtml(match[10] ?? "")}</em>`;
-    } else if (match[11]) {
+      result += `<em>${escapeHtml(match[9] ?? "")}</em>`;
+    } else if (match[10]) {
       // _italic_
-      result += `<em>${escapeHtml(match[12] ?? "")}</em>`;
+      result += `<em>${escapeHtml(match[10] ?? "")}</em>`;
     }
 
     lastIndex = matchIndex + match[0].length;
