@@ -99,43 +99,40 @@ const defaultOgData: OpenGraphData = ogData || {
 </script>
 
 <script is:inline>
+  const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+
   function init() {
-    preloadTheme();
     onScroll();
     animate();
 
     const backToTop = document.getElementById("back-to-top");
-    backToTop?.addEventListener("click", (event) => scrollToTop(event));
+    backToTop?.removeEventListener("click", handleScrollToTop);
+    backToTop?.addEventListener("click", handleScrollToTop);
 
     const backToPrev = document.getElementById("back-to-prev");
-    backToPrev?.addEventListener("click", () => window.history.back());
+    backToPrev?.removeEventListener("click", handleBackToPrev);
+    backToPrev?.addEventListener("click", handleBackToPrev);
 
-    const lightThemeButton = document.getElementById("light-theme-button");
-    lightThemeButton?.addEventListener("click", () => {
-      localStorage.setItem("theme", "light");
-      toggleTheme(false);
-    });
+    const skipLink = document.querySelector(".skip-link");
+    skipLink?.removeEventListener("click", focusMainContent);
+    skipLink?.addEventListener("click", focusMainContent);
 
-    const darkThemeButton = document.getElementById("dark-theme-button");
-    darkThemeButton?.addEventListener("click", () => {
-      localStorage.setItem("theme", "dark");
-      toggleTheme(true);
-    });
+    document
+      .querySelectorAll("[data-theme-button]")
+      .forEach((button) => {
+        if (button.dataset.initialized === "true") return;
+        button.dataset.initialized = "true";
+        button.addEventListener("click", () => {
+          const preference = button.getAttribute("data-theme-button");
+          if (preference) {
+            setThemePreference(preference);
+          }
+        });
+      });
 
-    const systemThemeButton = document.getElementById("system-theme-button");
-    systemThemeButton?.addEventListener("click", () => {
-      localStorage.setItem("theme", "system");
-      toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
-    });
+    updateThemeButtons(getThemePreference());
 
-    window.matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", event => {
-        if (localStorage.theme === "system" || !localStorage.theme) {
-          toggleTheme(event.matches);
-        }
-      }
-    );
-
+    document.removeEventListener("scroll", onScroll);
     document.addEventListener("scroll", onScroll);
   }
 
@@ -157,7 +154,7 @@ const defaultOgData: OpenGraphData = ogData || {
     }
   }
 
-  function scrollToTop(event) {
+  function handleScrollToTop(event) {
     event.preventDefault();
     window.scrollTo({
       top: 0,
@@ -165,7 +162,23 @@ const defaultOgData: OpenGraphData = ogData || {
     });
   }
 
-function toggleTheme(dark) {
+  function handleBackToPrev(event) {
+    if (window.history.length > 1) {
+      event.preventDefault();
+      window.history.back();
+    }
+  }
+
+  function focusMainContent() {
+    requestAnimationFrame(() => {
+      const main = document.getElementById("main-content");
+      if (main) {
+        main.focus();
+      }
+    });
+  }
+
+  function toggleTheme(dark) {
     const css = document.createElement("style");
 
     css.appendChild(
@@ -189,21 +202,51 @@ function toggleTheme(dark) {
       document.documentElement.classList.remove("dark");
     }
 
-  window.getComputedStyle(css).opacity;
+    window.getComputedStyle(css).opacity;
     document.head.removeChild(css);
   }
 
-  function preloadTheme() {
-    const userTheme = localStorage.theme;
-
-    if (userTheme === "light" || userTheme === "dark") {
-      toggleTheme(userTheme === "dark");
-    } else {
-      toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
-    }
+  function getThemePreference() {
+    const stored = localStorage.getItem("theme");
+    return stored === "light" || stored === "dark" || stored === "system"
+      ? stored
+      : "system";
   }
 
-  document.addEventListener("DOMContentLoaded", () => init());
-  document.addEventListener("astro:after-swap", () => init());
+  function resolveDarkMode(preference) {
+    if (preference === "dark") return true;
+    if (preference === "light") return false;
+    return colorSchemeMedia.matches;
+  }
+
+  function updateThemeButtons(activePreference) {
+    document
+      .querySelectorAll("[data-theme-button]")
+      .forEach((button) => {
+        const value = button.getAttribute("data-theme-button");
+        button.setAttribute("aria-pressed", value === activePreference ? "true" : "false");
+      });
+  }
+
+  function setThemePreference(preference) {
+    localStorage.setItem("theme", preference);
+    toggleTheme(resolveDarkMode(preference));
+    updateThemeButtons(preference);
+  }
+
+  function preloadTheme() {
+    const preference = getThemePreference();
+    toggleTheme(resolveDarkMode(preference));
+  }
+
+  colorSchemeMedia.addEventListener("change", (event) => {
+    if (getThemePreference() === "system") {
+      toggleTheme(event.matches);
+      updateThemeButtons("system");
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", init);
+  document.addEventListener("astro:after-swap", init);
   preloadTheme();
 </script>

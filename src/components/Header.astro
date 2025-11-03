@@ -2,6 +2,8 @@
 import Container from "@components/Container.astro";
 import Link from "@components/Link.astro";
 import { SITE } from "@consts";
+
+const currentPath = Astro.url?.pathname ?? "/";
 ---
 
 <header>
@@ -12,22 +14,39 @@ import { SITE } from "@consts";
           {SITE.NAME}
         </div>
       </Link>
-      <nav class="flex gap-1">
-        <Link href="/blog">
-          blog
-        </Link>
-        <span>
-          {`/`}
-        </span>
-        <Link href="/briefs">
-          briefs
-        </Link>
-        <span>
-          {`/`}
-        </span>
-        <Link href="/projects">
-          projects
-        </Link>
+      <nav aria-label="Primary" class="flex">
+        <ul class="flex items-center gap-3 list-none">
+          <li>
+            <Link
+              href="/blog"
+              aria-current={currentPath.startsWith("/blog") ? "page" : undefined}
+            >
+              blog
+            </Link>
+          </li>
+          <li aria-hidden="true" class="text-black/40 dark:text-white/40">
+            /
+          </li>
+          <li>
+            <Link
+              href="/briefs"
+              aria-current={currentPath.startsWith("/briefs") ? "page" : undefined}
+            >
+              briefs
+            </Link>
+          </li>
+          <li aria-hidden="true" class="text-black/40 dark:text-white/40">
+            /
+          </li>
+          <li>
+            <Link
+              href="/projects"
+              aria-current={currentPath.startsWith("/projects") ? "page" : undefined}
+            >
+              projects
+            </Link>
+          </li>
+        </ul>
       </nav>
     </div>
   </Container>
