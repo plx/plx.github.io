@@ -45,8 +45,8 @@
     "nonnull",
     "NSURL",
     "objc",
-    "plx",
     "Playwright",
+    "plx",
     "prb",
     "pretraining",
     "ripgrep",
@@ -110,7 +110,11 @@
   "overrides": [
     {
       "filename": "**/*.{ts,tsx,js,jsx,astro}",
-      "dictionaries": ["typescript", "node", "npm"],
+      "dictionaries": [
+        "typescript",
+        "node",
+        "npm"
+      ],
       "ignoreRegExpList": [
         "/import .* from ['\"].*/g",
         "/\\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\\b/g"
@@ -118,7 +122,10 @@
     },
     {
       "filename": "**/*.{md,mdx}",
-      "dictionaries": ["en-us", "software-terms"],
+      "dictionaries": [
+        "en-us",
+        "software-terms"
+      ],
       "ignoreRegExpList": [
         "/```[\\s\\S]*?```/gm",
         "/`[^`]+`/g"
@@ -126,7 +133,10 @@
     },
     {
       "filename": "dist/**/*.html",
-      "dictionaries": ["en-us", "html"],
+      "dictionaries": [
+        "en-us",
+        "html"
+      ],
       "ignoreRegExpList": [
         "/<script[\\s\\S]*?<\\/script>/gm",
         "/<style[\\s\\S]*?<\\/style>/gm",
