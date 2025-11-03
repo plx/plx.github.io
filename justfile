@@ -102,3 +102,52 @@ lint-fix:
 # Validate: runs all validation checks (lint + spellcheck + build + links)
 validate:
     npm run validate:all
+
+# Learn-spelling: adds new words to cspell dictionary (comma-separated)
+learn-spelling words:
+    #!/usr/bin/env node
+    const fs = require('fs');
+    const path = require('path');
+
+    // Parse input words
+    const newWords = '{{words}}'
+        .split(',')
+        .map(w => w.trim())
+        .filter(w => w.length > 0);
+
+    if (newWords.length === 0) {
+        console.log('No words provided');
+        process.exit(1);
+    }
+
+    // Read cspell.json
+    const configPath = path.join(__dirname, 'cspell.json');
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+    // Get existing words
+    const existingWords = new Set(config.words || []);
+
+    // Add new words (skip duplicates)
+    let added = 0;
+    let skipped = 0;
+    newWords.forEach(word => {
+        if (existingWords.has(word)) {
+            console.log(`Skipping duplicate: ${word}`);
+            skipped++;
+        } else {
+            existingWords.add(word);
+            added++;
+            console.log(`Adding: ${word}`);
+        }
+    });
+
+    // Sort alphabetically (case-insensitive)
+    config.words = Array.from(existingWords).sort((a, b) =>
+        a.toLowerCase().localeCompare(b.toLowerCase())
+    );
+
+    // Write back with pretty formatting
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n', 'utf8');
+
+    console.log(`\nDone! Added ${added} word(s), skipped ${skipped} duplicate(s).`);
+    console.log(`Total words in dictionary: ${config.words.length}`);
