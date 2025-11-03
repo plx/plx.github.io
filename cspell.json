@@ -135,7 +135,8 @@
       "filename": "dist/**/*.html",
       "dictionaries": [
         "en-us",
-        "html"
+        "html",
+        "software-terms"
       ],
       "ignoreRegExpList": [
         "/<script[\\s\\S]*?<\\/script>/gm",
