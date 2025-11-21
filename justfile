@@ -79,6 +79,11 @@ clean:
 install:
     npm install
 
+# Setup: full project setup including dependencies and Playwright browsers
+setup:
+    npm install
+    npx playwright install
+
 # Spellcheck: checks spelling in source files
 spellcheck:
     npm run spellcheck
