@@ -16,13 +16,25 @@ npx playwright install --with-deps
 
 ### First Time Setup
 
-Install Playwright browsers:
+**Recommended**: Use the justfile setup command which handles everything:
 
 ```bash
+just setup
+```
+
+This installs both npm dependencies and Playwright browsers.
+
+**Alternative**: Manual setup:
+
+```bash
+# Install npm dependencies
+npm install
+
+# Install Playwright browsers
 npx playwright install
 ```
 
-Or install dependencies for all browsers including WebKit (Safari):
+Or install with system dependencies for all browsers:
 
 ```bash
 npx playwright install --with-deps
