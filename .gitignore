@@ -26,4 +26,9 @@ pnpm-debug.log*
 
 # CSpell cache
 .cspellcache
-/test-results
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
