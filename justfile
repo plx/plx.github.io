@@ -57,6 +57,30 @@ lint-fix:
 validate:
     npm run validate:all
 
+# QA: runs Playwright QA tests
+qa:
+    npm run qa
+
+# QA-headed: runs Playwright tests with visible browser
+qa-headed:
+    npm run qa:headed
+
+# QA-ui: opens Playwright UI for interactive testing
+qa-ui:
+    npm run qa:ui
+
+# QA-debug: runs Playwright tests in debug mode
+qa-debug:
+    npm run qa:debug
+
+# QA-report: shows Playwright test report
+qa-report:
+    npm run qa:report
+
+# QA-codegen: opens Playwright code generator
+qa-codegen:
+    npm run qa:codegen
+
 # Learn-spelling: adds new words to cspell dictionary (comma-separated)
 learn-spelling words:
     node scripts/learn-spelling.js {{words}}
