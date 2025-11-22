@@ -108,9 +108,25 @@ lint-fix:
 validate:
     npm run validate:all
 
-# QA: runs Playwright QA tests
+# QA: runs all Playwright QA tests (full suite for CI)
 qa:
     npm run qa
+
+# QA-quick: runs quick sample of tests for local development
+qa-quick:
+    npm run qa:quick
+
+# QA-full: runs complete test suite including all sitemap pages
+qa-full:
+    npm run qa:full
+
+# QA-comprehensive: runs only the comprehensive sitemap tests
+qa-comprehensive:
+    npm run qa:comprehensive
+
+# QA-core: runs only the core tests (not comprehensive)
+qa-core:
+    npm run qa:core
 
 # QA-headed: runs Playwright tests with visible browser
 qa-headed:
