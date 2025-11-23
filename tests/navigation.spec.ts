@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Navigation", () => {
   test("home page loads successfully", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/plx\.github\.io/i);
+    await expect(page).toHaveTitle(/Dispatches/i);
   });
 
   test("can navigate to blog", async ({ page }) => {

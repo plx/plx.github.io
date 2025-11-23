@@ -104,6 +104,10 @@ lint:
 lint-fix:
     npm run lint:fix
 
+# Lint-markdown: runs markdownlint on content files
+lint-markdown:
+    npm run lint:markdown
+
 # Validate: runs all validation checks (lint + spellcheck + build + links)
 validate:
     npm run validate:all
