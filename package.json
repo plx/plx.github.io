@@ -11,11 +11,12 @@
     "astro": "astro",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint:markdown": "markdownlint-cli2 \"src/content/**/*.{md,mdx}\"",
     "spellcheck": "cspell \"src/**/*.{md,mdx,ts,tsx,js,jsx,astro}\" --no-progress",
     "spellcheck:html": "cspell \"dist/**/*.html\" --no-progress",
     "spellcheck:all": "npm run spellcheck && npm run build && npm run spellcheck:html",
     "validate:links": "node scripts/validate-links.js",
-    "validate:all": "npm run lint && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links",
+    "validate:all": "npm run lint && npm run lint:markdown && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links",
     "test:ci": "npm run lint && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links",
     "test:ci:verbose": "echo '🔍 Running CI validation locally...' && npm run lint && echo '✓ Linting passed' && npm run spellcheck && echo '✓ Source spell check passed' && npm run build && echo '✓ Build succeeded' && npm run spellcheck:html && echo '✓ HTML spell check passed' && npm run validate:links && echo '✓ Link validation passed' && echo '✅ All CI checks passed!'",
     "qa": "playwright test --ignore-snapshots",
@@ -68,6 +69,7 @@
     "@types/xml2js": "^0.4.14",
     "cspell": "^9.2.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "markdownlint-cli2": "^0.19.1",
     "prettier": "^3.6.2",
     "xml2js": "^0.6.2"
   }
