@@ -11,7 +11,7 @@ repoURL: "https://github.com/plx/hdxl-xctest-retrofit/"
 
 1. migrate from `XCTestCase` subclasses to `@Suite` structs
 2. apply `@Test` annotation to test functions[^2]
-2. prepend `#` to `XCTAssert*` calls
+3. prepend `#` to `XCTAssert*` calls
 
 [^1]: The primary gaps are around expectations, expected failures, and attachments—IMHO those don't map cleanly to Swift Testing's APIs, so they're currently unsupported.
 
