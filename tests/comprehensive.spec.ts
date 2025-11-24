@@ -16,6 +16,10 @@ const parseXML = promisify(parseString);
  * - Sample (SAMPLE_MODE=true): Tests only a few pages for quick local feedback
  */
 
+// Configuration constants
+const SAMPLE_PAGE_COUNT = 5;
+const MIN_PAGE_CONTENT_LENGTH = 50;
+
 let allUrls: string[] = [];
 let testUrls: string[] = [];
 
@@ -29,8 +33,13 @@ test.beforeAll(async ({ request }) => {
     urlset?: { url?: Array<{ loc: string[] }> };
   };
 
+  // Validate sitemap structure
+  if (!result.urlset?.url) {
+    throw new Error("Invalid sitemap structure: missing urlset or url array");
+  }
+
   // Extract URLs from sitemap
-  const urlset = result.urlset?.url || [];
+  const urlset = result.urlset.url;
   allUrls = urlset.map((entry) => {
     const url = entry.loc[0];
     // Convert full URL to path-only
@@ -43,7 +52,7 @@ test.beforeAll(async ({ request }) => {
 
   if (sampleMode) {
     // Sample mode: test a diverse sample (useful for local dev)
-    testUrls = sampleUrls(allUrls, 5);
+    testUrls = sampleUrls(allUrls, SAMPLE_PAGE_COUNT);
     console.log(`\n📋 Sample mode: Testing ${testUrls.length} of ${allUrls.length} pages`);
   } else {
     // Full mode: test everything (for CI)
@@ -83,14 +92,17 @@ test.describe("Comprehensive Sitemap Tests", () => {
       const response = await page.goto(url);
 
       // Page should load successfully
-      expect(response?.status()).toBeLessThan(400);
+      expect(response?.status(), `${url} should load successfully`).toBeLessThan(400);
 
       // Should have a title
-      await expect(page).toHaveTitle(/.+/);
+      await expect(page, `${url} should have a title`).toHaveTitle(/.+/);
 
       // Should have content
       const bodyText = await page.locator("body").textContent();
-      expect(bodyText?.length).toBeGreaterThan(50);
+      expect(
+        bodyText?.length,
+        `${url} should have content (>${MIN_PAGE_CONTENT_LENGTH} chars)`,
+      ).toBeGreaterThan(MIN_PAGE_CONTENT_LENGTH);
     }
   });
 
@@ -123,7 +135,8 @@ test.describe("Comprehensive Sitemap Tests", () => {
       const images = await page.locator("img").all();
       for (const img of images) {
         const alt = await img.getAttribute("alt");
-        expect(alt).toBeDefined();
+        const src = await img.getAttribute("src");
+        expect(alt, `Image on ${url} missing alt text (src: ${src})`).toBeDefined();
       }
     }
   });
@@ -138,7 +151,7 @@ test.describe("Comprehensive Sitemap Tests", () => {
       });
 
       const uniqueIds = new Set(ids);
-      expect(ids.length).toBe(uniqueIds.size);
+      expect(ids.length, `${url} has duplicate IDs`).toBe(uniqueIds.size);
     }
   });
 
@@ -151,12 +164,14 @@ test.describe("Comprehensive Sitemap Tests", () => {
         const text = await link.textContent();
         const ariaLabel = await link.getAttribute("aria-label");
         const title = await link.getAttribute("title");
+        const href = await link.getAttribute("href");
 
         // Link should have either visible text, aria-label, or title
         expect(
           (text && text.trim().length > 0) ||
-          (ariaLabel && ariaLabel.trim().length > 0) ||
-          (title && title.trim().length > 0),
+            (ariaLabel && ariaLabel.trim().length > 0) ||
+            (title && title.trim().length > 0),
+          `Link on ${url} missing accessible label (href: ${href})`,
         ).toBeTruthy();
       }
     }
