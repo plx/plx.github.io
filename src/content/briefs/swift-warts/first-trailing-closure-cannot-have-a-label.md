@@ -9,7 +9,7 @@ Swift's syntax for trailing closures and multiple trailing closures are fantasti
 
 Especially in such an otherwise-expressive language, this restriction is a bit jarring, and has real impacts on API design.
 
-### Method Pairs
+## Method Pairs
 
 As a simple example, I think it's helpful to include method pairs like these:
 
@@ -50,7 +50,7 @@ var activeComponents: Set<ComponentID> {
 
 Given the need to use labels to disambiguate between the two methods, we wind up with `@autoclosure` being the best fit for this API (instead of just using closures).
 
-### Fused Functional Chains 
+## Fused Functional Chains
 
 As another example, for performance reason I often create "fused" versions of common functional chains: a fused "map, filter", a fused "filter, map", and so on.
 
@@ -97,10 +97,10 @@ let premiumContactInfo = orders.mapFilterMap
 // feels clunky no matter how you finesse the formatting
 let premiumContactInfo = orders.mapFilterMap 
   { $0.customer } 
-  filter: { $0.isPremium } 
+  filter: { $0.isPremium }
   map: { $0.contactInfo }
 ```
 
-### Is There Hope?
+## Is There Hope?
 
 Sadly, no: this capability has already been discussed-and-decided against, [as discussed a bit here](https://forums.swift.org/t/can-first-trailing-closure-be-named/69793/8).
