@@ -14,12 +14,14 @@ type Props = {
 
 const { title, description, ogData } = Astro.props;
 const plainTitle = stripMarkdown(title);
+// Don't add site name suffix if the title is already the site name (home page)
+const pageTitle = plainTitle === SITE.NAME ? plainTitle : `${plainTitle} | ${SITE.NAME}`;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <Head title={`${plainTitle} | ${SITE.NAME}`} description={description} ogData={ogData} />
+    <Head title={pageTitle} description={description} ogData={ogData} />
   </head>
   <body>
     <Header />
