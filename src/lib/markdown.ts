@@ -1,37 +1,53 @@
 export function renderInlineMarkdown(text: string): string {
   if (!text) return "";
 
-  // Helper function to escape HTML entities
-  const escapeHtml = (str: string): string => {
-    return str
+  const escapeHtml = (str: string): string =>
+    str
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
-  };
 
-  // Process inline markdown patterns
-  let html = text
-    // Code: `text` - escape content inside backticks, then wrap in <code>
-    .replace(/`([^`]+)`/g, (_, content) => `<code>${escapeHtml(content)}</code>`)
+  const pattern = /(`([^`]+)`)|(\*\*([^*]+)\*\*)|(__([^_]+)__)|(~~([^~]+)~~)|(?<!\*)\*([^*]+)\*(?!\*)|(?<!_)_([^_]+)_(?!_)/g;
 
-    // Bold: **text** or __text__ - escape content, then wrap in <strong>
-    .replace(/\*\*([^*]+)\*\*/g, (_, content) => `<strong>${escapeHtml(content)}</strong>`)
-    .replace(/__([^_]+)__/g, (_, content) => `<strong>${escapeHtml(content)}</strong>`)
+  let result = "";
+  let lastIndex = 0;
 
-    // Italic: *text* or _text_ (but not part of bold) - escape content, then wrap in <em>
-    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, (_, content) => `<em>${escapeHtml(content)}</em>`)
-    .replace(/(?<!_)_([^_]+)_(?!_)/g, (_, content) => `<em>${escapeHtml(content)}</em>`)
+  for (const match of text.matchAll(pattern)) {
+    const matchIndex = match.index ?? 0;
+    if (matchIndex > lastIndex) {
+      result += escapeHtml(text.slice(lastIndex, matchIndex));
+    }
 
-    // Strikethrough: ~~text~~ - escape content, then wrap in <del>
-    .replace(/~~([^~]+)~~/g, (_, content) => `<del>${escapeHtml(content)}</del>`);
+    if (match[1]) {
+      // `code`
+      result += `<code>${escapeHtml(match[2] ?? "")}</code>`;
+    } else if (match[3]) {
+      // **bold**
+      result += `<strong>${escapeHtml(match[4] ?? "")}</strong>`;
+    } else if (match[5]) {
+      // __bold__
+      result += `<strong>${escapeHtml(match[6] ?? "")}</strong>`;
+    } else if (match[7]) {
+      // ~~strikethrough~~
+      result += `<del>${escapeHtml(match[8] ?? "")}</del>`;
+    } else if (match[9]) {
+      // *italic*
+      result += `<em>${escapeHtml(match[9] ?? "")}</em>`;
+    } else if (match[10]) {
+      // _italic_
+      result += `<em>${escapeHtml(match[10] ?? "")}</em>`;
+    }
 
-  // Escape any remaining unprocessed text (text outside of markdown patterns)
-  // This is tricky because we need to avoid escaping the HTML we just created
-  // For now, we'll leave plain text unescaped since Astro should handle it
+    lastIndex = matchIndex + match[0].length;
+  }
 
-  return html;
+  if (lastIndex < text.length) {
+    result += escapeHtml(text.slice(lastIndex));
+  }
+
+  return result;
 }
 
 /**
