@@ -28,7 +28,7 @@ my-server --port $(trop reserve)
 The *motivation* for this tool was to streamline the "simultaneous agents in multiple worktrees"-style workflows, e.g. wherein:
 
 - you have multiple claude code instances operating concurrently
-- each instance is working on a distinct task 
+- each instance is working on a distinct task
 - each instance is working within a distinct worktree
 
 `trop` exists because using that workflow with *small-and-simple* projects can easily lead to port collisions.
@@ -84,7 +84,7 @@ In other words, it makes it a lot easier to keep track of things:
 
 #### Token Efficiency
 
-Since `trop` can be used as a drop-in substitute for hardcoded port numbers, it makes *launching servers* a bit more token-efficient: 
+Since `trop` can be used as a drop-in substitute for hardcoded port numbers, it makes *launching servers* a bit more token-efficient:
 
 - the agent knows the port it should use
 - it directly invokes the server at that port
@@ -94,7 +94,7 @@ Nothing magic, but reduces the need to burn tokens either (a) identifying a port
 
 #### Cross-File Consistency
 
-I think this is the strongest benefit for `trop`, and it's something I didn't anticipate when I started the project: 
+I think this is the strongest benefit for `trop`, and it's something I didn't anticipate when I started the project:
 
 - `trop reserve` is idempotent(ish) vis-a-vis the invocation path
 - coding agents are (usually) invoked from the worktree root
@@ -112,7 +112,7 @@ Nothing *earth-shattering*, but still a useful capability to help with token-eff
 
 ### Overall Justification
 
-The tl;dr, here is that the tool is solving an easily-solvable, "already-solved" problem, but in a way that's particularly-helpful when using worktrees and agentic coding assistants. 
+The tl;dr, here is that the tool is solving an easily-solvable, "already-solved" problem, but in a way that's particularly-helpful when using worktrees and agentic coding assistants.
 
 ## Implementation Remarks
 
@@ -152,7 +152,7 @@ Despite having to undertake a few significant interventions, my overall experien
 Overall, I'd say that we're closer than I thought to being able to write a detailed spec and have coding agents diligently implement it (and implement it *correctly*, at that).
 We may even be at that point, in fact, if your skill level is high enough and your strategy is sufficiently sophisticated.
 
-As a final remark—just to put some concrete measurements on the table—I'd ballpark this project as just about 1 week of end-to-end, full-time work. 
+As a final remark—just to put some concrete measurements on the table—I'd ballpark this project as just about 1 week of end-to-end, full-time work.
 It's hard to be too precise because I was doing this in-between other things, but to the best of my recollection:
 
 - 2 full days spent writing-and-revising the specification
