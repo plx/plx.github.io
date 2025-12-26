@@ -41,22 +41,26 @@ test.describe("Responsive Design", () => {
 
     for (const img of images) {
       // Check that images have CSS to prevent them from exceeding container width
-      const styles = await img.evaluate((el) => {
+      const imageInfo = await img.evaluate((el) => {
         const computed = window.getComputedStyle(el);
+        const parent = el.parentElement;
+        const parentWidth = parent ? parent.clientWidth : window.innerWidth;
         return {
           maxWidth: computed.maxWidth,
           width: computed.width,
+          clientWidth: el.clientWidth,
+          parentWidth: parentWidth,
         };
       });
 
-      // Images should either have max-width: 100% or explicit width constraint
-      // This ensures they won't overflow on smaller screens
-      const hasConstraint =
-        styles.maxWidth === "100%" ||
-        styles.maxWidth !== "none" ||
-        (styles.width !== "auto" && !styles.width.includes("px"));
+      // Images should be constrained to their container
+      // Check that the image width doesn't exceed its parent container
+      const hasResponsiveConstraint =
+        imageInfo.maxWidth === "100%" ||
+        imageInfo.width === "100%" ||
+        imageInfo.clientWidth <= imageInfo.parentWidth;
 
-      expect(hasConstraint).toBeTruthy();
+      expect(hasResponsiveConstraint).toBeTruthy();
     }
   });
 

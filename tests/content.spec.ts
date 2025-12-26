@@ -114,14 +114,24 @@ test.describe("Content", () => {
   test("external links open in new tab", async ({ page }) => {
     await page.goto("/");
 
+    // Get the site's hostname for comparison
+    const siteHostname = new URL(page.url()).hostname;
+
     const externalLinks = await page.locator("a[href^=\"http\"]").all();
 
     for (const link of externalLinks) {
       const href = await link.getAttribute("href");
       const target = await link.getAttribute("target");
 
-      // Skip links to plx.github.io itself
-      if (href?.includes("plx.github.io")) continue;
+      // Skip links to the same hostname (internal links with full URLs)
+      if (href) {
+        try {
+          const linkHostname = new URL(href).hostname;
+          if (linkHostname === siteHostname) continue;
+        } catch {
+          // Invalid URL - treat as external
+        }
+      }
 
       // External links should open in new tab
       expect(target).toBe("_blank");
