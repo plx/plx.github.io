@@ -1,0 +1,69 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import Link from "@components/Link.astro";
+import { SITE, SOCIALS } from "@consts";
+import { getHomeOGData } from "@lib/opengraph";
+
+const ogData = getHomeOGData(
+  Astro.url.toString(),
+  Astro.site?.toString() || ""
+);
+---
+
+<PageLayout title="About" description="About Dispatches and its author" ogData={ogData}>
+  <Container>
+    <div class="space-y-10">
+      <h1 class="animate font-semibold text-black dark:text-white">
+        About
+      </h1>
+
+      <div class="space-y-4">
+        <section class="animate space-y-4">
+          <h2 class="font-semibold text-black dark:text-white">About Dispatches</h2>
+          <article class="prose dark:prose-invert">
+            <p>
+              <em>Dispatches</em> is where I publish technical writing on topics of personal interest.
+              During this initial phase, much of the content will be "refurbished-and-expanded": older
+              personal notes or explanations, updated and expanded where necessary.
+            </p>
+            <p>
+              Expect a focus on Swift, lower-level iOS work, and—as of late—agentic coding assistants.
+            </p>
+          </article>
+        </section>
+
+        <section class="animate space-y-4">
+          <h2 class="font-semibold text-black dark:text-white">About Me</h2>
+          <article class="prose dark:prose-invert">
+            <p>
+              I'm a software engineer with extensive experience in iOS development, Swift programming,
+              and system-level engineering. I've spent years working on complex iOS applications and
+              have developed a deep appreciation for elegant APIs, robust type systems, and accessible design.
+            </p>
+            <p>
+              More recently, I've been exploring the intersection of human and AI-assisted development,
+              particularly through tools like Claude Code and other agentic coding assistants.
+            </p>
+          </article>
+        </section>
+
+        <section class="animate space-y-4">
+          <h2 class="font-semibold text-black dark:text-white">Connect</h2>
+          <article>
+            <p class="mb-4">Feel free to reach out:</p>
+            <ul class="flex flex-wrap gap-2">
+              {SOCIALS.map(SOCIAL => (
+                <li class="flex gap-x-2 text-nowrap">
+                  <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
+                    {SOCIAL.NAME}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </article>
+        </section>
+      </div>
+    </div>
+  </Container>
+</PageLayout>

@@ -1,6 +1,8 @@
 ---
 import { renderInlineMarkdown } from "@lib/markdown";
 
+type HeadingLevel = 2 | 3 | 4 | 5 | 6;
+
 type Props = {
   titlePrefix?: string;
   title: string;
@@ -8,9 +10,11 @@ type Props = {
   link: string;
   ariaLabel?: string;
   maxLines?: number | "none";
+  headingLevel?: HeadingLevel;
 }
 
-const { titlePrefix, title, subtitle, link, ariaLabel, maxLines = 2 } = Astro.props;
+const { titlePrefix, title, subtitle, link, ariaLabel, maxLines = 2, headingLevel = 3 } = Astro.props;
+const HeadingTag = `h${headingLevel}` as keyof HTMLElementTagNameMap;
 const renderedTitlePrefix = titlePrefix ? renderInlineMarkdown(titlePrefix) : undefined;
 const renderedTitle = renderInlineMarkdown(title);
 const renderedSubtitle = renderInlineMarkdown(subtitle);
@@ -38,12 +42,12 @@ const accessibleLabel = ariaLabel || `${titlePrefix ? titlePrefix + ': ' : ''}${
   aria-label={accessibleLabel}
   class="relative group flex flex-nowrap py-3 px-4 pr-10 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/10 dark:hover:bg-white/10 hover:text-black dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 motion-safe:transition-colors motion-safe:duration-300 motion-safe:ease-in-out">
   <div class="flex flex-col flex-1">
-    <h3 class="font-semibold text-base">
+    <HeadingTag class="font-semibold text-base">
       {renderedTitlePrefix && (
         <span class="font-bold" set:html={renderedTitlePrefix + ":&nbsp;"}></span>
       )}
       <span class="font-semibold" set:html={renderedTitle}></span>
-    </h3>
+    </HeadingTag>
     <p class={`text-sm ${lineClampClass}`} set:html={renderedSubtitle}></p>
   </div>
   <svg 

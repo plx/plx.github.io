@@ -39,6 +39,7 @@ const ogData = getHomeOGData(
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION} ogData={ogData}>
   <Container>
+    <h1 class="sr-only">Dispatches</h1>
     <div class="space-y-16">
       <section>
         <article class="space-y-4">
@@ -52,9 +53,9 @@ const ogData = getHomeOGData(
 
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
+          <h2 class="font-semibold text-black dark:text-white">
             Latest posts
-          </h5>
+          </h2>
           <Link href="/blog">
             See all posts
           </Link>
@@ -70,9 +71,9 @@ const ogData = getHomeOGData(
 
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
+          <h2 class="font-semibold text-black dark:text-white">
             Recent briefs
-          </h5>
+          </h2>
           <Link href="/briefs">
             See all briefs
           </Link>
@@ -88,9 +89,9 @@ const ogData = getHomeOGData(
 
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
+          <h2 class="font-semibold text-black dark:text-white">
             Recent projects
-          </h5>
+          </h2>
           <Link href="/projects">
             See all projects
           </Link>
@@ -98,16 +99,16 @@ const ogData = getHomeOGData(
         <ul class="flex flex-col gap-4">
           {projects.map(project => (
             <li>
-              <ContentCard {...getProjectCardProps(project, 2)} />
+              <ContentCard {...getProjectCardProps(project, { maxLines: 2 })} />
             </li>
           ))}
         </ul>
       </section>
 
       <section class="animate space-y-4">
-        <h5 class="font-semibold text-black dark:text-white">
+        <h2 class="font-semibold text-black dark:text-white">
           Let's Connect
-        </h5>
+        </h2>
         <article>
           <p>
             Here's how to get in touch:
