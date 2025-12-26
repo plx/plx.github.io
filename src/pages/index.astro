@@ -99,7 +99,7 @@ const ogData = getHomeOGData(
         <ul class="flex flex-col gap-4">
           {projects.map(project => (
             <li>
-              <ContentCard {...getProjectCardProps(project, 2)} />
+              <ContentCard {...getProjectCardProps(project, { maxLines: 2 })} />
             </li>
           ))}
         </ul>

@@ -31,7 +31,7 @@ const ogData = getListOGData(
         {
           projects.map((project) => (
             <li>
-              <ContentCard {...getProjectCardProps(project, 3)}/>
+              <ContentCard {...getProjectCardProps(project, { maxLines: 3, headingLevel: 2 })}/>
             </li>
           ))
         }
