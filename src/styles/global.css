@@ -30,22 +30,15 @@ body {
   z-index: 100;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  background-color: #f5f5f5;
-  color: #111827;
   text-decoration: none;
   transition: top 150ms ease-in-out;
-}
-
-.dark .skip-link {
-  background-color: #1f2937;
-  color: #f5f5f5;
+  @apply bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-stone-100;
 }
 
 .skip-link:focus,
 .skip-link:hover {
   top: 1rem;
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
+  @apply outline-2 outline-blue-600 dark:outline-blue-400 outline-offset-2;
 }
 
 header {
@@ -59,8 +52,7 @@ main {
 }
 
 main:focus {
-  outline: 2px solid #2563eb;
-  outline-offset: 0.5rem;
+  @apply outline-2 outline-blue-600 dark:outline-blue-400 outline-offset-2;
 }
 
 footer {
