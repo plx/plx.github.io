@@ -26,3 +26,4 @@ pnpm-debug.log*
 
 # CSpell cache
 .cspellcache
+/test-results
