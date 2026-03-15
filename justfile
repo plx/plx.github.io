@@ -79,6 +79,11 @@ clean:
 install:
     npm install
 
+# Setup: full project setup including dependencies and Playwright browsers
+setup:
+    npm install
+    npx playwright install
+
 # Spellcheck: checks spelling in source files
 spellcheck:
     npm run spellcheck
@@ -106,3 +111,27 @@ lint-markdown:
 # Validate: runs all validation checks (lint + spellcheck + build + links)
 validate:
     npm run validate:all
+
+# QA: runs all Playwright QA tests
+qa:
+    npm run qa
+
+# QA-headed: runs Playwright tests with visible browser
+qa-headed:
+    npm run qa:headed
+
+# QA-ui: opens Playwright UI for interactive testing
+qa-ui:
+    npm run qa:ui
+
+# QA-debug: runs Playwright tests in debug mode
+qa-debug:
+    npm run qa:debug
+
+# QA-report: shows Playwright test report
+qa-report:
+    npm run qa:report
+
+# QA-codegen: opens Playwright code generator
+qa-codegen:
+    npm run qa:codegen
