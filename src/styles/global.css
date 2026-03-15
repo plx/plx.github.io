@@ -23,6 +23,24 @@ body {
   @apply text-black/50 dark:text-white/75;
 }
 
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: top 150ms ease-in-out;
+  @apply bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-stone-100;
+}
+
+.skip-link:focus,
+.skip-link:hover {
+  top: 1rem;
+  @apply outline-2 outline-blue-600 dark:outline-blue-400 outline-offset-2;
+}
+
 header {
   @apply fixed top-0 left-0 right-0 z-50 py-5;
   @apply bg-stone-100/75 dark:bg-stone-900/25;
@@ -31,6 +49,10 @@ header {
 
 main {
   @apply flex-1 py-32;
+}
+
+main:focus {
+  @apply outline-2 outline-blue-600 dark:outline-blue-400 outline-offset-2;
 }
 
 footer {

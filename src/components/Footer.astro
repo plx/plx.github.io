@@ -15,11 +15,14 @@ import BackToTop from "@components/BackToTop.astro";
       <div>
         &copy; 2024 {`|`} {SITE.NAME}
       </div>
-      <div class="flex flex-wrap gap-1 items-center">
+      <div class="flex flex-wrap gap-1 items-center" role="group" aria-label="Theme selection">
         <button
           id="light-theme-button"
+          type="button"
           aria-label="Light theme"
-          class="group size-8 flex items-center justify-center rounded-full"
+          aria-pressed="false"
+          data-theme-button="light"
+          class="group size-8 flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400 focus-visible:outline-offset-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -46,8 +49,11 @@ import BackToTop from "@components/BackToTop.astro";
         </button>
         <button
           id="dark-theme-button"
+          type="button"
           aria-label="Dark theme"
-          class="group size-8 flex items-center justify-center rounded-full"
+          aria-pressed="false"
+          data-theme-button="dark"
+          class="group size-8 flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400 focus-visible:outline-offset-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -66,8 +72,11 @@ import BackToTop from "@components/BackToTop.astro";
         </button>
         <button
           id="system-theme-button"
+          type="button"
           aria-label="System theme"
-          class="group size-8 flex items-center justify-center rounded-full"
+          aria-pressed="false"
+          data-theme-button="system"
+          class="group size-8 flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400 focus-visible:outline-offset-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
