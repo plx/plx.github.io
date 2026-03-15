@@ -80,7 +80,7 @@ const ogData = getListOGData(
       <ul class="animate flex flex-col gap-4">
         {renderedBriefs.map((brief) => (
           <li>
-            <ContentCard {...getBriefCardProps(brief, false, 3)} />
+            <ContentCard {...getBriefCardProps(brief, false, { maxLines: 3 })} />
           </li>
         ))}
       </ul>

@@ -66,19 +66,19 @@ For the *initial* implementation, I used a specification-driven workflow:
 2. In *plan mode*, I had Opus generate a high-level roadmap with distinct *phases* (and iterated a bit until it was satisfactory)
 3. I asked Claude to implement "phase 1" (and just "phase 1")
 4. I had Claude write a `ContinuingMission.md` file that:
-  - described the work done so far
-  - described the work remaining
-  - described the immediate "next steps" for the next session
-4. I then entered a loop like this:
-  - start a fresh session
-  - have Claude copy the `ContinuingMission.md` file into a `missions/` folder in the repo (and rename with a timestamp, to make it unique)
-  - have Claude read the `ContinuingMission.md` file and take on the next task
-  - review the results, offer feedback, and keep Claude iterating until he finished the task
-  - have Claude *rewrite* `ContinuingMission.md` to once again:
-    - describe the work done so far
-    - describe the work remaining
-    - describe the immediate "next steps" for the next session
-5. I kept repeating that loop until the initial pass on the project was complete
+    - described the work done so far
+    - described the work remaining
+    - described the immediate "next steps" for the next session
+5. I then entered a loop like this:
+    - start a fresh session
+    - have Claude copy the `ContinuingMission.md` file into a `missions/` folder in the repo (and rename with a timestamp, to make it unique)
+    - have Claude read the `ContinuingMission.md` file and take on the next task
+    - review the results, offer feedback, and keep Claude iterating until he finished the task
+    - have Claude *rewrite* `ContinuingMission.md` to once again:
+        - describe the work done so far
+        - describe the work remaining
+        - describe the immediate "next steps" for the next session
+6. I kept repeating that loop until the initial pass on the project was complete
 
 Since this was my first pure vibe-coding experiment, I iteratively improved my workflow as I went:
 

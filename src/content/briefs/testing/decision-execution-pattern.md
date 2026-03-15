@@ -22,7 +22,4 @@ TODO: provide a *motivated*, *concrete* example.
 
 
 
-
-
-
 The code in the "decision" phase should *generally* be structured as a pure function that receives all relevant information via parameters and returns a   a function that returns a data item, e.g.:
