@@ -46,6 +46,17 @@ const currentPath = Astro.url?.pathname ?? "/";
               projects
             </Link>
           </li>
+          <li aria-hidden="true" class="text-black/40 dark:text-white/40">
+            /
+          </li>
+          <li>
+            <Link
+              href="/about"
+              aria-current={currentPath.startsWith("/about") ? "page" : undefined}
+            >
+              about
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>
