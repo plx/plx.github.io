@@ -2,10 +2,16 @@
   "name": "astro-nano",
   "type": "module",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "dev:network": "astro dev --host",
     "build": "astro check && astro build",
+    "typecheck": "npm run typecheck:app && npm run typecheck:playwright",
+    "typecheck:app": "tsc -p tsconfig.json --noEmit",
+    "typecheck:playwright": "tsc -p tsconfig.playwright.json --noEmit",
     "preview": "astro preview",
     "preview:network": "astro preview --host",
     "astro": "astro",
@@ -33,6 +39,7 @@
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
     "@astrojs/tailwind": "^5.1.5",
+    "@eslint/js": "^10.0.1",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/lora": "^5.2.8",
     "@tailwindcss/typography": "^0.5.19",
@@ -46,14 +53,14 @@
     "astro-icon": "^1.1.5",
     "astro-seo": "^0.8.4",
     "clsx": "^2.1.1",
-    "eslint": "^9.39.4",
+    "eslint": "^10.2.1",
     "eslint-plugin-astro": "^1.7.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "sharp": "^0.34.5",
     "tailwind-merge": "^2.6.1",
     "tailwindcss": "^3.4.19",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "yaml": "^2.8.3"
   },
   "devDependencies": {
@@ -62,9 +69,14 @@
     "@cspell/dict-npm": "^5.2.38",
     "@cspell/dict-typescript": "^3.2.3",
     "@playwright/test": "^1.59.1",
+    "@types/node": "^22.19.17",
     "cspell": "^10.0.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
     "markdownlint-cli2": "^0.22.0",
     "prettier": "^3.8.3"
+  },
+  "overrides": {
+    "@astrojs/check": {
+      "typescript": "$typescript"
+    }
   }
 }
