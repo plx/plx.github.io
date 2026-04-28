@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    // `types` replaces (not merges) the parent array; `astro/client` is
+    // intentionally dropped because Playwright tests don't need it.
     "types": [
       "node",
       "@playwright/test"
