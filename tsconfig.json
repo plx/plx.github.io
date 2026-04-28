@@ -5,9 +5,8 @@
     "types": [
       "astro/client"
     ],
-    // baseUrl is intentionally omitted: TypeScript 5.5+ permits `paths` without
-    // `baseUrl` under `moduleResolution: "bundler"` (set by astro/tsconfigs/strict).
-    // Path values resolve relative to this tsconfig.json.
+    // baseUrl is intentionally omitted: under `moduleResolution: "bundler"` (set by
+    // astro/tsconfigs/strict), `paths` entries resolve relative to this tsconfig.json.
     "paths": {
       "@*": [
         "./src/*"
