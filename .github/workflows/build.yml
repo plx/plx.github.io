@@ -45,7 +45,10 @@ jobs:
       
       - name: Run Linting
         run: npm run lint
-      
+
+      - name: Run Unit Tests
+        run: npm run test:unit
+
       - name: Run Spell Check (Source)
         run: npm run spellcheck
       
