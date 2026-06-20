@@ -11,7 +11,7 @@ const blog = defineCollection({
     // OpenGraph overrides
     ogTitle: z.string().optional(),
     ogDescription: z.string().optional(),
-    ogImage: z.string().optional(),
+    ogImage: z.string().url().optional(),
     ogImageAlt: z.string().optional(),
     noOgImage: z.boolean().optional(),
     modifiedDate: z.coerce.date().optional()
@@ -32,7 +32,7 @@ const briefs = defineCollection({
     // OpenGraph overrides
     ogTitle: z.string().optional(),
     ogDescription: z.string().optional(),
-    ogImage: z.string().optional(),
+    ogImage: z.string().url().optional(),
     ogImageAlt: z.string().optional(),
     noOgImage: z.boolean().optional(),
     modifiedDate: z.coerce.date().optional()
@@ -50,12 +50,12 @@ const projects = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     draft: z.boolean().optional(),
-    demoURL: z.string().optional(),
-    repoURL: z.string().optional(),
+    demoURL: z.string().url().optional(),
+    repoURL: z.string().url().optional(),
     // OpenGraph overrides
     ogTitle: z.string().optional(),
     ogDescription: z.string().optional(),
-    ogImage: z.string().optional(),
+    ogImage: z.string().url().optional(),
     ogImageAlt: z.string().optional(),
     noOgImage: z.boolean().optional(),
     modifiedDate: z.coerce.date().optional()
