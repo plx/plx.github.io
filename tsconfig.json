@@ -2,7 +2,11 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "strictNullChecks": true,
-    "baseUrl": ".",
+    "types": [
+      "astro/client"
+    ],
+    // baseUrl is intentionally omitted: under `moduleResolution: "bundler"` (set by
+    // astro/tsconfigs/strict), `paths` entries resolve relative to this tsconfig.json.
     "paths": {
       "@*": [
         "./src/*"
