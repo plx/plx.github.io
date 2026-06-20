@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readingTime } from "./utils";
+import { dateRange, readingTime } from "./utils";
 
 /** Build a string containing exactly `count` whitespace-separated words. */
 function words(count: number): string {
@@ -35,5 +35,30 @@ describe("readingTime", () => {
   it("rounds partial minutes up", () => {
     expect(readingTime(words(1000))).toBe("5 min read");
     expect(readingTime(words(1001))).toBe("6 min read");
+  });
+});
+
+describe("dateRange", () => {
+  // Use the local Date(year, monthIndex, day) constructor so month/year are
+  // timezone-independent.
+  const start = new Date(2020, 0, 15); // Jan 2020
+
+  it("formats a closed Date-to-Date range", () => {
+    expect(dateRange(start, new Date(2021, 2, 1))).toBe("Jan 2020 - Mar 2021");
+  });
+
+  it("defaults an omitted end date to Present", () => {
+    expect(dateRange(start)).toBe("Jan 2020 - Present");
+  });
+
+  it("uses a provided string end label verbatim", () => {
+    expect(dateRange(start, "Present")).toBe("Jan 2020 - Present");
+    expect(dateRange(start, "2024")).toBe("Jan 2020 - 2024");
+  });
+
+  it("never emits 'undefined' fragments for any input form", () => {
+    expect(dateRange(start)).not.toContain("undefined");
+    expect(dateRange(start, "Now")).not.toContain("undefined");
+    expect(dateRange(start, new Date(2022, 5, 1))).not.toContain("undefined");
   });
 });

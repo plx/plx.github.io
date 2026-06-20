@@ -22,21 +22,31 @@ export function readingTime(html: string): string {
   return `${minutes} min read`;
 }
 
-export function dateRange(startDate: Date, endDate?: Date | string): string {
-  const startMonth = startDate.toLocaleString("default", { month: "short" });
-  const startYear = startDate.getFullYear().toString();
-  let endMonth;
-  let endYear;
+function formatMonthYear(date: Date): string {
+  const month = date.toLocaleString("en-US", { month: "short" });
+  return `${month} ${date.getFullYear()}`;
+}
 
-  if (endDate) {
-    if (typeof endDate === "string") {
-      endMonth = "";
-      endYear = endDate;
-    } else {
-      endMonth = endDate.toLocaleString("default", { month: "short" });
-      endYear = endDate.getFullYear().toString();
-    }
+/**
+ * Format a date range as `MMM YYYY - MMM YYYY`.
+ *
+ * `endDate` may be:
+ *  - a `Date`, formatted the same way as the start (`MMM YYYY`);
+ *  - a string, used verbatim as the end label (e.g. `"Present"`);
+ *  - omitted, in which case the range is treated as open-ended and the
+ *    end label defaults to `"Present"`.
+ */
+export function dateRange(startDate: Date, endDate?: Date | string): string {
+  const start = formatMonthYear(startDate);
+
+  let end: string;
+  if (endDate === undefined) {
+    end = "Present";
+  } else if (typeof endDate === "string") {
+    end = endDate;
+  } else {
+    end = formatMonthYear(endDate);
   }
 
-  return `${startMonth}${startYear} - ${endMonth}${endYear}`;
+  return `${start} - ${end}`;
 }
