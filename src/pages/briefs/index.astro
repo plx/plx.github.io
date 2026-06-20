@@ -13,13 +13,6 @@ const collection = (await getCollection("briefs"))
   .filter(brief => !brief.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const briefs = await Promise.all(
-  collection.map(async (item) => {
-    const { Content } = await item.render();
-    return { ...item, Content };
-  })
-);
-
 type BriefList = CollectionEntry<"briefs">[];
 type Brief = CollectionEntry<"briefs">;
 
@@ -31,7 +24,7 @@ type BriefsByCategory = {
 }
 
 // Group briefs by category
-const briefs_by_category: BriefsByCategory = briefs.reduce((acc: BriefsByCategory, brief) => {
+const briefs_by_category: BriefsByCategory = collection.reduce((acc: BriefsByCategory, brief) => {
     const categorySlug = extractCategoryFromSlug(brief.slug);
     const categoryKey = categorySlug || 'uncategorized';
     

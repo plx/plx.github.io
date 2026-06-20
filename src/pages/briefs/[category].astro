@@ -42,13 +42,6 @@ const { category: categorySlug, briefs } = Astro.props;
 const categoryPath = `src/content/briefs/${categorySlug}`;
 const category = getCategory(categorySlug, categoryPath);
 
-const renderedBriefs = await Promise.all(
-  briefs.map(async (item) => {
-    const { Content } = await item.render();
-    return { ...item, Content };
-  })
-);
-
 const ogData = getListOGData(
   `${category.displayName} Briefs`,
   category.description || `Briefs about ${category.displayName.toLowerCase()}`,
@@ -78,7 +71,7 @@ const ogData = getListOGData(
         )}
       </div>
       <ul class="animate flex flex-col gap-4">
-        {renderedBriefs.map((brief) => (
+        {briefs.map((brief) => (
           <li>
             <ContentCard {...getBriefCardProps(brief, false, { maxLines: 3 })} />
           </li>
