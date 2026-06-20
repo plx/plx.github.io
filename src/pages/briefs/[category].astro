@@ -5,13 +5,13 @@ import Container from "@components/Container.astro";
 import ContentCard from "@components/ContentCard.astro";
 import { getBriefCardProps } from "@lib/contentCardHelpers";
 import { getCategory, extractCategoryFromSlug } from "@lib/category";
+import { byDateDesc, published } from "@lib/collections";
 import BackToPrev from "@components/BackToPrev.astro";
 import { getListOGData } from "@lib/opengraph";
 
 export async function getStaticPaths() {
-  const allBriefs = (await getCollection("briefs"))
-    .filter(brief => !brief.data.draft);
-    
+  const allBriefs = published(await getCollection("briefs"));
+
   // Get unique categories from brief slugs
   const categories = new Set<string>();
   allBriefs.forEach(brief => {
@@ -20,15 +20,15 @@ export async function getStaticPaths() {
       categories.add(category);
     }
   });
-  
+
   // Create paths for each category
   return Array.from(categories).map(category => ({
     params: { category },
     props: {
       category,
-      briefs: allBriefs
-        .filter(brief => extractCategoryFromSlug(brief.slug) === category)
-        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+      briefs: byDateDesc(
+        allBriefs.filter(brief => extractCategoryFromSlug(brief.slug) === category)
+      )
     }
   }));
 }

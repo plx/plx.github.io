@@ -1,17 +1,16 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
+import { getPublishedCollection } from "@lib/collections";
 import BackToPrev from "@components/BackToPrev.astro";
 import { getPostOGData } from "@lib/opengraph";
 import { renderInlineMarkdown } from "@lib/markdown";
 
 export async function getStaticPaths() {
-  const posts = (await getCollection("blog"))
-    .filter(post => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const posts = await getPublishedCollection("blog");
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: post,
