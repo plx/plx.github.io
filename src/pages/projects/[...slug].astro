@@ -1,18 +1,17 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
+import { getPublishedCollection } from "@lib/collections";
 import BackToPrev from "@components/BackToPrev.astro";
 import Link from "@components/Link.astro";
 import { getProjectOGData } from "@lib/opengraph";
 import { renderInlineMarkdown } from "@lib/markdown";
 
 export async function getStaticPaths() {
-  const projects = (await getCollection("projects"))
-    .filter(post => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const projects = await getPublishedCollection("projects");
   return projects.map((project) => ({
     params: { slug: project.slug },
     props: project,

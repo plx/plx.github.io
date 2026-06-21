@@ -1,24 +1,16 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import ContentCard from "@components/ContentCard.astro";
 import Link from "@components/Link.astro";
 import { getBriefCardProps } from "@lib/contentCardHelpers";
 import { extractCategoryFromSlug, getCategory } from "@lib/category";
+import { getPublishedCollection } from "@lib/collections";
 import { BRIEFS } from "@consts";
 import { getListOGData } from "@lib/opengraph";
 
-const collection = (await getCollection("briefs"))
-  .filter(brief => !brief.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-const briefs = await Promise.all(
-  collection.map(async (item) => {
-    const { Content } = await item.render();
-    return { ...item, Content };
-  })
-);
+const collection = await getPublishedCollection("briefs");
 
 type BriefList = CollectionEntry<"briefs">[];
 type Brief = CollectionEntry<"briefs">;
@@ -31,7 +23,7 @@ type BriefsByCategory = {
 }
 
 // Group briefs by category
-const briefs_by_category: BriefsByCategory = briefs.reduce((acc: BriefsByCategory, brief) => {
+const briefs_by_category: BriefsByCategory = collection.reduce((acc: BriefsByCategory, brief) => {
     const categorySlug = extractCategoryFromSlug(brief.slug);
     const categoryKey = categorySlug || 'uncategorized';
     

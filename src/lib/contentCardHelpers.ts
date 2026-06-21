@@ -9,9 +9,13 @@ type CardOptions = {
 };
 
 /**
- * Transform a blog entry into ContentCard props
+ * Shared mapping for blog/project entries, which produce identical card props.
+ * Briefs are intentionally excluded because they add category-prefix behavior.
  */
-export function getBlogCardProps(entry: CollectionEntry<"blog">, options?: CardOptions) {
+function getStandardCardProps(
+  entry: CollectionEntry<"blog"> | CollectionEntry<"projects">,
+  options?: CardOptions
+) {
   const displayTitle = entry.data.cardTitle || entry.data.title;
 
   return {
@@ -24,18 +28,17 @@ export function getBlogCardProps(entry: CollectionEntry<"blog">, options?: CardO
 }
 
 /**
+ * Transform a blog entry into ContentCard props
+ */
+export function getBlogCardProps(entry: CollectionEntry<"blog">, options?: CardOptions) {
+  return getStandardCardProps(entry, options);
+}
+
+/**
  * Transform a project entry into ContentCard props
  */
-export function getProjectCardProps(entry: CollectionEntry<"blog"> | CollectionEntry<"projects">, options?: CardOptions) {
-  const displayTitle = entry.data.cardTitle || entry.data.title;
-
-  return {
-    title: displayTitle,
-    subtitle: entry.data.description,
-    link: `/${entry.collection}/${entry.slug}`,
-    ...(options?.maxLines !== undefined && { maxLines: options.maxLines }),
-    ...(options?.headingLevel !== undefined && { headingLevel: options.headingLevel }),
-  };
+export function getProjectCardProps(entry: CollectionEntry<"projects">, options?: CardOptions) {
+  return getStandardCardProps(entry, options);
 }
 
 /**
