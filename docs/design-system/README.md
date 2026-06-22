@@ -161,8 +161,10 @@ it makes long-form posts feel like a quiet book, not a SaaS landing page.
 ### Spacing & shape
 
 - Container: **640px** (`max-w-screen-sm`). Single column, centered.
-- Header: fixed top, `py-5`, frosted glass via `backdrop-blur-sm saturate-200`
-  over a 75%-alpha stone-100 (light) or 25%-alpha stone-900 (dark) tint.
+- Header: fixed top, `py-5`, frosted glass via `backdrop-blur-sm` over an
+  opaque-ish veil (`--bg-frost`: paper at 75% light / night at 68% dark). No
+  `saturate()` — an earlier `saturate-200` amplified saturated content scrolling
+  behind the bar (e.g. a list title mid-hover flipping to plum) into a flash.
 - Main content: `py-32` — *very* generous top/bottom padding.
 - Cards: `rounded-lg` (8px), thin border, no shadow.
 - Buttons: `rounded` (6px) or `rounded-full` for icon buttons.
@@ -264,8 +266,8 @@ Interaction feedback only. No entrance animation, no decorative motion.
 - **Radii:** only three — `sm` (4px), default (6px), `lg` (8px),
   plus `full` for circular icon buttons.
 - **Shadows:** none.
-- **Backdrop blur:** only on the fixed header, `backdrop-blur-sm
-  saturate-200`. Used as the *only* layering signal.
+- **Backdrop blur:** only on the fixed header, `backdrop-blur-sm` over the
+  `--bg-frost` veil (no `saturate()`). Used as the *only* layering signal.
 
 ### Layout rules
 

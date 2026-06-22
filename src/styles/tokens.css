@@ -46,7 +46,8 @@
 
   /* ---------- Semantic tokens — light mode ---------- */
   --bg:               var(--paper);
-  --bg-elevated:      rgba(22 24 48 / 0.04);   /* header frost tint */
+  --bg-elevated:      rgba(22 24 48 / 0.04);   /* skip-link / subtle raised surface */
+  --bg-frost:         rgba(246 246 250 / 0.75); /* header glass veil — opaque-ish so backdrop colors don't bleed/flash */
   --bg-hover:         rgba(22 24 48 / 0.09);   /* card / button hover */
   --fg:               rgba(22 24 48 / 0.62);   /* body — soft ink */
   --fg-strong:        var(--ink);              /* headings, code, strong, focus */
@@ -108,6 +109,7 @@
 html.dark {
   --bg:               var(--night);
   --bg-elevated:      rgba(228 230 248 / 0.05);
+  --bg-frost:         rgba(15 17 38 / 0.68);    /* header glass veil — night, opaque-ish */
   --bg-hover:         rgba(228 230 248 / 0.11);
   --fg:               rgba(228 230 248 / 0.76);
   --fg-strong:        var(--moon);

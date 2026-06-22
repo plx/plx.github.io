@@ -41,7 +41,8 @@ headings, `strong`, inline `code`, hovered links, and focus rings hit
 | Semantic token | Light | Dark | Role |
 | --- | --- | --- | --- |
 | `--bg` | `#f6f6fa` (paper) | `#0f1126` (night) | page surface |
-| `--bg-elevated` | `rgba(22 24 48 / .04)` | `rgba(228 230 248 / .05)` | header frost tint |
+| `--bg-elevated` | `rgba(22 24 48 / .04)` | `rgba(228 230 248 / .05)` | skip-link / subtle raised surface |
+| `--bg-frost` | `rgba(246 246 250 / .75)` | `rgba(15 17 38 / .68)` | header frosted-glass veil (opaque-ish so backdrop colors don't bleed/flash) |
 | `--bg-hover` | `rgba(22 24 48 / .09)` | `rgba(228 230 248 / .11)` | card/button hover |
 | `--fg` | `rgba(22 24 48 / .62)` | `rgba(228 230 248 / .76)` | body text (soft) |
 | `--fg-strong` | `#161830` (ink) | `#eff1fb` (moon) | headings, strong, code, focus |
@@ -73,7 +74,7 @@ in dark mode**. Use the semantic utility; **do not add `dark:` color variants.**
 
 | Utility | Token | Notes |
 | --- | --- | --- |
-| `bg-bg`, `bg-bg-elevated`, `bg-bg-hover` | `--bg` / `--bg-elevated` / `--bg-hover` | surfaces |
+| `bg-bg`, `bg-bg-elevated`, `bg-bg-hover`, `bg-frost` | `--bg` / `--bg-elevated` / `--bg-hover` / `--bg-frost` | surfaces; `bg-frost` is the header glass veil |
 | `text-fg`, `text-fg-strong`, `text-muted` | `--fg` / `--fg-strong` / `--fg-muted` | text |
 | `border-border`, `hover:border-border-hover` | `--border` / `--border-hover` | bare `border` is also brand-colored |
 | `decoration-decoration`, `hover:decoration-decoration-hover` | `--decoration` / `--decoration-hover` | link underlines |

@@ -44,8 +44,12 @@ body {
 
 header {
   @apply fixed top-0 left-0 right-0 z-50 py-5;
-  @apply bg-bg-elevated;
-  @apply backdrop-blur-sm saturate-200;
+  /* Frosted glass: an opaque-ish veil + blur. The veil (not a 4% tint) is what
+     keeps saturated content scrolling behind the header — e.g. a list title
+     mid-hover flipping to plum — from bleeding through and flashing. No
+     `saturate()` boost: it amplified that bleed, and the palette is
+     deliberately low-saturation. Dial --bg-frost alpha to taste. */
+  @apply bg-frost backdrop-blur-sm;
 }
 
 main {

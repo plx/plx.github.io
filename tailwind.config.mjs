@@ -21,6 +21,7 @@ export default {
         bg: "var(--bg)",
         "bg-elevated": "var(--bg-elevated)",
         "bg-hover": "var(--bg-hover)",
+        frost: "var(--bg-frost)",
         fg: "var(--fg)",
         "fg-strong": "var(--fg-strong)",
         muted: "var(--fg-muted)",
