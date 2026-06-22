@@ -2,18 +2,13 @@
 import "../styles/global.css";
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/inter/latin-600.css";
-import "@fontsource/lora/400.css";
-import "@fontsource/lora/600.css";
 import inter400 from "@fontsource/inter/files/inter-latin-400-normal.woff2";
 import inter600 from "@fontsource/inter/files/inter-latin-600-normal.woff2";
-import lora400 from "@fontsource/lora/files/lora-latin-400-normal.woff2";
-import lora600 from "@fontsource/lora/files/lora-latin-600-normal.woff2";
 
 import { ClientRouter } from "astro:transitions";
 import { SITE } from "@consts";
 import OpenGraphMeta from "@components/OpenGraphMeta.astro";
 import type { OpenGraphData } from "@lib/opengraph";
-import { generateTailgraphURL } from "@lib/opengraph";
 
 interface Props {
   title: string;
@@ -24,21 +19,18 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = "/Logo.jpeg", ogData } = Astro.props;
+const { title, description, image = "/og-image.png", ogData } = Astro.props;
 
-// Create default OG data if not provided
+// Create default OG data if not provided. Social cards use the static
+// stippled brand image (light + dark) — see src/lib/opengraph.ts.
 const defaultOgData: OpenGraphData = ogData || {
   title,
   description,
   type: "website",
   url: canonicalURL.toString(),
   siteName: SITE.NAME,
-  image: image.startsWith("http") ? image : generateTailgraphURL({
-    title,
-    theme: "dark",
-    backgroundImage: "gradient",
-    logo: `${Astro.site}Logo-144.jpeg`
-  }),
+  image: image.startsWith("http") ? image : new URL(image, Astro.site).toString(),
+  imageDark: new URL("/og-image-dark.png", Astro.site).toString(),
   twitter: {
     card: "summary_large_image"
   }
@@ -50,22 +42,21 @@ const defaultOgData: OpenGraphData = ogData || {
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="/mstile-150x150.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f6fa">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1126">
 
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
 <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin/>
 <link rel="preload" href={inter600} as="font" type="font/woff2" crossorigin/>
-<link rel="preload" href={lora400} as="font" type="font/woff2" crossorigin/>
-<link rel="preload" href={lora600} as="font" type="font/woff2" crossorigin/>
+<link rel="preload" href="/fonts/source-serif-4-latin.woff2" as="font" type="font/woff2" crossorigin/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />

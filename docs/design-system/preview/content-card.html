@@ -1,0 +1,40 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="ContentCard" subtitle="Hover → arrow draws itself L→R · 300ms" viewport="700x200" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>ContentCard</title>
+<style>
+  body { padding: 24px; }
+  .stack { display: flex; flex-direction: column; gap: 10px; }
+  .hint { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); margin-bottom: 10px; }
+  .hint kbd { font-family: var(--font-mono); padding: 1px 5px; border:1px solid var(--border); border-radius: 4px; color: var(--fg-strong); }
+</style>
+</head>
+<body>
+  <div class="hint">hover a card → background + text color cross-fade (300ms ease-in-out)</div>
+  <div class="stack">
+    <a class="dc-card" href="javascript:void(0)">
+      <div style="display:flex; flex-direction:column;">
+        <div class="title"><b style="font-weight:700">Swift Wart:&nbsp;</b><span>Lazy Sequences Decay Easily</span></div>
+        <div class="subtitle">Swift's lazy functional API is elegant, but prone to silently decaying back to its eager equivalent.</div>
+      </div>
+      <svg class="dc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+    <a class="dc-card" href="javascript:void(0)">
+      <div style="display:flex; flex-direction:column;">
+        <div class="title">Claude Code's Subscription Pricing vs GPT-5</div>
+        <div class="subtitle">Anthropic's subscriptions are economical, but so is GPT-5.</div>
+      </div>
+      <svg class="dc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+  </div>
+</body>
+</html>

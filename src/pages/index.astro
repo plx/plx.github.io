@@ -2,7 +2,8 @@
 import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import ContentCard from "@components/ContentCard.astro";
-import { getBlogCardProps, getBriefCardProps, getProjectCardProps } from "@lib/contentCardHelpers";
+import ExcerptEntry from "@components/ExcerptEntry.astro";
+import { getBlogEntryProps, getBriefEntryProps, getProjectCardProps } from "@lib/contentCardHelpers";
 import Link from "@components/Link.astro";
 import { getPublishedCollection } from "@lib/collections";
 import { SITE, HOME, SOCIALS } from "@consts";
@@ -21,90 +22,67 @@ const ogData = getHomeOGData(
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION} ogData={ogData}>
   <Container>
     <h1 class="sr-only">Dispatches</h1>
-    <div class="space-y-16">
-      <section>
-        <article class="space-y-4">
-          <p class="animate">
-            <em>Dispatches</em> is where I publish my technical writing. During this initial phase, much of the content will "refurbished-and-expanded": older personal notes or explanations, updated-and-expanded where necessary.
 
-            Expect a focus on Swift, lower-level iOS work, and—as of late—agentic coding assistants.
-          </p>
-        </article>
-      </section>
+    <p class="intro-lede">
+      <em>Dispatches</em> is where I publish my technical writing. During this initial phase, much of the content will be "refurbished-and-expanded": older personal notes or explanations, updated and expanded where necessary. Expect a focus on Swift, lower-level iOS work, and—as of late—agentic coding assistants.
+    </p>
 
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h2 class="font-semibold text-black dark:text-white">
-            Latest posts
-          </h2>
-          <Link href="/blog">
-            See all posts
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {blog.map(post => (
-            <li>
-              <ContentCard {...getBlogCardProps(post, { maxLines: 2 })} />
-            </li>
-          ))}
-        </ul>
-      </section>
+    <section class="feed-section">
+      <div class="feed-head">
+        <h2 class="feed-eyebrow">Latest posts</h2>
+        <Link href="/blog" class="feed-seeall">See all posts</Link>
+      </div>
+      <ul class="ex-feed">
+        {blog.map(post => (
+          <li>
+            <ExcerptEntry kindLabel="Blog" {...getBlogEntryProps(post)} />
+          </li>
+        ))}
+      </ul>
+    </section>
 
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h2 class="font-semibold text-black dark:text-white">
-            Recent briefs
-          </h2>
-          <Link href="/briefs">
-            See all briefs
-          </Link>
-        </div>
-        <ul class="flex flex-col space-y-4">
-          {briefs.map(brief => (
-            <li>
-              <ContentCard {...getBriefCardProps(brief, true, { maxLines: 2 })} />
-            </li>
-          ))}
-        </ul>
-      </section>
+    <section class="feed-section">
+      <div class="feed-head">
+        <h2 class="feed-eyebrow">Recent briefs</h2>
+        <Link href="/briefs" class="feed-seeall">See all briefs</Link>
+      </div>
+      <ul class="ex-feed">
+        {briefs.map(brief => (
+          <li>
+            <ExcerptEntry {...getBriefEntryProps(brief, true)} />
+          </li>
+        ))}
+      </ul>
+    </section>
 
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h2 class="font-semibold text-black dark:text-white">
-            Recent projects
-          </h2>
-          <Link href="/projects">
-            See all projects
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {projects.map(project => (
-            <li>
-              <ContentCard {...getProjectCardProps(project, { maxLines: 2 })} />
-            </li>
-          ))}
-        </ul>
-      </section>
+    <section class="feed-section">
+      <div class="feed-head">
+        <h2 class="feed-eyebrow">Recent projects</h2>
+        <Link href="/projects" class="feed-seeall">See all projects</Link>
+      </div>
+      <ul class="flex flex-col gap-4">
+        {projects.map(project => (
+          <li>
+            <ContentCard {...getProjectCardProps(project, { maxLines: 2 })} />
+          </li>
+        ))}
+      </ul>
+    </section>
 
-      <section class="animate space-y-4">
-        <h2 class="font-semibold text-black dark:text-white">
-          Let's Connect
-        </h2>
-        <article>
-          <p>
-            Here's how to get in touch:
-          </p>
-        </article>
-        <ul class="flex flex-wrap gap-2">
-          {SOCIALS.map(SOCIAL => (
-            <li class="flex gap-x-2 text-nowrap">
-              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
-                {SOCIAL.NAME}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </div>
+    <section class="feed-section space-y-4">
+      <div class="feed-head">
+        <h2 class="feed-eyebrow">Let's connect</h2>
+      </div>
+      <p>Here's how to get in touch:</p>
+      <ul class="flex flex-wrap gap-2">
+        {SOCIALS.map(SOCIAL => (
+          <li class="flex gap-x-2 text-nowrap">
+            <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
+              {SOCIAL.NAME}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   </Container>
 </PageLayout>

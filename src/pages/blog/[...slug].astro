@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import { getPublishedCollection } from "@lib/collections";
@@ -23,17 +22,22 @@ const { Content } = await post.render();
 
 const ogData = getPostOGData(post, Astro.url.toString(), Astro.site?.toString() || "");
 const renderedTitle = renderInlineMarkdown(post.data.title);
+
+// Opt-in Tufte layout: a wider column with footnotes floated into a
+// right-margin gutter (see src/lib/rehype-sidenotes.mjs + `.post-blog`).
+const useTufte = post.data.sidenotes === true;
+const wrapperClass = useTufte ? "mx-auto max-w-[880px] px-5" : "mx-auto max-w-screen-sm px-5";
 ---
 
 <PageLayout title={post.data.title} description={post.data.description} ogData={ogData}>
-  <Container>
-    <div class="animate">
+  <div class={wrapperClass}>
+    <div>
       <BackToPrev href="/blog">
         Back to blog
       </BackToPrev>
     </div>
     <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5">
         <div class="font-base text-sm">
           <FormattedDate date={post.data.date} />
         </div>
@@ -42,10 +46,10 @@ const renderedTitle = renderInlineMarkdown(post.data.title);
           {readingTime(post.body)}
         </div>
       </div>
-      <h1 class="animate text-2xl font-semibold text-black dark:text-white" set:html={renderedTitle}></h1>
+      <h1 class="text-2xl font-semibold text-fg-strong" set:html={renderedTitle}></h1>
     </div>
-    <article class="animate">
+    <article class={useTufte ? "post-blog" : undefined}>
       <Content />
     </article>
-  </Container>
+  </div>
 </PageLayout>

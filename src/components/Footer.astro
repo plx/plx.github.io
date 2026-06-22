@@ -4,7 +4,7 @@ import { SITE } from "@consts";
 import BackToTop from "@components/BackToTop.astro";
 ---
 
-<footer class="animate">
+<footer>
   <Container>
     <div class="relative">
       <div class="absolute right-0 -top-20">
@@ -22,7 +22,7 @@ import BackToTop from "@components/BackToTop.astro";
           aria-label="Light theme"
           aria-pressed="false"
           data-theme-button="light"
-          class="group size-8 flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400 focus-visible:outline-offset-2"
+          class="group size-8 flex items-center justify-center rounded-full text-current aria-pressed:text-fg-strong focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,7 @@ import BackToTop from "@components/BackToTop.astro";
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out"
+            class="group-hover:stroke-fg-strong transition-colors duration-300 ease-in-out"
           >
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -53,7 +53,7 @@ import BackToTop from "@components/BackToTop.astro";
           aria-label="Dark theme"
           aria-pressed="false"
           data-theme-button="dark"
-          class="group size-8 flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400 focus-visible:outline-offset-2"
+          class="group size-8 flex items-center justify-center rounded-full text-current aria-pressed:text-fg-strong focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ import BackToTop from "@components/BackToTop.astro";
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out"
+            class="group-hover:stroke-fg-strong transition-colors duration-300 ease-in-out"
           >
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
@@ -76,7 +76,7 @@ import BackToTop from "@components/BackToTop.astro";
           aria-label="System theme"
           aria-pressed="false"
           data-theme-button="system"
-          class="group size-8 flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400 focus-visible:outline-offset-2"
+          class="group size-8 flex items-center justify-center rounded-full text-current aria-pressed:text-fg-strong focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ import BackToTop from "@components/BackToTop.astro";
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out"
+            class="group-hover:stroke-fg-strong transition-colors duration-300 ease-in-out"
           >
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
             <line x1="8" y1="21" x2="16" y2="21"></line>

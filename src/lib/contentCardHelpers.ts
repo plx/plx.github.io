@@ -42,6 +42,50 @@ export function getProjectCardProps(entry: CollectionEntry<"projects">, options?
 }
 
 /**
+ * Shared mapping for the editorial-feed listing (ExcerptEntry).
+ * The excerpt is the entry's `description`; body-derived excerpts are a
+ * documented future enhancement (see docs/DESIGN_SYSTEM.md).
+ */
+function getStandardEntryProps(
+  entry: CollectionEntry<"blog"> | CollectionEntry<"projects"> | CollectionEntry<"briefs">
+) {
+  return {
+    title: entry.data.cardTitle || entry.data.title,
+    excerpt: entry.data.description,
+    date: entry.data.date,
+    href: `/${entry.collection}/${entry.slug}`,
+  };
+}
+
+/**
+ * Transform a blog entry into ExcerptEntry props.
+ */
+export function getBlogEntryProps(entry: CollectionEntry<"blog">) {
+  return getStandardEntryProps(entry);
+}
+
+/**
+ * Transform a brief entry into ExcerptEntry props.
+ * @param includeCategory - Whether to surface the category as a title prefix
+ *   (used on the home feed; omitted on the briefs index where the category
+ *   is already the section heading).
+ */
+export function getBriefEntryProps(entry: CollectionEntry<"briefs">, includeCategory = false) {
+  const base = getStandardEntryProps(entry);
+
+  if (!includeCategory) return base;
+
+  const categorySlug = extractCategoryFromSlug(entry.slug);
+  let titlePrefix: string | undefined;
+  if (categorySlug) {
+    const category = getCategory(categorySlug, `src/content/briefs/${categorySlug}`);
+    titlePrefix = category.titlePrefix || category.displayName;
+  }
+
+  return { ...base, titlePrefix };
+}
+
+/**
  * Transform a brief entry into ContentCard props
  * @param includeCategory - Whether to include the category as a title prefix
  * @param options - Card display options (maxLines, headingLevel)

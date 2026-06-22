@@ -32,3 +32,7 @@ pnpm-debug.log*
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+.playwright-mcp/
+
+# Design-system handoff archive (unpacked form lives in docs/design-system/)
+Dispatches Design System-handoff.zip

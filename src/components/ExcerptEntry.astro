@@ -1,0 +1,67 @@
+---
+import { renderInlineMarkdown } from "@lib/markdown";
+import FormattedDate from "@components/FormattedDate.astro";
+
+type HeadingLevel = 2 | 3;
+
+type Props = {
+  titlePrefix?: string;
+  title: string;
+  excerpt: string;
+  date: Date;
+  kindLabel?: string;
+  href: string;
+  headingLevel?: HeadingLevel;
+  ariaLabel?: string;
+};
+
+const {
+  titlePrefix,
+  title,
+  excerpt,
+  date,
+  kindLabel,
+  href,
+  headingLevel = 3,
+  ariaLabel,
+} = Astro.props;
+
+const HeadingTag = `h${headingLevel}` as keyof HTMLElementTagNameMap;
+const renderedTitlePrefix = titlePrefix ? renderInlineMarkdown(titlePrefix) : undefined;
+const renderedTitle = renderInlineMarkdown(title);
+const renderedExcerpt = renderInlineMarkdown(excerpt);
+
+// The whole entry is a single link wrapping a heading + excerpt + tail.
+// Give it an explicit, concise accessible name so screen readers don't
+// read out the entire excerpt + "Continue reading" as the link text.
+const plainTitle = title.replace(/<[^>]*>/g, "");
+const metaBits = [kindLabel, titlePrefix].filter(Boolean).join(" · ");
+const accessibleLabel = ariaLabel || (metaBits ? `${plainTitle} — ${metaBits}` : plainTitle);
+---
+
+<a href={href} aria-label={accessibleLabel} class="ex-entry">
+  <div class="ex-meta">
+    <FormattedDate date={date} />
+    {kindLabel && (
+      <>
+        <span class="ex-meta-sep" aria-hidden="true">·</span>
+        <span>{kindLabel}</span>
+      </>
+    )}
+    {renderedTitlePrefix && (
+      <>
+        <span class="ex-meta-sep" aria-hidden="true">·</span>
+        <span set:html={renderedTitlePrefix}></span>
+      </>
+    )}
+  </div>
+  <HeadingTag class="ex-title" set:html={renderedTitle}></HeadingTag>
+  <p class="ex-excerpt" set:html={renderedExcerpt}></p>
+  <span class="ex-more" aria-hidden="true">
+    Continue reading
+    <svg class="ex-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
+  </span>
+</a>

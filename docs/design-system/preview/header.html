@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Header (frosted)" subtitle="Fixed · backdrop-blur · slash-separated nav" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Header</title>
+<style>
+  body { padding: 0; background: var(--bg); }
+  .scene {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .header {
+    position: absolute; top: 0; left: 0; right: 0;
+    padding: 18px 28px;
+    background: rgba(246, 246, 250, 0.75);
+    backdrop-filter: blur(6px) saturate(180%);
+    -webkit-backdrop-filter: blur(6px) saturate(180%);
+    z-index: 1;
+  }
+  .hrow {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 600px; margin: 0 auto;
+  }
+  .brand { font-family: var(--font-sans); font-weight: 600; font-size: 15px; color: var(--fg-strong); }
+  nav { font-family: var(--font-sans); font-size: 14px; color: var(--fg); display: flex; align-items: center; gap: 10px; }
+  nav a { color: currentColor; text-decoration: underline; text-decoration-color: rgba(22,24,48,.18); text-underline-offset: 2px; }
+  nav a[aria-current="page"] { color: var(--fg-strong); text-decoration-color: var(--accent); }
+  nav .sep { color: var(--fg-muted); }
+  .caption { position: absolute; bottom: 8px; left: 28px; font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); }
+</style>
+</head>
+<body>
+  <div class="scene">
+    <div class="header">
+      <div class="hrow">
+        <div class="brand">Dispatches</div>
+        <nav aria-label="Primary">
+          <a href="#" aria-current="page">blog</a>
+          <span class="sep">/</span>
+          <a href="#">briefs</a>
+          <span class="sep">/</span>
+          <a href="#">projects</a>
+          <span class="sep">/</span>
+          <a href="#">about</a>
+        </nav>
+      </div>
+    </div>
+    <div class="caption">fixed · backdrop-blur · saturate-180 · paper / 75%</div>
+  </div>
+</body>
+</html>

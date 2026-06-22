@@ -8,6 +8,11 @@ const blog = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     draft: z.boolean().optional(),
+    // Opt a longer-form essay into the Tufte layout: a wider column with
+    // numbered footnotes floated into a right-margin gutter as sidenotes
+    // (see src/lib/rehype-sidenotes.mjs + the `.post-blog` styles). Default
+    // (omitted/false) keeps the 640px column with footnotes at the bottom.
+    sidenotes: z.boolean().optional(),
     // OpenGraph overrides
     ogTitle: z.string().optional(),
     ogDescription: z.string().optional(),

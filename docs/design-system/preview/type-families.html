@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Type families" subtitle="Inter (UI) · Source Serif 4 (prose) · Mono (code)" viewport="700x280" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Type families</title>
+<style>
+  .row { display: grid; grid-template-columns: 90px 1fr; gap: 16px; align-items: baseline; padding: 10px 0; }
+  .row + .row { border-top: 1px solid var(--border); }
+  .label { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); line-height: 1.4; }
+  .label b { display: block; color: var(--fg-strong); font-family: var(--font-sans); font-weight: 600; font-size: 11px; }
+  .specimen-sans { font-family: var(--font-sans); font-weight: 600; font-size: 26px; color: var(--fg-strong); letter-spacing: -0.01em; line-height: 1.1; }
+  .specimen-serif { font-family: var(--font-serif); font-size: 17px; line-height: 1.45; color: var(--fg); }
+  .specimen-serif em { font-style: italic; }
+  .specimen-mono { font-family: var(--font-mono); font-size: 14px; color: var(--fg-strong); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="label"><b>Inter</b>400 / 600<br>headings · UI</div>
+    <div class="specimen-sans">The quiet rails of hierarchy.</div>
+  </div>
+  <div class="row">
+    <div class="label"><b>Source Serif 4</b>variable · italic<br>prose body</div>
+    <div class="specimen-serif">Long-form posts feel like a quiet book — <em>not</em> a SaaS landing page.</div>
+  </div>
+  <div class="row">
+    <div class="label"><b>Mono</b>system / JetBrains<br>code only</div>
+    <div class="specimen-mono">LazySequenceProtocol&lt;Element&gt;</div>
+  </div>
+</body>
+</html>

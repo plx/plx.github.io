@@ -2,9 +2,9 @@
 import type { CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import ContentCard from "@components/ContentCard.astro";
+import ExcerptEntry from "@components/ExcerptEntry.astro";
 import Link from "@components/Link.astro";
-import { getBriefCardProps } from "@lib/contentCardHelpers";
+import { getBriefEntryProps } from "@lib/contentCardHelpers";
 import { extractCategoryFromSlug, getCategory } from "@lib/category";
 import { getPublishedCollection } from "@lib/collections";
 import { BRIEFS } from "@consts";
@@ -26,18 +26,18 @@ type BriefsByCategory = {
 const briefs_by_category: BriefsByCategory = collection.reduce((acc: BriefsByCategory, brief) => {
     const categorySlug = extractCategoryFromSlug(brief.slug);
     const categoryKey = categorySlug || 'uncategorized';
-    
+
     if (!acc[categoryKey]) {
-      const metadata = categorySlug 
+      const metadata = categorySlug
         ? getCategory(categorySlug, `src/content/briefs/${categorySlug}`)
         : { slug: 'uncategorized', displayName: 'Uncategorized', sortPriority: -1 };
-      
+
       acc[categoryKey] = {
         briefs: [],
         metadata
       };
     }
-    
+
     acc[categoryKey].briefs.push(brief);
     return acc;
   }, {});
@@ -47,11 +47,11 @@ const brief_categories = Object.keys(briefs_by_category)
     .sort((a, b) => {
       const a_priority = briefs_by_category[a].metadata.sortPriority || 0;
       const b_priority = briefs_by_category[b].metadata.sortPriority || 0;
-      
+
       if (a_priority !== b_priority) {
         return b_priority - a_priority;
       }
-      
+
       // alphabetic (ascending) as fallback
       return briefs_by_category[a].metadata.displayName.localeCompare(
         briefs_by_category[b].metadata.displayName
@@ -71,48 +71,50 @@ const ogData = getListOGData(
 <PageLayout title={BRIEFS.TITLE} description={BRIEFS.DESCRIPTION} ogData={ogData}>
   <Container>
     <div class="space-y-10">
-      <h1 class="animate font-semibold text-black dark:text-white">
+      <h1 class="font-semibold text-fg-strong">
         Briefs
       </h1>
-      <ul class="flex flex-col space-y-4">
-        { 
+      <div class="space-y-10">
+        {
           brief_categories.map(categoryKey => {
             const { briefs: categoryBriefs, metadata } = briefs_by_category[categoryKey];
             const hasCategory = categoryKey !== 'uncategorized';
-            
+
             return (
-              <li>
-                <div class="flex items-center gap-3 mb-2">
-                  <h2 class="font-semibold text-black dark:text-white">
-                    { metadata.displayName }
-                  </h2>
-                  {hasCategory && (
-                    <span class="text-sm">
-                      <Link href={`/briefs/${metadata.slug}`}>
-                        View all →
-                      </Link>
-                    </span>
+              <section class="space-y-4">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-3">
+                    <h2 class="font-semibold text-fg-strong">
+                      { metadata.displayName }
+                    </h2>
+                    {hasCategory && (
+                      <span class="text-sm">
+                        <Link href={`/briefs/${metadata.slug}`}>
+                          View all →
+                        </Link>
+                      </span>
+                    )}
+                  </div>
+                  {metadata.description && (
+                    <p class="text-sm text-muted">
+                      {metadata.description}
+                    </p>
                   )}
                 </div>
-                {metadata.description && (
-                  <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    {metadata.description}
-                  </p>
-                )}
-                <ul class="flex flex-col gap-4">
+                <ul class="ex-feed">
                   {
                     categoryBriefs.map((brief: Brief) => (
-                      <li class="animate">
-                        <ContentCard {...getBriefCardProps(brief, false, { maxLines: 3 })}/>
+                      <li>
+                        <ExcerptEntry {...getBriefEntryProps(brief, false)} />
                       </li>
                     ))
                   }
                 </ul>
-              </li>
+              </section>
             );
           })
         }
-      </ul>
+      </div>
     </div>
   </Container>
 </PageLayout>

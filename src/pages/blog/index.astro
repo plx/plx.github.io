@@ -2,14 +2,14 @@
 import type { CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import ContentCard from "@components/ContentCard.astro";
-import { getBlogCardProps } from "@lib/contentCardHelpers";
+import ExcerptEntry from "@components/ExcerptEntry.astro";
+import { getBlogEntryProps } from "@lib/contentCardHelpers";
 import { getPublishedCollection } from "@lib/collections";
 import { BLOG } from "@consts";
 import { getListOGData } from "@lib/opengraph";
 
 const data = await getPublishedCollection("blog");
-  
+
 type Acc = {
   [year: string]: CollectionEntry<"blog">[];
 }
@@ -38,26 +38,22 @@ const ogData = getListOGData(
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION} ogData={ogData}>
   <Container>
     <div class="space-y-10">
-      <h1 class="animate font-semibold text-black dark:text-white">
+      <h1 class="font-semibold text-fg-strong">
         Blog
       </h1>
-      <div class="space-y-4">
+      <div class="space-y-10">
         {years.map(year => (
-          <section class="animate space-y-4">
-            <h2 class="font-semibold text-black dark:text-white">
+          <section class="space-y-4">
+            <h2 class="font-semibold text-fg-strong">
               {year}
             </h2>
-            <div>
-              <ul class="flex flex-col gap-4">
-                {
-                  posts[year].map((post) => (
-                    <li>
-                      <ContentCard {...getBlogCardProps(post, { maxLines: 3 })}/>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
+            <ul class="ex-feed">
+              {posts[year].map((post) => (
+                <li>
+                  <ExcerptEntry {...getBlogEntryProps(post)} />
+                </li>
+              ))}
+            </ul>
           </section>
         ))}
       </div>

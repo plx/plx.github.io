@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Semantic tokens · light" subtitle="Paper bg · ink fg · plum accent · 8 tokens" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Light semantic tokens</title>
+<style>
+  body { background: #f6f6fa; color: rgba(22,24,48,.62); }
+  .tokens { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tk {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgba(22,24,48,.13);
+    border-radius: var(--radius);
+  }
+  .tk .sw { width: 28px; height: 28px; border-radius: 6px; border: 1px solid rgba(22,24,48,.10); flex: 0 0 28px; }
+  .tk .lbl { font-family: var(--font-mono); font-size: 10px; color: rgba(22,24,48,.6); line-height: 1.3; }
+  .tk .lbl b { display:block; color: #161830; font-family: var(--font-sans); font-weight: 600; font-size: 11px; }
+</style>
+</head>
+<body>
+  <div class="tokens">
+    <div class="tk"><div class="sw" style="background:#f6f6fa"></div><div class="lbl"><b>--bg</b>paper · #f6f6fa</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(22,24,48,.09);"></div><div class="lbl"><b>--bg-hover</b>ink / 9%</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(22,24,48,.62);"></div><div class="lbl"><b>--fg</b>ink / 62% (body)</div></div>
+    <div class="tk"><div class="sw" style="background:#161830;"></div><div class="lbl"><b>--fg-strong</b>ink · headings · code</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(22,24,48,.42);"></div><div class="lbl"><b>--fg-muted</b>meta · dividers</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(22,24,48,.13); border-color:rgba(22,24,48,.13);"></div><div class="lbl"><b>--border</b>ink / 13%</div></div>
+    <div class="tk"><div class="sw" style="background:#762263;"></div><div class="lbl"><b>--accent</b>plum-700 · focus + link hover</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(118,34,99,.09);"></div><div class="lbl"><b>--accent-soft</b>code chip backdrop</div></div>
+  </div>
+</body>
+</html>

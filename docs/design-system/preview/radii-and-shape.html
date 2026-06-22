@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Radii & shape" subtitle="4 / 6 / 8 / full · no shadow system" viewport="700x240" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Radii & shape</title>
+<style>
+  .radii { display: flex; gap: 16px; align-items: end; }
+  .r {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted);
+  }
+  .r .box { width: 76px; height: 60px; border: 1px solid var(--border); background: var(--bg-elevated); }
+  .r .nm { color: var(--fg-strong); font-family: var(--font-sans); font-weight: 600; font-size: 11px; }
+  .r .use { font-size: 10px; color: var(--fg-muted); text-align: center; line-height: 1.3; }
+  .note {
+    margin-top: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font-serif);
+    font-size: 13px;
+    color: var(--fg);
+    line-height: 1.5;
+  }
+  .note b { color: var(--fg-strong); font-family: var(--font-sans); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="radii">
+    <div class="r">
+      <div class="box" style="border-radius:4px;"></div>
+      <div class="nm">sm · 4px</div>
+      <div class="use">code chips</div>
+    </div>
+    <div class="r">
+      <div class="box" style="border-radius:6px;"></div>
+      <div class="nm">default · 6px</div>
+      <div class="use">buttons<br>BackToPrev</div>
+    </div>
+    <div class="r">
+      <div class="box" style="border-radius:8px;"></div>
+      <div class="nm">lg · 8px</div>
+      <div class="use">ContentCard<br>article images</div>
+    </div>
+    <div class="r">
+      <div class="box" style="border-radius:9999px; width:60px; height:60px;"></div>
+      <div class="nm">full</div>
+      <div class="use">icon buttons<br>theme toggle</div>
+    </div>
+  </div>
+  <div class="note"><b>No shadow system.</b> Cards are flat, with a 1px border at 15% (light) or 20% (dark) alpha. The only depth signal in the brand is the fixed header's <code style="font-family:var(--font-mono); font-size:.88em; color:var(--fg-strong)">backdrop-blur-sm saturate-200</code>.</div>
+</body>
+</html>
