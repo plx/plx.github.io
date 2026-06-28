@@ -118,7 +118,10 @@ export default function rehypeSidenotes() {
       const targetId = typeof href === "string" ? href.replace(/^#/, "") : "";
       const match = targetId.match(/(\d+)$/);
       const n = match ? match[1] : "";
-      const content = notes.get(targetId) || [];
+      // Clone the note's nodes: a footnote cited more than once would otherwise
+      // share the same node objects across sidenotes, breaking the hast
+      // invariant that every node has exactly one parent.
+      const content = structuredClone(notes.get(targetId) || []);
 
       const marker = {
         type: "element",

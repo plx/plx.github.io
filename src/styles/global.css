@@ -64,6 +64,11 @@ footer {
   @apply py-5 text-sm;
 }
 
+/* `dark:prose-invert` is a sanctioned exception to the no-`dark:`-color rule:
+   Tailwind Typography themes prose through its own `--tw-prose-*` variables,
+   which no single semantic token replaces. The explicit prose-* overrides
+   below land in the utilities layer and still win, so our tokens drive
+   headings/body/strong/links. */
 article {
   @apply max-w-full prose dark:prose-invert prose-img:mx-auto prose-img:my-auto;
   @apply prose-headings:font-semibold prose-p:font-serif;
@@ -103,16 +108,6 @@ article :where(code)::after {
     padding: 0 0.25rem;
   }
 }
-
-/* Entrance animation removed (design system: content paints immediately).
-   `.animate` is kept as a no-op so the legacy Head.astro animate() script
-   and existing call sites stay harmless; re-enable by restoring the two
-   rules below. */
-.animate {
-  /* @apply opacity-0 translate-y-3 transition-all duration-700 ease-out; */
-}
-
-/* .animate.show { @apply opacity-100 translate-y-0; } */
 
 html #back-to-top {
   @apply opacity-0 pointer-events-none;

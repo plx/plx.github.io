@@ -94,7 +94,6 @@ const defaultOgData: OpenGraphData = ogData || {
 
   function init() {
     onScroll();
-    animate();
 
     const backToTop = document.getElementById("back-to-top");
     backToTop?.removeEventListener("click", handleScrollToTop);
@@ -129,16 +128,6 @@ const defaultOgData: OpenGraphData = ogData || {
 
     document.removeEventListener("scroll", onScroll);
     document.addEventListener("scroll", onScroll);
-  }
-
-  function animate() {
-    const animateElements = document.querySelectorAll(".animate");
-
-    animateElements.forEach((element, index) => {
-      setTimeout(() => {
-        element.classList.add("show");
-      }, index * 150);
-    });
   }
 
   function onScroll() {
