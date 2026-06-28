@@ -14,6 +14,11 @@ export async function GET(context: Context) {
   const items = byDateDesc([...blog, ...projects]);
 
   return rss({
+    // Declare the itunes namespace so the <itunes:image> tag in customData below
+    // is valid XML. Without this, the feed parses with a namespace error.
+    xmlns: {
+      itunes: "http://www.itunes.com/dtds/podcast-1.0.dtd",
+    },
     title: HOME.TITLE,
     description: HOME.DESCRIPTION,
     site: context.site,

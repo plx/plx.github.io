@@ -79,7 +79,11 @@ jobs:
       
       - name: Validate Internal Links
         run: npm run validate:links
-      
+
+      # xmllint ships with ubuntu-latest (libxml2-utils); no install step needed.
+      - name: Validate RSS Feed
+        run: npm run validate:feed
+
       - name: Upload Pages Artifact
         id: upload
         uses: actions/upload-pages-artifact@v3
