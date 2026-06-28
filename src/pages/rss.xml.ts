@@ -19,13 +19,12 @@ export async function GET(context: Context) {
     site: context.site,
     customData: `<language>en-us</language>
     <image>
-      <url>${context.site}og-image.png</url>
+      <url>${context.site}rss-image.png</url>
       <title>${HOME.TITLE}</title>
       <link>${context.site}</link>
-      <width>1200</width>
-      <height>630</height>
-    </image>
-    <itunes:image href="${context.site}og-image.png" />`,
+      <width>144</width>
+      <height>144</height>
+    </image>`,
     items: items.map((item) => ({
       title: item.data.title,
       description: item.data.description,
