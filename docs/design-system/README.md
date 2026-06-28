@@ -193,8 +193,11 @@ is available for use as a recurring background motif on essay landings.
 
 A dark-mode OG variant lives at **`assets/og-image-dark.svg/.png`**
 (and `-dark-bare.svg/.png`) — same plum-300 ink stippling on the
-indigo `--night` surface, identical geometry. For platforms that
-honor it, the dark variant should be served as `og:image:dark`.
+indigo `--night` surface, identical geometry. It ships as a brand
+asset but isn't wired into the page metadata: `og:image:dark` is not
+part of the Open Graph protocol and no major platform honors it, so
+social cards use the single light `og-image.png` until a supported
+mechanism exists.
 
 ### Favicon
 

@@ -28,8 +28,6 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
 const ogData = getListOGData(
   BLOG.TITLE,
   BLOG.DESCRIPTION,
-  "blog",
-  data.length,
   Astro.url.toString(),
   Astro.site?.toString() || ""
 );

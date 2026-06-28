@@ -9,7 +9,6 @@ export interface OpenGraphData {
   url: string;
   siteName: string;
   image?: string;
-  imageDark?: string;
   imageAlt?: string;
   article?: {
     publishedTime?: Date;
@@ -23,31 +22,27 @@ export interface OpenGraphData {
   };
 }
 
-// Social cards use the static, on-brand stippled OG art (light + dark).
-// The site previously generated per-post cards via Tailgraph on a gradient
+// Social cards use the static, on-brand stippled OG art. The site
+// previously generated per-post cards via Tailgraph on a gradient
 // background, which the design system explicitly rules out.
 const OG_IMAGE = "og-image.png";
-const OG_IMAGE_DARK = "og-image-dark.png";
 
 function brandImage(siteUrl: string, file: string): string {
   return siteUrl ? new URL(file, siteUrl).toString() : `/${file}`;
 }
 
 /**
- * Resolve the OG image pair for an entry, honoring per-entry overrides:
- * a custom `ogImage` wins (no dark variant); `noOgImage` opts out entirely;
- * otherwise the static brand pair is used.
+ * Resolve the OG image for an entry, honoring per-entry overrides:
+ * a custom `ogImage` wins; `noOgImage` opts out entirely; otherwise the
+ * static brand image is used.
  */
-function resolveEntryImages(
+function resolveEntryImage(
   data: { ogImage?: string; noOgImage?: boolean },
   siteUrl: string
-): { image?: string; imageDark?: string } {
+): { image?: string } {
   if (data.ogImage) return { image: data.ogImage };
   if (data.noOgImage) return {};
-  return {
-    image: brandImage(siteUrl, OG_IMAGE),
-    imageDark: brandImage(siteUrl, OG_IMAGE_DARK),
-  };
+  return { image: brandImage(siteUrl, OG_IMAGE) };
 }
 
 /**
@@ -60,7 +55,7 @@ export function getPostOGData(
 ): OpenGraphData {
   const ogTitle = stripMarkdown(post.data.ogTitle || post.data.title);
   const ogDescription = post.data.ogDescription || post.data.description;
-  const { image, imageDark } = resolveEntryImages(post.data, siteUrl);
+  const { image } = resolveEntryImage(post.data, siteUrl);
 
   return {
     title: ogTitle,
@@ -69,7 +64,6 @@ export function getPostOGData(
     url,
     siteName: SITE.NAME,
     image,
-    imageDark,
     imageAlt: post.data.ogImageAlt || `${ogTitle} - Blog Post`,
     article: {
       publishedTime: post.data.date,
@@ -94,7 +88,7 @@ export function getBriefOGData(
 ): OpenGraphData {
   const ogTitle = stripMarkdown(brief.data.ogTitle || brief.data.title);
   const ogDescription = brief.data.ogDescription || brief.data.description;
-  const { image, imageDark } = resolveEntryImages(brief.data, siteUrl);
+  const { image } = resolveEntryImage(brief.data, siteUrl);
 
   return {
     title: ogTitle,
@@ -103,7 +97,6 @@ export function getBriefOGData(
     url,
     siteName: SITE.NAME,
     image,
-    imageDark,
     imageAlt: brief.data.ogImageAlt || `${ogTitle} - Brief`,
     article: {
       publishedTime: brief.data.date,
@@ -127,7 +120,7 @@ export function getProjectOGData(
 ): OpenGraphData {
   const ogTitle = stripMarkdown(project.data.ogTitle || project.data.title);
   const ogDescription = project.data.ogDescription || project.data.description;
-  const { image, imageDark } = resolveEntryImages(project.data, siteUrl);
+  const { image } = resolveEntryImage(project.data, siteUrl);
 
   return {
     title: ogTitle,
@@ -136,7 +129,6 @@ export function getProjectOGData(
     url,
     siteName: SITE.NAME,
     image,
-    imageDark,
     imageAlt: project.data.ogImageAlt || `${ogTitle} - Project`,
     twitter: {
       card: "summary_large_image"
@@ -150,15 +142,9 @@ export function getProjectOGData(
 export function getListOGData(
   title: string,
   description: string,
-  pageType: "blog" | "briefs" | "projects",
-  itemCount: number,
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  // itemCount/pageType retained for potential future per-list cards.
-  void itemCount;
-  void pageType;
-
   return {
     title: `${title} | ${SITE.NAME}`,
     description,
@@ -166,7 +152,6 @@ export function getListOGData(
     url,
     siteName: SITE.NAME,
     image: brandImage(siteUrl, OG_IMAGE),
-    imageDark: brandImage(siteUrl, OG_IMAGE_DARK),
     imageAlt: `${title} - ${SITE.NAME}`,
     twitter: {
       card: "summary_large_image"
@@ -188,7 +173,6 @@ export function getHomeOGData(
     url,
     siteName: SITE.NAME,
     image: brandImage(siteUrl, OG_IMAGE),
-    imageDark: brandImage(siteUrl, OG_IMAGE_DARK),
     imageAlt: SITE.NAME,
     twitter: {
       card: "summary_large_image"

@@ -1,5 +1,5 @@
 ---
-import { renderInlineMarkdown } from "@lib/markdown";
+import { renderInlineMarkdown, stripMarkdown } from "@lib/markdown";
 import FormattedDate from "@components/FormattedDate.astro";
 
 type HeadingLevel = 2 | 3;
@@ -34,7 +34,7 @@ const renderedExcerpt = renderInlineMarkdown(excerpt);
 // The whole entry is a single link wrapping a heading + excerpt + tail.
 // Give it an explicit, concise accessible name so screen readers don't
 // read out the entire excerpt + "Continue reading" as the link text.
-const plainTitle = title.replace(/<[^>]*>/g, "");
+const plainTitle = stripMarkdown(title);
 const metaBits = [kindLabel, titlePrefix].filter(Boolean).join(" · ");
 const accessibleLabel = ariaLabel || (metaBits ? `${plainTitle} — ${metaBits}` : plainTitle);
 ---

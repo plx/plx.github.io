@@ -12,8 +12,6 @@ const projects = await getPublishedCollection("projects");
 const ogData = getListOGData(
   PROJECTS.TITLE,
   PROJECTS.DESCRIPTION,
-  "projects",
-  projects.length,
   Astro.url.toString(),
   Astro.site?.toString() || ""
 );

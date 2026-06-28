@@ -45,8 +45,6 @@ const category = getCategory(categorySlug, categoryPath);
 const ogData = getListOGData(
   `${category.displayName} Briefs`,
   category.description || `Briefs about ${category.displayName.toLowerCase()}`,
-  "briefs",
-  briefs.length,
   Astro.url.toString(),
   Astro.site?.toString() || ""
 );
