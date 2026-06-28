@@ -35,7 +35,9 @@ const renderedExcerpt = renderInlineMarkdown(excerpt);
 // Give it an explicit, concise accessible name so screen readers don't
 // read out the entire excerpt + "Continue reading" as the link text.
 const plainTitle = stripMarkdown(title);
-const metaBits = [kindLabel, titlePrefix].filter(Boolean).join(" · ");
+const metaBits = [kindLabel, titlePrefix ? stripMarkdown(titlePrefix) : undefined]
+  .filter(Boolean)
+  .join(" · ");
 const accessibleLabel = ariaLabel || (metaBits ? `${plainTitle} — ${metaBits}` : plainTitle);
 ---
 

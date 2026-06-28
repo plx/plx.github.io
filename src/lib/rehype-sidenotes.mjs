@@ -36,12 +36,33 @@ function findFirst(node, pred) {
 // Pull a footnote definition's inline content out of its <li>, dropping the
 // back-reference anchor (pointless once the note sits next to its marker) and
 // flattening paragraphs (separated by <br>) so it nests inside an inline span.
-function extractInline(li) {
+//
+// Only paragraph content is flattened. Block-level siblings (lists, code blocks,
+// blockquotes) can't legally nest inside an inline <span>, so they're skipped —
+// but we warn via file.message() rather than drop them silently, since Tufte
+// sidenotes are meant to be short inline notes and the author should know the
+// note isn't fully represented.
+function extractInline(li, file) {
   const out = [];
   const paragraphs = (li.children || []).filter(
     (c) => c.type === "element" && c.tagName === "p"
   );
   const blocks = paragraphs.length ? paragraphs : [li];
+
+  if (paragraphs.length && file) {
+    const dropped = (li.children || []).filter(
+      (c) => c.type === "element" && c.tagName !== "p"
+    );
+    if (dropped.length) {
+      file.message(
+        `rehype-sidenotes: a footnote contains block-level content ` +
+          `(${dropped.map((c) => `<${c.tagName}>`).join(", ")}) that can't ` +
+          `render inside an inline sidenote; only its paragraph text is kept.`,
+        li
+      );
+    }
+  }
+
   blocks.forEach((block, i) => {
     if (i > 0) {
       out.push({ type: "element", tagName: "br", properties: {}, children: [] });
@@ -93,7 +114,7 @@ export default function rehypeSidenotes() {
           if (li.type !== "element" || li.tagName !== "li" || !li.properties) continue;
           const id = li.properties.id;
           const idStr = Array.isArray(id) ? id[0] : id;
-          if (idStr) notes.set(idStr, extractInline(li));
+          if (idStr) notes.set(idStr, extractInline(li, file));
         }
       }
     }

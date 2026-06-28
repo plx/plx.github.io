@@ -47,8 +47,11 @@ const defaultOgData: OpenGraphData = ogData || {
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f6fa">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1126">
+<!-- Single theme-color, kept in sync by applyThemeColor() with the resolved
+     (JS-toggled) theme rather than the OS preference. Defaults to the light
+     surface for the no-JS / pre-script paint; the inline theme script below
+     corrects it before first paint and on every View Transition swap. -->
+<meta id="theme-color" name="theme-color" content="#f6f6fa">
 
 <meta name="generator" content={Astro.generator} />
 
@@ -162,6 +165,13 @@ const defaultOgData: OpenGraphData = ogData || {
     });
   }
 
+  // Keep <meta name="theme-color"> (mobile browser chrome) in sync with the
+  // resolved theme. Values mirror --paper / --night in tokens.css.
+  function applyThemeColor(dark) {
+    const meta = document.getElementById("theme-color");
+    if (meta) meta.setAttribute("content", dark ? "#0f1126" : "#f6f6fa");
+  }
+
   function toggleTheme(dark) {
     const css = document.createElement("style");
 
@@ -185,6 +195,8 @@ const defaultOgData: OpenGraphData = ogData || {
     } else {
       document.documentElement.classList.remove("dark");
     }
+
+    applyThemeColor(dark);
 
     window.getComputedStyle(css).opacity;
     document.head.removeChild(css);
