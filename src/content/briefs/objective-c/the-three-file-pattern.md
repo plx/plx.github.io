@@ -34,7 +34,7 @@ As an example illustrating both, let's say we're writing a class cluster that:
 - represents an in-memory OpenCV image
 - is essentially "just a wrapper around an OpenCV `cv::Mat` value"
 - has subclasses for various concrete types (e.g. monochrome, RGB, BGRA, etc.)
-- should have a purely objective-c API (e.g. no C++ "leakage")
+- should have a purely Objective-C API (e.g. no C++ "leakage")
 - will have a large API surface area, broken down into topic-specific categories
 
 In that case, our base class might look like this:
@@ -180,4 +180,3 @@ The closest matches I could find were the below, neither of which feels like the
 
 - [Microsoft's (legacy?) Objective-C style guide](https://microsoft.github.io/objc-guide/Headers/Factoring.html)
 - [A WWDC talk from 2011](https://nonstrict.eu/wwdcindex/wwdc2011/322/) (strangely hard to locate)
-

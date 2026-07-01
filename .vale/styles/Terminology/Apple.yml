@@ -1,0 +1,19 @@
+extends: substitution
+message: "Use '%s' instead of '%s'."
+level: error
+ignorecase: true
+swap:
+  '\bios\b': iOS
+  '\bipad\b': iPad
+  '\bipad[ -]?os\b': iPadOS
+  '\biphone\b': iPhone
+  '\bmac[ -]?os\b': macOS
+  '\bwatch[ -]?os\b': watchOS
+  '\btv[ -]?os\b': tvOS
+  '\bvision[ -]?os\b': visionOS
+  '\bxcode\b': Xcode
+  '\bswift[ -]?ui\b': SwiftUI
+  '\bobjective[ -]?c\b': Objective-C
+  '\bapp\s+store\b': App Store
+  '\btest\s?flight\b': TestFlight
+  '\bapple\s+silicon\b': Apple silicon

@@ -51,6 +51,9 @@ jobs:
 
       - name: Run Spell Check (Source)
         run: npm run spellcheck
+
+      - name: Run Prose Lint (Vale)
+        run: npm run lint:prose
       
       - name: Build Site
         run: npm run build

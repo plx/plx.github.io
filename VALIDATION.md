@@ -45,19 +45,25 @@ npm run spellcheck:html
 npm run spellcheck:all
 ```
 
-### 3. Build
+### 3. Prose Linting
+Checks article content for Vale style and terminology rules:
+```bash
+npm run lint:prose
+```
+
+### 4. Build
 Generates the static site:
 ```bash
 npm run build
 ```
 
-### 4. Link Validation
+### 5. Link Validation
 Checks for broken internal links (requires build first):
 ```bash
 npm run validate:links
 ```
 
-### 5. All Validations
+### 6. All Validations
 Runs everything in sequence:
 ```bash
 npm run validate:all
@@ -70,9 +76,10 @@ npm run test:ci
 The GitHub Actions workflow runs these exact same checks:
 1. Linting (`npm run lint`)
 2. Source spell check (`npm run spellcheck`)
-3. Build (`npm run build`)
-4. HTML spell check (`npm run spellcheck:html`)
-5. Link validation (`npm run validate:links`)
+3. Prose lint (`npm run lint:prose`)
+4. Build (`npm run build`)
+5. HTML spell check (`npm run spellcheck:html`)
+6. Link validation (`npm run validate:links`)
 
 ## Troubleshooting
 
@@ -122,7 +129,8 @@ Before pushing changes:
 1. ✅ Run `npm run test:ci` locally
 2. ✅ Fix any issues that arise
 3. ✅ If adding new terms, update `cspell.json`
-4. ✅ Commit all changes including config updates
+4. ✅ If adding new terminology rules, update `.vale/styles/`
+5. ✅ Commit all changes including config updates
 
 ## Common Gotchas
 

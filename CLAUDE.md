@@ -21,7 +21,8 @@ Some key commands are:
 - just spellcheck-html: checks spelling in built HTML output
 - just lint: runs ESLint on all files
 - just lint-fix: auto-fixes ESLint issues where possible
-- just validate: runs all validation checks (lint + spellcheck + build + links)
+- just lint-prose: runs Vale on article content
+- just validate: runs all validation checks (lint + spellcheck + prose + build + links)
 
 ## Key Technical Decisions
 
