@@ -68,7 +68,7 @@ We evaluated several spell-checking solutions:
 - **Hunspell/Aspell**: Traditional spell checkers, but poor at handling technical terms and camelCase
 - **LanguageTool**: Excellent for grammar but overkill for basic spell checking
 - **textlint**: Good but requires more configuration for technical content
-- **Vale**: Great for style guides, and now used for prose style and terminology checks rather than spelling
+- **Vale**: Strong for style guides; used here for prose style and terminology consistency, not spelling
 
 CSpell was chosen because it:
 - Has built-in understanding of code conventions

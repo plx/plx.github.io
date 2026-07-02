@@ -1,19 +1,19 @@
 extends: substitution
 message: "Use '%s' instead of '%s'."
 level: error
-ignorecase: true
+ignorecase: false
 swap:
-  '\bios\b': iOS
-  '\bipad\b': iPad
-  '\bipad[ -]?os\b': iPadOS
-  '\biphone\b': iPhone
-  '\bmac[ -]?os\b': macOS
-  '\bwatch[ -]?os\b': watchOS
-  '\btv[ -]?os\b': tvOS
-  '\bvision[ -]?os\b': visionOS
-  '\bxcode\b': Xcode
-  '\bswift[ -]?ui\b': SwiftUI
-  '\bobjective[ -]?c\b': Objective-C
-  '\bapp\s+store\b': App Store
-  '\btest\s?flight\b': TestFlight
-  '\bapple\s+silicon\b': Apple silicon
+  '\b(ios|IOS|Ios)\b': iOS
+  '\b(ipad|IPad|Ipad|IPAD)\b': iPad
+  '\b(ipad[ -]?os|ipad[ -]?OS|iPad[ -]os|iPad[ -]OS|IPad[ -]?OS|Ipad[ -]?OS|IPADOS)\b': iPadOS
+  '\b(iphone|IPhone|Iphone|IPHONE)\b': iPhone
+  '\b(mac[ -]?os|MacOS|Mac-OS|MAC[ -]?OS)\b': macOS
+  '\b(watch[ -]?os|watch[ -]OS|Watch[ -]?OS|Watch[ -]?os|WATCH[ -]?OS)\b': watchOS
+  '\b(tv[ -]?os|tv[ -]OS|TV[ -]?OS|Tv[ -]?OS)\b': tvOS
+  '\b(vision[ -]?os|vision[ -]OS|Vision[ -]?OS|Vision[ -]?os|VISION[ -]?OS)\b': visionOS
+  '\b(xcode|XCode|XCODE)\b': Xcode
+  '\b(swift[ -]?ui|swift[ -]?UI|Swift[ -]UI|Swift[ -]?Ui|SWIFT[ -]?UI)\b': SwiftUI
+  '\b(objective[ -]?c|Objective C|Objective-c|ObjectiveC|OBJECTIVE[ -]?C)\b': Objective-C
+  '\b(app\s+store|App\s+store|app\s+Store|APP\s+STORE)\b': App Store
+  '\b(test\s*flight|Test\s+Flight|Testflight|TEST\s*FLIGHT)\b': TestFlight
+  '\b(apple\s+silicon|Apple\s+Silicon|APPLE\s+SILICON)\b': Apple silicon

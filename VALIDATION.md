@@ -51,23 +51,30 @@ Checks article content for Vale style and terminology rules:
 npm run lint:prose
 ```
 
-### 4. Build
+### 4. Vale Fixture Tests
+Checks that Vale terminology fixtures fail and pass as expected:
+```bash
+npm run test:vale
+```
+
+### 5. Build
 Generates the static site:
 ```bash
 npm run build
 ```
 
-### 5. Link Validation
+### 6. Link Validation
 Checks for broken internal links (requires build first):
 ```bash
 npm run validate:links
 ```
 
-### 6. All Validations
+### 7. All Validations
 Runs everything in sequence:
 ```bash
 npm run validate:all
-# OR equivalently:
+
+# Full CI parity, including unit tests:
 npm run test:ci
 ```
 
@@ -75,11 +82,13 @@ npm run test:ci
 
 The GitHub Actions workflow runs these exact same checks:
 1. Linting (`npm run lint`)
-2. Source spell check (`npm run spellcheck`)
-3. Prose lint (`npm run lint:prose`)
-4. Build (`npm run build`)
-5. HTML spell check (`npm run spellcheck:html`)
-6. Link validation (`npm run validate:links`)
+2. Unit tests (`npm run test:unit`)
+3. Source spell check (`npm run spellcheck`)
+4. Prose lint (`npm run lint:prose`)
+5. Vale fixture tests (`npm run test:vale`)
+6. Build (`npm run build`)
+7. HTML spell check (`npm run spellcheck:html`)
+8. Link validation (`npm run validate:links`)
 
 ## Troubleshooting
 
@@ -138,6 +147,7 @@ Before pushing changes:
 2. **HTML spell check requires build**: Always run `npm run build` first
 3. **CI uses exact npm scripts**: Don't rely on different local commands
 4. **Case sensitivity**: File paths are case-sensitive in CI (Linux) but may not be locally (macOS/Windows)
+5. **Vale fixture failures**: Update `.vale/fixtures/` and `scripts/check-vale-fixtures.js` when changing expected terminology rule behavior
 
 ## Maintaining CI/CD Parity
 

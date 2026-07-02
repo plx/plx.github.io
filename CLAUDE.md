@@ -22,7 +22,8 @@ Some key commands are:
 - just lint: runs ESLint on all files
 - just lint-fix: auto-fixes ESLint issues where possible
 - just lint-prose: runs Vale on article content
-- just validate: runs all validation checks (lint + spellcheck + prose + build + links)
+- just test-vale: verifies Vale terminology fixture behavior
+- just validate: runs all validation checks (lint + spellcheck + prose + Vale fixtures + build + links)
 
 ## Key Technical Decisions
 

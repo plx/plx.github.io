@@ -9,9 +9,26 @@ Vale checks article prose in `src/content`.
 
 Add new rule files under the most specific style namespace that fits the rule. If a new family of checks does not fit `Terminology`, add another directory under `.vale/styles` and include it in `.vale.ini` with `BasedOnStyles`.
 
+## Rule Notes
+
+Apple terminology substitutions are case-sensitive and list the incorrect forms they should catch. That keeps correctly cased terms from depending on case-insensitive substitution behavior.
+
+Historical Apple platform names such as `classic Mac OS` and `Mac OS X` are valid when discussing older systems. If a passage intentionally uses a form that a rule flags, keep the exception local:
+
+```markdown
+<!-- vale Terminology.Apple = NO -->
+classic mac os spelling retained for quoted or historical context
+<!-- vale Terminology.Apple = YES -->
+```
+
+MDX files are treated as Markdown. JSX component attribute values can be linted as prose, so use local Vale disable comments around intentional non-prose values when needed.
+
+The local `@vvago/vale` package downloads the Vale binary during npm install. The lint command itself uses the checked-in rules and does not run `vale sync`.
+
 ## Usage
 
 ```bash
 npm run lint:prose
+npm run test:vale
 just lint-prose
 ```

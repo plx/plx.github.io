@@ -17,6 +17,7 @@ This repository uses a modular GitHub Actions workflow architecture to ensure co
   - Unit tests
   - Spell checking (source files)
   - Prose linting (Vale)
+  - Vale fixture tests
   - TypeScript checking and Astro build
   - Spell checking (generated HTML)
   - Internal link validation
@@ -67,6 +68,7 @@ PRs undergo the exact same validation as deployment, including:
 - All linting and type checking
 - Spell checking (both source and generated HTML)
 - Prose linting
+- Vale fixture tests
 - Full site build
 - Link validation
 

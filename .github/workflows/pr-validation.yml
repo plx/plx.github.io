@@ -45,6 +45,7 @@ jobs:
               '✓ Unit tests',
               '✓ Spell check (source)',
               '✓ Prose lint (Vale)',
+              '✓ Vale fixture tests',
               '✓ Type checking & Build',
               '✓ Spell check (HTML)',
               '✓ Internal link validation',

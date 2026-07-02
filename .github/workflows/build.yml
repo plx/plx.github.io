@@ -54,6 +54,9 @@ jobs:
 
       - name: Run Prose Lint (Vale)
         run: npm run lint:prose
+
+      - name: Run Vale Fixture Tests
+        run: npm run test:vale
       
       - name: Build Site
         run: npm run build
