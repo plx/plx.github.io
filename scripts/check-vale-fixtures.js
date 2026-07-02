@@ -1,8 +1,10 @@
 import { spawnSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { requireValeExecutable } from "./vale.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const valeExecutable = requireValeExecutable(root);
 
 const cases = [
   {
@@ -25,7 +27,7 @@ const cases = [
 
 function runVale(file) {
   const result = spawnSync(
-    "vale",
+    valeExecutable,
     ["--config=.vale.ini", "--output=JSON", file],
     {
       cwd: root,

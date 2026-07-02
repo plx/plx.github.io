@@ -18,7 +18,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:markdown": "markdownlint-cli2 \"src/content/**/*.{md,mdx}\"",
-    "lint:prose": "vale --config=.vale.ini src/content",
+    "lint:prose": "node scripts/run-vale.js --config=.vale.ini src/content",
     "test:vale": "node scripts/check-vale-fixtures.js",
     "spellcheck": "cspell \"src/**/*.{md,mdx,ts,tsx,js,jsx,astro}\" --no-progress",
     "spellcheck:html": "cspell \"dist/**/*.html\" --no-progress",
