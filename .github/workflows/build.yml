@@ -81,7 +81,7 @@ jobs:
         run: npm run validate:links
 
       - name: Install xmllint
-        run: sudo apt-get install -y libxml2-utils
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
 
       - name: Validate RSS Feed
         run: npm run validate:feed
