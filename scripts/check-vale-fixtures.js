@@ -15,9 +15,16 @@ const cases = [
     file: ".vale/fixtures/apple-terminology-invalid.md",
     expectedMatches: [
       "ios",
+      "ipad",
+      "ipad os",
+      "iphone",
       "xcode",
+      "watch os",
+      "tv os",
+      "vision os",
       "Swift UI",
       "Objective C",
+      "app store",
       "Test Flight",
       "MacOS",
       "Apple Silicon",
@@ -62,7 +69,8 @@ let failed = false;
 
 for (const { file, expectedMatches } of cases) {
   const { status, stderr, alerts } = runVale(file);
-  const matches = new Set(alerts.map((alert) => alert.Match));
+  const matches = alerts.map((alert) => alert.Match).sort();
+  const sortedExpectedMatches = expectedMatches.toSorted();
 
   if (expectedMatches.length === 0) {
     if (status !== 0 || alerts.length !== 0) {
@@ -79,11 +87,13 @@ for (const { file, expectedMatches } of cases) {
     console.error(`${file} should fail with Vale alerts.`);
   }
 
-  for (const expectedMatch of expectedMatches) {
-    if (!matches.has(expectedMatch)) {
-      failed = true;
-      console.error(`${file} did not report expected match: ${expectedMatch}`);
-    }
+  if (JSON.stringify(matches) !== JSON.stringify(sortedExpectedMatches)) {
+    failed = true;
+    console.error(`${file} reported unexpected Vale matches.`);
+    console.error("Expected:");
+    console.error(JSON.stringify(sortedExpectedMatches, null, 2));
+    console.error("Actual:");
+    console.error(JSON.stringify(matches, null, 2));
   }
 
   if (stderr) {
