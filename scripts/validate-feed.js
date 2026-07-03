@@ -41,7 +41,7 @@ if (!existsSync(feedPath)) {
 
 // 2. xmllint has to be available.
 const probe = spawnSync("xmllint", ["--version"], { stdio: "ignore" });
-if (probe.error) {
+if (probe.error || probe.status !== 0) {
   console.error("❌ xmllint not found on PATH.");
   console.error("   macOS ships it by default; on Debian/Ubuntu install it with");
   console.error("   \"sudo apt-get install -y libxml2-utils\".");
@@ -68,4 +68,3 @@ if (result.status !== 0 || stderr) {
 }
 
 console.log(`✅ ${relFeed} is well-formed and all XML namespaces are declared.`);
-process.exit(0);

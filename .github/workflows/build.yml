@@ -80,7 +80,9 @@ jobs:
       - name: Validate Internal Links
         run: npm run validate:links
 
-      # xmllint ships with ubuntu-latest (libxml2-utils); no install step needed.
+      - name: Install xmllint
+        run: sudo apt-get install -y libxml2-utils
+
       - name: Validate RSS Feed
         run: npm run validate:feed
 
