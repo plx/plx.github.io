@@ -1,0 +1,62 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Wordmark" subtitle="Lockup + bare, light + dark — extracted from OG image" viewport="700x360" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Wordmark</title>
+<style>
+  body { padding: 18px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .group.dark {
+    background: #0f1126;
+    border-color: rgba(228,230,248,.14);
+    color: rgba(228,230,248,.76);
+  }
+  .group .hdr {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--fg-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .group.dark .hdr { color: rgba(228,230,248,.55); }
+  .group .hdr .path { font-style: normal; }
+  .lockup-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .lockup-row img { display: block; }
+  .lockup-row .bare { height: 36px; width: auto; }
+  .lockup-row .full { height: 56px; width: auto; }
+</style>
+</head>
+<body>
+  <div class="group">
+    <div class="hdr"><span>Light · ink on paper</span><span class="path">assets/wordmark{,-bare}.svg</span></div>
+    <div class="lockup-row">
+      <img class="full" src="../assets/wordmark.svg" alt="Dispatches — Technical writing on topics of personal interest.">
+      <img class="bare" src="../assets/wordmark-bare.svg" alt="Dispatches">
+    </div>
+  </div>
+
+  <div class="group dark">
+    <div class="hdr"><span>Dark · moon on night</span><span class="path">assets/wordmark-dark{,-bare-dark}.svg</span></div>
+    <div class="lockup-row">
+      <img class="full" src="../assets/wordmark-dark.svg" alt="Dispatches — Technical writing on topics of personal interest.">
+      <img class="bare" src="../assets/wordmark-bare-dark.svg" alt="Dispatches">
+    </div>
+  </div>
+</body>
+</html>

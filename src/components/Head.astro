@@ -2,18 +2,13 @@
 import "../styles/global.css";
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/inter/latin-600.css";
-import "@fontsource/lora/400.css";
-import "@fontsource/lora/600.css";
 import inter400 from "@fontsource/inter/files/inter-latin-400-normal.woff2";
 import inter600 from "@fontsource/inter/files/inter-latin-600-normal.woff2";
-import lora400 from "@fontsource/lora/files/lora-latin-400-normal.woff2";
-import lora600 from "@fontsource/lora/files/lora-latin-600-normal.woff2";
 
 import { ClientRouter } from "astro:transitions";
 import { SITE } from "@consts";
 import OpenGraphMeta from "@components/OpenGraphMeta.astro";
 import type { OpenGraphData } from "@lib/opengraph";
-import { generateTailgraphURL } from "@lib/opengraph";
 
 interface Props {
   title: string;
@@ -24,21 +19,17 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = "/Logo.jpeg", ogData } = Astro.props;
+const { title, description, image = "/og-image.png", ogData } = Astro.props;
 
-// Create default OG data if not provided
+// Create default OG data if not provided. Social cards use the static
+// stippled brand image — see src/lib/opengraph.ts.
 const defaultOgData: OpenGraphData = ogData || {
   title,
   description,
   type: "website",
   url: canonicalURL.toString(),
   siteName: SITE.NAME,
-  image: image.startsWith("http") ? image : generateTailgraphURL({
-    title,
-    theme: "dark",
-    backgroundImage: "gradient",
-    logo: `${Astro.site}Logo-144.jpeg`
-  }),
+  image: image.startsWith("http") ? image : new URL(image, Astro.site).toString(),
   twitter: {
     card: "summary_large_image"
   }
@@ -50,22 +41,25 @@ const defaultOgData: OpenGraphData = ogData || {
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="/mstile-150x150.png">
-<meta name="theme-color" content="#ffffff">
+<!-- Single theme-color, kept in sync by applyThemeColor() with the resolved
+     (JS-toggled) theme rather than the OS preference. Defaults to the light
+     surface for the no-JS / pre-script paint; the inline theme script below
+     corrects it before first paint and on every View Transition swap. -->
+<meta id="theme-color" name="theme-color" content="#f6f6fa">
 
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
 <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin/>
 <link rel="preload" href={inter600} as="font" type="font/woff2" crossorigin/>
-<link rel="preload" href={lora400} as="font" type="font/woff2" crossorigin/>
-<link rel="preload" href={lora600} as="font" type="font/woff2" crossorigin/>
+<link rel="preload" href="/fonts/source-serif-4-latin.woff2" as="font" type="font/woff2" crossorigin/>
+<link rel="preload" href="/fonts/source-serif-4-latin-italic.woff2" as="font" type="font/woff2" crossorigin/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -101,9 +95,8 @@ const defaultOgData: OpenGraphData = ogData || {
 <script is:inline>
   const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
-  function init() {
+  function init(event) {
     onScroll();
-    animate();
 
     const backToTop = document.getElementById("back-to-top");
     backToTop?.removeEventListener("click", handleScrollToTop);
@@ -130,20 +123,13 @@ const defaultOgData: OpenGraphData = ogData || {
         });
       });
 
+    // View Transitions reset <html>'s class on every swap. The inline
+    // preloadTheme() below already handles the initial full load.
+    if (event.type === "astro:after-swap") preloadTheme();
     updateThemeButtons(getThemePreference());
 
     document.removeEventListener("scroll", onScroll);
     document.addEventListener("scroll", onScroll);
-  }
-
-  function animate() {
-    const animateElements = document.querySelectorAll(".animate");
-
-    animateElements.forEach((element, index) => {
-      setTimeout(() => {
-        element.classList.add("show");
-      }, index * 150);
-    });
   }
 
   function onScroll() {
@@ -178,6 +164,13 @@ const defaultOgData: OpenGraphData = ogData || {
     });
   }
 
+  // Keep <meta name="theme-color"> (mobile browser chrome) in sync with the
+  // resolved theme. Values mirror --paper / --night in tokens.css.
+  function applyThemeColor(dark) {
+    const meta = document.getElementById("theme-color");
+    if (meta) meta.setAttribute("content", dark ? "#0f1126" : "#f6f6fa");
+  }
+
   function toggleTheme(dark) {
     const css = document.createElement("style");
 
@@ -202,15 +195,21 @@ const defaultOgData: OpenGraphData = ogData || {
       document.documentElement.classList.remove("dark");
     }
 
+    applyThemeColor(dark);
+
     window.getComputedStyle(css).opacity;
     document.head.removeChild(css);
   }
 
   function getThemePreference() {
-    const stored = localStorage.getItem("theme");
-    return stored === "light" || stored === "dark" || stored === "system"
-      ? stored
-      : "system";
+    try {
+      const stored = window.localStorage.getItem("theme");
+      return stored === "light" || stored === "dark" || stored === "system"
+        ? stored
+        : "system";
+    } catch {
+      return "system";
+    }
   }
 
   function resolveDarkMode(preference) {
@@ -229,7 +228,11 @@ const defaultOgData: OpenGraphData = ogData || {
   }
 
   function setThemePreference(preference) {
-    localStorage.setItem("theme", preference);
+    try {
+      window.localStorage.setItem("theme", preference);
+    } catch {
+      // Storage can be blocked; still apply the theme for this page view.
+    }
     toggleTheme(resolveDarkMode(preference));
     updateThemeButtons(preference);
   }

@@ -1,0 +1,116 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Motion" subtitle="700ms fade-up · 150ms stagger by index" viewport="700x230" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Motion</title>
+<style>
+  body { padding: 22px 28px; }
+
+  .hint {
+    font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted);
+    margin-bottom: 14px;
+  }
+
+  /* Two side-by-side demos: a hoverable link and a hoverable card-ish chip. */
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 14px;
+  }
+  .demo {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 92px;
+  }
+
+  /* Prose link — color + decoration cross-fade */
+  .plink {
+    font-family: var(--font-serif); font-size: 15px; color: var(--fg);
+  }
+  .plink a {
+    font-family: var(--font-sans); font-weight: 500;
+    color: currentColor; text-decoration: underline; text-underline-offset: 2px;
+    text-decoration-color: var(--decoration);
+    transition: color var(--dur-base) var(--ease-in-out),
+                text-decoration-color var(--dur-base) var(--ease-in-out);
+  }
+  .plink a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+  /* Chip — background + color cross-fade (same as ContentCard hover) */
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font-sans); font-size: 14px;
+    color: var(--fg);
+    background: transparent;
+    text-decoration: none;
+    transition: background var(--dur-base) var(--ease-in-out),
+                color var(--dur-base) var(--ease-in-out),
+                border-color var(--dur-base) var(--ease-in-out);
+  }
+  .chip:hover {
+    background: var(--bg-hover);
+    color: var(--fg-strong);
+    border-color: var(--border-hover);
+  }
+
+  .meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    font-family: var(--font-mono); font-size: 11px; color: var(--fg-muted);
+    line-height: 1.55;
+  }
+  .meta b {
+    display: block; color: var(--fg-strong);
+    font-family: var(--font-sans); font-weight: 600; font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .strike {
+    margin-top: 16px;
+    padding: 10px 12px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--fg-muted);
+    line-height: 1.6;
+  }
+  .strike b {
+    display: block; color: var(--fg-strong);
+    font-family: var(--font-sans); font-weight: 600; font-size: 11px;
+    margin-bottom: 4px;
+  }
+  .strike s { color: var(--fg-muted); }
+</style>
+</head>
+<body>
+  <div class="hint">hover either element → 300ms ease-in-out cross-fade</div>
+
+  <div class="grid">
+    <div class="demo">
+      <div class="plink">Read about <a href="javascript:void(0)">meso-optimization</a></div>
+    </div>
+    <div class="demo">
+      <a class="chip" href="javascript:void(0)">link / button chip</a>
+    </div>
+  </div>
+
+  <div class="meta">
+    <div><b>--dur-base</b>300ms</div>
+    <div><b>--ease-in-out</b>cubic-bezier(.65, 0, .35, 1)</div>
+    <div><b>properties</b>color · background · border · text-decoration</div>
+    <div><b>scope</b>hover &amp; focus state changes only</div>
+  </div>
+
+  <div class="strike">
+    <b>Removed from this system</b>
+    <s>Page-load fade-up (.animate / .show, 700ms + 150ms stagger)</s><br>
+    <s>ContentCard arrow draw-in (shaft scaleX 0→1, head translate)</s><br>
+    <s>BackToPrev mirrored arrow draw-in</s>
+  </div>
+</body>
+</html>

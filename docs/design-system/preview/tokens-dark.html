@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Semantic tokens · dark" subtitle="Night bg · moon fg · lifted plum accent · 8 tokens" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Dark semantic tokens</title>
+<style>
+  body { background: #0f1126; color: rgba(228,230,248,.76); }
+  .tokens { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tk {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgba(228,230,248,.16);
+    border-radius: var(--radius);
+  }
+  .tk .sw { width: 28px; height: 28px; border-radius: 6px; border: 1px solid rgba(228,230,248,.16); flex: 0 0 28px; }
+  .tk .lbl { font-family: var(--font-mono); font-size: 10px; color: rgba(228,230,248,.7); line-height: 1.3; }
+  .tk .lbl b { display:block; color: #eff1fb; font-family: var(--font-sans); font-weight: 600; font-size: 11px; }
+</style>
+</head>
+<body>
+  <div class="tokens">
+    <div class="tk"><div class="sw" style="background:#0f1126"></div><div class="lbl"><b>--bg</b>night · #0f1126</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(228,230,248,.11);"></div><div class="lbl"><b>--bg-hover</b>moon / 11%</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(228,230,248,.76);"></div><div class="lbl"><b>--fg</b>moon / 76% (body)</div></div>
+    <div class="tk"><div class="sw" style="background:#eff1fb;"></div><div class="lbl"><b>--fg-strong</b>moon · headings · code</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(228,230,248,.48);"></div><div class="lbl"><b>--fg-muted</b>meta · dividers</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(228,230,248,.16);"></div><div class="lbl"><b>--border</b>moon / 16%</div></div>
+    <div class="tk"><div class="sw" style="background:#d088b3;"></div><div class="lbl"><b>--accent</b>plum-300 · focus + link hover</div></div>
+    <div class="tk"><div class="sw" style="background:rgba(208,136,179,.13);"></div><div class="lbl"><b>--accent-soft</b>code chip backdrop</div></div>
+  </div>
+</body>
+</html>

@@ -31,13 +31,13 @@ const renderedTitle = renderInlineMarkdown(brief.data.title);
 
 <PageLayout title={brief.data.title} description={brief.data.description} ogData={ogData}>
   <Container>
-    <div class="animate">
+    <div>
       <BackToPrev href={categorySlug ? `/briefs/${categorySlug}` : "/briefs"}>
         Back to {categorySlug ? category?.displayName + " briefs" : "briefs"}
       </BackToPrev>
     </div>
     <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5">
         <div class="font-base text-sm">
           <FormattedDate date={brief.data.date} />
         </div>
@@ -49,9 +49,9 @@ const renderedTitle = renderInlineMarkdown(brief.data.title);
           </>
         )}
       </div>
-      <h1 class="animate text-2xl font-semibold text-black dark:text-white" set:html={renderedTitle}></h1>
+      <h1 class="text-2xl font-semibold text-fg-strong" set:html={renderedTitle}></h1>
     </div>
-    <article class="animate">
+    <article>
       <Content />
     </article>
   </Container>

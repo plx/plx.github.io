@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Prose composition" subtitle="Sans heading · Source Serif 4 body · inline code & link" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Prose composition</title>
+<style>
+  body { padding: 22px 28px; }
+  .prose h2 { font-family: var(--font-sans); font-weight: 600; font-size: 22px; color: var(--fg-strong); margin: 0 0 10px; }
+  .prose p { font-family: var(--font-serif); font-size: 15px; line-height: 1.7; color: var(--fg); margin: 0 0 8px; }
+  .prose em { font-style: italic; }
+  .prose strong { font-weight: 600; color: var(--fg-strong); }
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--fg-strong);
+    background: var(--accent-soft);
+    padding: 0 4px;
+    border-radius: 3px;
+  }
+  .prose a {
+    font-family: var(--font-sans);
+    color: currentColor;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--decoration);
+    transition: color .3s, text-decoration-color .3s;
+  }
+  .prose a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+  .prose .footnote { vertical-align: super; font-size: 0.75em; }
+</style>
+</head>
+<body>
+  <div class="prose">
+    <h2>Why Meso-Optimization Matters</h2>
+    <p>An <em>elegant-looking</em> corner of the Swift standard library is its <a href="#">lazy-functional APIs</a> — if you want to convert a chain into its lazy equivalent, all you need to do is prepend it with <code>lazy</code>.</p>
+    <p>Looks nice, but there's a catch: the implementation is making clever use of an <strong>unusually-tricky aspect</strong> of Swift's overload-resolution rules<span class="footnote">1</span>.</p>
+  </div>
+</body>
+</html>

@@ -28,13 +28,13 @@ const renderedTitle = renderInlineMarkdown(project.data.title);
 
 <PageLayout title={project.data.title} description={project.data.description} ogData={ogData}>
   <Container>
-    <div class="animate">
+    <div>
       <BackToPrev href="/projects">
         Back to projects
       </BackToPrev>
     </div>
     <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5">
         <div class="font-base text-sm">
           <FormattedDate date={project.data.date} />
         </div>
@@ -43,9 +43,9 @@ const renderedTitle = renderInlineMarkdown(project.data.title);
           {readingTime(project.body)}
         </div>
       </div>
-      <h1 class="animate text-2xl font-semibold text-black dark:text-white" set:html={renderedTitle}></h1>
+      <h1 class="text-2xl font-semibold text-fg-strong" set:html={renderedTitle}></h1>
       {(project.data.demoURL || project.data.repoURL) && (
-        <nav class="animate flex gap-1">
+        <nav class="flex gap-1">
           {project.data.demoURL && (
             <Link href={project.data.demoURL} external>
               demo
@@ -62,7 +62,7 @@ const renderedTitle = renderInlineMarkdown(project.data.title);
         </nav>
       )}
     </div>
-    <article class="animate">
+    <article>
       <Content />
     </article>
   </Container>

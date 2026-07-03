@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Favicon" subtitle="H4 · disproportionate scaling · plum + moon-highlight stars · 16/32/48/180" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Favicon</title>
+<style>
+  body { padding: 18px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; align-items: end; gap: 16px; }
+  .col { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .col img { display: block; border-radius: 0; image-rendering: pixelated; }
+  .col.lg img { border-radius: 12px; image-rendering: auto; }
+  .col .lbl { font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-muted); }
+  .group { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); }
+  .group.dark { background: #2a2d52; color: rgba(228,230,248,.76); border-color: rgba(228,230,248,.18); }
+  .group .hdr { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); margin-bottom: 4px; }
+  .group.dark .hdr { color: rgba(228,230,248,.55); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="group">
+      <div class="hdr">Light mode · ink on paper</div>
+      <div class="row">
+        <div class="col"><img src="../assets/favicon-light-16.png" width="16" height="16" alt=""><div class="lbl">16</div></div>
+        <div class="col"><img src="../assets/favicon-light-32.png" width="32" height="32" alt=""><div class="lbl">32</div></div>
+        <div class="col"><img src="../assets/favicon-light-48.png" width="48" height="48" alt=""><div class="lbl">48</div></div>
+        <div class="col lg"><img src="../assets/favicon-light-180.png" width="80" height="80" alt=""><div class="lbl">180 (apple-touch)</div></div>
+      </div>
+    </div>
+    <div class="group dark">
+      <div class="hdr">Dark mode · plum + moon-highlights on dusk</div>
+      <div class="row">
+        <div class="col"><img src="../assets/favicon-dark-16.png" width="16" height="16" alt=""><div class="lbl">16</div></div>
+        <div class="col"><img src="../assets/favicon-dark-32.png" width="32" height="32" alt=""><div class="lbl">32</div></div>
+        <div class="col"><img src="../assets/favicon-dark-48.png" width="48" height="48" alt=""><div class="lbl">48</div></div>
+        <div class="col lg"><img src="../assets/favicon-dark-180.png" width="80" height="80" alt=""><div class="lbl">180</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

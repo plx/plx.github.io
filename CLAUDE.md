@@ -35,6 +35,29 @@ Some key commands are:
 
 Additionally, we aim to have *reasonable* accessibility support throughout the site.
 
+## Design System
+
+The site's visual design is the **Twilight** design system: a single
+indigo-night-sky surface/text family with deep **plum** as the only accent;
+serif prose (Source Serif 4) on sans UI (Inter); flat-with-border, no shadows,
+no gradients, no emoji. **Before making any visual change, read
+[`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md)** (token table, the
+token→Tailwind-utility mapping, dos & don'ts, dark-mode mechanics, and the
+opt-in Tufte / deferred patterns). The `/dispatches-design` skill and the full
+brand narrative in `docs/design-system/README.md` are also available.
+
+Key things to know:
+
+- **Tokens** are CSS variables in `src/styles/tokens.css`, exposed as Tailwind
+  utilities in `tailwind.config.mjs` (`bg-bg`, `text-fg`, `text-fg-strong`,
+  `text-muted`, `border-border`, `bg-bg-hover`, `text-accent`, `bg-accent-soft`,
+  `ring-accent`). They **auto-flip in dark mode** — use the semantic token, don't
+  add `dark:` color variants.
+- **Served brand assets** (`public/favicon.svg`, `og-image*.png`, etc.) are
+  generated from `docs/design-system/` — don't hand-edit the PNGs.
+- **Motion is interaction feedback only** (300ms hover/focus); there is no
+  page-load animation.
+
 ## Content Structure
 
 The site's content is organized into three main collections:
