@@ -16,6 +16,7 @@ const cases = [
     expectedMatches: [
       "ios",
       "ipad",
+      "ipad-Os",
       "ipad os",
       "IPad os",
       "IPAD OS",
