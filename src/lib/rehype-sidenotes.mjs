@@ -33,6 +33,11 @@ function findFirst(node, pred) {
   return null;
 }
 
+function textContent(node) {
+  if (node.type === "text") return node.value;
+  return (node.children || []).map(textContent).join("");
+}
+
 // Pull a footnote definition's inline content out of its <li>, dropping the
 // back-reference anchor (pointless once the note sits next to its marker) and
 // flattening paragraphs (separated by <br>) so it nests inside an inline span.
@@ -72,7 +77,7 @@ function extractInline(li, file) {
         child.type === "element" &&
         child.tagName === "a" &&
         child.properties &&
-        child.properties.dataFootnoteBackref
+        Object.hasOwn(child.properties, "dataFootnoteBackref")
       ) {
         continue;
       }
@@ -131,14 +136,21 @@ export default function rehypeSidenotes() {
             n.properties &&
             n.properties.dataFootnoteRef
         );
-        if (ref) refs.push({ sup: node, parent, href: ref.properties.href });
+        if (ref) {
+          refs.push({
+            sup: node,
+            parent,
+            href: ref.properties.href,
+            label: textContent(ref),
+          });
+        }
       }
     });
 
-    for (const { sup, parent, href } of refs) {
+    for (const { sup, parent, href, label } of refs) {
       const targetId = typeof href === "string" ? href.replace(/^#/, "") : "";
       const match = targetId.match(/(\d+)$/);
-      const n = match ? match[1] : "";
+      const n = label || (match ? match[1] : "");
       const note = notes.get(targetId);
       if (!note || note.length === 0) continue;
 

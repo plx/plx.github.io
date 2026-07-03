@@ -5,7 +5,8 @@ dist/
 .astro/
 
 # conductor build artifacts
-.conductor/
+.conductor/*
+!.conductor/settings.toml
 
 # dependencies
 node_modules/

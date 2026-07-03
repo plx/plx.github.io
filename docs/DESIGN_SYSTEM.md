@@ -179,6 +179,6 @@ The handoff's `README.md` §Motion is **authoritative**: the page-load fade-up
 300ms hover/focus cross-fades remain and chevrons are static. The bundle's
 `_ds_manifest.json` "motion" card and the original `SKILL.md` still describe the
 old "700ms fade-up · 150ms stagger" — that text is **stale**. This repo follows
-the README: no entrance animation. (`global.css` keeps an inert `.animate` no-op
-and the legacy `Head.astro` `animate()` script so re-enabling is a one-line CSS
-change; existing `class="animate"` call sites were removed during migration.)
+the README: no entrance animation. The legacy `.animate` / `.show` CSS, old
+`Head.astro` `animate()` script, and existing `class="animate"` call sites were
+removed during migration.

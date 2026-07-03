@@ -1,0 +1,18 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "npm ci && npx playwright install chromium firefox webkit"
+run_mode = "concurrent"
+
+[scripts.run.dev]
+command = "npm run dev -- --host 127.0.0.1 --port $CONDUCTOR_PORT"
+default = true
+icon = "play"
+
+[scripts.run.preview]
+command = "npm run build && npm run preview -- --host 127.0.0.1 --port $CONDUCTOR_PORT"
+icon = "globe"
+
+[scripts.run.unit]
+command = "npm run test:unit"
+icon = "test-tube"
