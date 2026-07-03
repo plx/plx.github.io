@@ -79,7 +79,13 @@ jobs:
       
       - name: Validate Internal Links
         run: npm run validate:links
-      
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Validate RSS Feed
+        run: npm run validate:feed
+
       - name: Upload Pages Artifact
         id: upload
         uses: actions/upload-pages-artifact@v3
