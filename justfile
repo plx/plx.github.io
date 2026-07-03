@@ -83,6 +83,7 @@ install:
 setup:
     npm install
     npx playwright install
+    @command -v xmllint >/dev/null 2>&1 || echo "⚠️  xmllint not found — needed for 'just validate-feed'. macOS ships it; on Debian/Ubuntu run 'sudo apt-get install -y libxml2-utils'."
 
 # Spellcheck: checks spelling in source files
 spellcheck:
@@ -116,9 +117,14 @@ lint-prose:
 test-vale:
     npm run test:vale
 
-# Validate: runs validation checks (lint + spellcheck + prose + Vale fixtures + build + links)
+# Validate: runs all validation checks (lint + spellcheck + prose + Vale fixtures + build + links + feed)
 validate:
     npm run validate:all
+
+# Validate-feed: builds the site then validates the RSS feed XML (well-formedness + namespaces, via xmllint)
+validate-feed:
+    npm run build
+    npm run validate:feed
 
 # QA: runs all Playwright QA tests
 qa:

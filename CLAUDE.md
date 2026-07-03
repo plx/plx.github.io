@@ -23,7 +23,8 @@ Some key commands are:
 - just lint-fix: auto-fixes ESLint issues where possible
 - just lint-prose: runs Vale on article content
 - just test-vale: verifies Vale terminology fixture behavior
-- just validate: runs all validation checks (lint + spellcheck + prose + Vale fixtures + build + links)
+- just validate-feed: builds the site then validates the RSS feed XML (well-formedness + namespaces, via xmllint)
+- just validate: runs all validation checks (lint + spellcheck + prose + Vale fixtures + build + links + feed)
 
 ## Key Technical Decisions
 

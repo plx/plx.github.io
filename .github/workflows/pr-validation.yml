@@ -49,6 +49,7 @@ jobs:
               '✓ Type checking & Build',
               '✓ Spell check (HTML)',
               '✓ Internal link validation',
+              '✓ RSS feed validation',
               '✓ Artifact upload'
             ];
             
