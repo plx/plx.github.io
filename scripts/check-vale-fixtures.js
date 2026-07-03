@@ -18,6 +18,8 @@ const cases = [
       "ipad",
       "ipad os",
       "IPad os",
+      "IPAD OS",
+      "IPAD-OS",
       "iphone",
       "xcode",
       "watch os",

@@ -4,8 +4,8 @@ level: error
 ignorecase: false
 swap:
   '\b(ios|IOS|Ios)\b': iOS
-  '\b(ipad(?![ -]?(?:os|OS)\b)|IPad(?![ -]?(?:os|OS)\b)|Ipad(?![ -]?(?:os|OS)\b)|IPAD)\b': iPad
-  '\b(ipad[ -]?os|ipad[ -]?OS|iPad[ -]os|iPad[ -]OS|IPad[ -]?os|IPad[ -]?OS|Ipad[ -]?os|Ipad[ -]?OS|IPADOS)\b': iPadOS
+  '\b(ipad(?![ -]?(?:os|OS)\b)|IPad(?![ -]?(?:os|OS)\b)|Ipad(?![ -]?(?:os|OS)\b)|IPAD(?![ -]?(?:os|OS)\b))\b': iPad
+  '\b(ipad[ -]?os|ipad[ -]?OS|iPad[ -]os|iPad[ -]OS|IPad[ -]?os|IPad[ -]?OS|Ipad[ -]?os|Ipad[ -]?OS|IPAD[ -]?OS|IPADOS)\b': iPadOS
   '\b(iphone|IPhone|Iphone|IPHONE)\b': iPhone
   '\b(mac[ -]?os|MacOS|Mac-OS|MAC[ -]?OS)\b': macOS
   '\b(watch[ -]?os|watch[ -]OS|Watch[ -]?OS|Watch[ -]?os|WATCH[ -]?OS)\b': watchOS
