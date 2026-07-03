@@ -59,7 +59,7 @@
   --bg-hover:     rgba(22 24 48 / 0.09);          /* card hover */
   --fg:           rgba(22 24 48 / 0.62);          /* default body — soft ink */
   --fg-strong:    var(--ink);                     /* headings, code, focus */
-  --fg-muted:     rgba(22 24 48 / 0.42);          /* nav dividers, meta */
+  --fg-muted:     rgba(22 24 48 / 0.61);          /* nav dividers, meta */
   --border:       rgba(22 24 48 / 0.13);          /* card / button outline */
   --border-hover: rgba(22 24 48 / 0.25);
   --decoration:   rgba(22 24 48 / 0.15);          /* underline for prose links */
@@ -110,9 +110,8 @@
   --radius-lg: 0.5rem;     /* `rounded-lg` — content cards */
   --radius-full: 9999px;   /* icon buttons, theme switcher */
 
-  --container: 640px;      /* max-w-screen-sm */
-  --header-h:  3.5rem;
-  --page-py:   8rem;       /* `py-32` on <main> */
+  --container: 640px;
+  --page-py:   8rem;
 
   /* =========================================================
      MOTION — interaction feedback only.

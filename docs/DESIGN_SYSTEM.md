@@ -46,7 +46,7 @@ headings, `strong`, inline `code`, hovered links, and focus rings hit
 | `--bg-hover` | `rgba(22 24 48 / .09)` | `rgba(228 230 248 / .11)` | card/button hover |
 | `--fg` | `rgba(22 24 48 / .62)` | `rgba(228 230 248 / .76)` | body text (soft) |
 | `--fg-strong` | `#161830` (ink) | `#eff1fb` (moon) | headings, strong, code, focus |
-| `--fg-muted` | `rgba(22 24 48 / .42)` | `rgba(228 230 248 / .48)` | meta, nav dividers, footer |
+| `--fg-muted` | `rgba(22 24 48 / .61)` | `rgba(228 230 248 / .48)` | meta, nav dividers, footer |
 | `--border` | `rgba(22 24 48 / .13)` | `rgba(228 230 248 / .16)` | 1px outlines |
 | `--border-hover` | `rgba(22 24 48 / .25)` | `rgba(228 230 248 / .40)` | |
 | `--decoration` | `rgba(22 24 48 / .15)` | `rgba(228 230 248 / .22)` | prose link underline |

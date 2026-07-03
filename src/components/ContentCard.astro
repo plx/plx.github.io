@@ -1,5 +1,5 @@
 ---
-import { renderInlineMarkdown } from "@lib/markdown";
+import { renderInlineMarkdown, stripMarkdown } from "@lib/markdown";
 
 type HeadingLevel = 2 | 3 | 4 | 5 | 6;
 
@@ -34,7 +34,7 @@ if (maxLines !== "none") {
 }
 
 // Create accessible label for screen readers
-const accessibleLabel = ariaLabel || `${titlePrefix ? titlePrefix + ': ' : ''}${title.replace(/<[^>]*>/g, '')} - ${subtitle.replace(/<[^>]*>/g, '')}`;
+const accessibleLabel = ariaLabel || `${titlePrefix ? stripMarkdown(titlePrefix) + ': ' : ''}${stripMarkdown(title)} - ${stripMarkdown(subtitle)}`;
 ---
 
 <a 

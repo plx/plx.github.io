@@ -38,6 +38,10 @@ function textContent(node) {
   return (node.children || []).map(textContent).join("");
 }
 
+function footnoteReferenceNumber(ref) {
+  return textContent(ref).trim();
+}
+
 // Pull a footnote definition's inline content out of its <li>, dropping the
 // back-reference anchor (pointless once the note sits next to its marker) and
 // flattening paragraphs (separated by <br>) so it nests inside an inline span.
@@ -141,16 +145,14 @@ export default function rehypeSidenotes() {
             sup: node,
             parent,
             href: ref.properties.href,
-            label: textContent(ref),
+            number: footnoteReferenceNumber(ref),
           });
         }
       }
     });
 
-    for (const { sup, parent, href, label } of refs) {
+    for (const { sup, parent, href, number } of refs) {
       const targetId = typeof href === "string" ? href.replace(/^#/, "") : "";
-      const match = targetId.match(/(\d+)$/);
-      const n = label || (match ? match[1] : "");
       const note = notes.get(targetId);
       if (!note || note.length === 0) continue;
 
@@ -162,19 +164,23 @@ export default function rehypeSidenotes() {
       const marker = {
         type: "element",
         tagName: "sup",
-        properties: { className: ["fnref"], dataN: n },
-        children: [{ type: "text", value: n }],
+        properties: { className: ["fnref"], dataN: number },
+        children: [{ type: "text", value: number }],
       };
       const sidenote = {
         type: "element",
         tagName: "span",
-        properties: { className: ["sidenote"] },
+        properties: {
+          className: ["sidenote"],
+          role: "note",
+          ariaLabel: number ? `Note ${number}` : "Note",
+        },
         children: [
           {
             type: "element",
             tagName: "span",
-            properties: { className: ["num"] },
-            children: [{ type: "text", value: `${n}.` }],
+            properties: { className: ["num"], ariaHidden: "true" },
+            children: [{ type: "text", value: `${number}.` }],
           },
           ...content,
         ],

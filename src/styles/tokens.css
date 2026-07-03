@@ -51,7 +51,7 @@
   --bg-hover:         rgba(22 24 48 / 0.09);   /* card / button hover */
   --fg:               rgba(22 24 48 / 0.62);   /* body — soft ink */
   --fg-strong:        var(--ink);              /* headings, code, strong, focus */
-  --fg-muted:         rgba(22 24 48 / 0.42);   /* nav dividers, meta, footer */
+  --fg-muted:         rgba(22 24 48 / 0.61);   /* nav dividers, meta, footer */
   --border:           rgba(22 24 48 / 0.13);
   --border-hover:     rgba(22 24 48 / 0.25);
   --decoration:       rgba(22 24 48 / 0.15);   /* prose link underline */
@@ -93,9 +93,8 @@
   --radius-lg:   0.5rem;    /* `rounded-lg` — content cards */
   --radius-full: 9999px;    /* icon buttons, theme switcher */
 
-  --container: 640px;       /* max-w-screen-sm */
-  --header-h:  3.5rem;
-  --page-py:   8rem;        /* `py-32` on <main> */
+  --container: 640px;
+  --page-py:   8rem;
 
   /* ---------- Motion — interaction feedback only ----------
      Hover/focus state changes transition at --dur-base. There is

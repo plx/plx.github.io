@@ -26,7 +26,7 @@ const renderedTitle = renderInlineMarkdown(post.data.title);
 // Opt-in Tufte layout: a wider column with footnotes floated into a
 // right-margin gutter (see src/lib/rehype-sidenotes.mjs + `.post-blog`).
 const useTufte = post.data.sidenotes === true;
-const wrapperClass = useTufte ? "mx-auto max-w-[880px] px-5" : "mx-auto max-w-screen-sm px-5";
+const wrapperClass = useTufte ? "mx-auto max-w-[880px] px-5" : "mx-auto max-w-[var(--container)] px-5";
 ---
 
 <PageLayout title={post.data.title} description={post.data.description} ogData={ogData}>

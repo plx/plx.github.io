@@ -23,7 +23,7 @@
     "spellcheck:all": "npm run spellcheck && npm run build && npm run spellcheck:html",
     "validate:links": "node scripts/validate-links.js",
     "validate:feed": "node scripts/validate-feed.js",
-    "validate:all": "npm run lint && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links && npm run validate:feed",
+    "validate:all": "npm run lint && npm run test:unit && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links && npm run validate:feed",
     "test:unit": "vitest run",
     "test:ci": "npm run lint && npm run test:unit && npm run spellcheck && npm run build && npm run spellcheck:html && npm run validate:links && npm run validate:feed",
     "test:ci:verbose": "echo '🔍 Running CI validation locally...' && npm run lint && echo '✓ Linting passed' && npm run test:unit && echo '✓ Unit tests passed' && npm run spellcheck && echo '✓ Source spell check passed' && npm run build && echo '✓ Build succeeded' && npm run spellcheck:html && echo '✓ HTML spell check passed' && npm run validate:links && echo '✓ Link validation passed' && npm run validate:feed && echo '✓ Feed validation passed' && echo '✅ All CI checks passed!'",

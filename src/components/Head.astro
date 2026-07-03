@@ -202,10 +202,14 @@ const defaultOgData: OpenGraphData = ogData || {
   }
 
   function getThemePreference() {
-    const stored = localStorage.getItem("theme");
-    return stored === "light" || stored === "dark" || stored === "system"
-      ? stored
-      : "system";
+    try {
+      const stored = window.localStorage.getItem("theme");
+      return stored === "light" || stored === "dark" || stored === "system"
+        ? stored
+        : "system";
+    } catch {
+      return "system";
+    }
   }
 
   function resolveDarkMode(preference) {
@@ -224,7 +228,11 @@ const defaultOgData: OpenGraphData = ogData || {
   }
 
   function setThemePreference(preference) {
-    localStorage.setItem("theme", preference);
+    try {
+      window.localStorage.setItem("theme", preference);
+    } catch {
+      // Storage can be blocked; still apply the theme for this page view.
+    }
     toggleTheme(resolveDarkMode(preference));
     updateThemeButtons(preference);
   }
