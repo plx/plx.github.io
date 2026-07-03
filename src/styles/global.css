@@ -133,11 +133,6 @@ html.scrolled #back-to-top {
   margin: 0;
   color: var(--fg);
 }
-.intro-greeting {
-  font-family: var(--font-sans);
-  font-weight: var(--weight-semibold);
-  color: var(--fg-strong);
-}
 
 /* Section wrapper + eyebrow header for each feed */
 .feed-section { margin-top: 3rem; }

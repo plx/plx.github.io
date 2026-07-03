@@ -95,7 +95,7 @@ const defaultOgData: OpenGraphData = ogData || {
 <script is:inline>
   const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
-  function init() {
+  function init(event) {
     onScroll();
 
     const backToTop = document.getElementById("back-to-top");
@@ -123,10 +123,9 @@ const defaultOgData: OpenGraphData = ogData || {
         });
       });
 
-    // View Transitions reset <html>'s class on every swap, so re-apply the
-    // stored theme here. The inline preloadTheme() below only runs on the
-    // initial full load; init() runs again on each astro:after-swap.
-    preloadTheme();
+    // View Transitions reset <html>'s class on every swap. The inline
+    // preloadTheme() below already handles the initial full load.
+    if (event.type === "astro:after-swap") preloadTheme();
     updateThemeButtons(getThemePreference());
 
     document.removeEventListener("scroll", onScroll);
