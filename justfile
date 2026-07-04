@@ -101,6 +101,10 @@ spellcheck-all:
 lint:
     npm run lint
 
+# Test: runs unit tests
+test:
+    npm run test:unit
+
 # Lint-fix: auto-fixes ESLint issues where possible
 lint-fix:
     npm run lint:fix
@@ -117,7 +121,7 @@ lint-prose:
 test-vale:
     npm run test:vale
 
-# Validate: runs all validation checks (lint + spellcheck + prose + Vale fixtures + build + links + feed)
+# Validate: runs all validation checks (lint + unit tests + spellcheck + prose + Vale fixtures + build + links + feed)
 validate:
     npm run validate:all
 

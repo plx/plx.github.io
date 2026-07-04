@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Palette" subtitle="Twilight 3b · paper / night / ink / moon / plum-700 / plum-300" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Twilight palette</title>
+<style>
+  body { padding: 22px 28px; }
+  .palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .sw { display: flex; flex-direction: column; gap: 4px; font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-muted); }
+  .sw .chip { width: 100%; height: 56px; border-radius: var(--radius); border: 1px solid var(--border); }
+  .sw .nm { color: var(--fg-strong); font-family: var(--font-sans); font-weight: 600; font-size: 10.5px; }
+  .sw .hex { letter-spacing: 0.02em; }
+  .note { margin-top: 14px; font-family: var(--font-serif); font-size: 13px; line-height: 1.5; color: var(--fg); }
+  .note b { color: var(--fg-strong); font-family: var(--font-sans); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#f6f6fa"></div><div class="nm">paper</div><div class="hex">#f6f6fa</div></div>
+    <div class="sw"><div class="chip" style="background:#0f1126"></div><div class="nm">night</div><div class="hex">#0f1126</div></div>
+    <div class="sw"><div class="chip" style="background:#161830"></div><div class="nm">ink</div><div class="hex">#161830</div></div>
+    <div class="sw"><div class="chip" style="background:#eff1fb"></div><div class="nm">moon</div><div class="hex">#eff1fb</div></div>
+    <div class="sw"><div class="chip" style="background:#762263"></div><div class="nm">plum-700</div><div class="hex">#762263</div></div>
+    <div class="sw"><div class="chip" style="background:#d088b3"></div><div class="nm">plum-300</div><div class="hex">#d088b3</div></div>
+  </div>
+  <div class="note">
+    <b>Twilight 3b · Deeper.</b> Indigo night-sky shading toward cool desaturated paper; deep plum is the only chromatic accent. <span class="strong">paper / night</span> are the surfaces; <span class="strong">ink / moon</span> are the high-contrast text colors; <span class="strong">plum-700 / plum-300</span> carries focus rings, code-chip tints, hovered links.
+  </div>
+</body>
+</html>

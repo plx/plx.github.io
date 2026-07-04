@@ -1,0 +1,237 @@
+/* =========================================================
+   Dispatches — Colors & Type
+   Personal tech blog by Paul Berman (plx.github.io)
+   Palette: Twilight 3b “Deeper” — indigo night-sky / cool paper,
+   with deep plum as the only chromatic accent.
+   ========================================================= */
+
+/* ---------- Fonts ---------- */
+/* Brand serif: Source Serif 4 (uploaded by user) — variable font, all weights
+   and italic in two files. Replaces the template default of Lora. */
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("fonts/SourceSerif4-VariableFont_opsz_wght.ttf") format("truetype-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("fonts/SourceSerif4-Italic-VariableFont_opsz_wght.ttf") format("truetype-variations");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+/* Inter (UI sans) + JetBrains Mono (code) — still from Google Fonts. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* =========================================================
+     COLOR — Base palette (Twilight 3b)
+     The brand runs on a single indigo-night-sky family for surfaces
+     and text, with a deep plum as the only chromatic accent. There
+     is no other accent color; the focus ring is the accent.
+     ========================================================= */
+
+  /* Surface / ink anchors (raw values; semantics below) */
+  --ink:        #161830;   /* indigo near-black — light-mode ink, dark-mode bg-fg-strong reference */
+  --night:      #0f1126;   /* dark-mode bg — a step toward midnight */
+  --paper:      #f6f6fa;   /* light-mode bg — cool desaturated paper */
+  --moon:       #eff1fb;   /* dark-mode fg-strong, lifted off pure white */
+
+  /* Accent ramp — deep plum (light) and lifted plum (dark) */
+  --plum-700:   #762263;   /* accent in light mode */
+  --plum-300:   #d088b3;   /* accent in dark mode */
+
+  /* Keep these for occasional reference; they aren't used semantically. */
+  --stone-100: #f5f5f4;
+  --stone-900: #1c1917;
+
+  /* =========================================================
+     COLOR — Semantic (light mode)
+     Body text is intentionally LOW-CONTRAST against the bg —
+     `--ink` at ~62% alpha. Headings, hovered links, and code
+     pop to full `--ink`. Mirrored in dark mode with `--moon`.
+     ========================================================= */
+  --bg:           var(--paper);
+  --bg-elevated:  rgba(22 24 48 / 0.04);          /* skip-link / raised surface */
+  --bg-frost:     rgba(246 246 250 / 0.75);       /* header frosted-glass veil */
+  --bg-hover:     rgba(22 24 48 / 0.09);          /* card hover */
+  --fg:           rgba(22 24 48 / 0.62);          /* default body — soft ink */
+  --fg-strong:    var(--ink);                     /* headings, code, focus */
+  --fg-muted:     rgba(22 24 48 / 0.61);          /* nav dividers, meta */
+  --border:       rgba(22 24 48 / 0.13);          /* card / button outline */
+  --border-hover: rgba(22 24 48 / 0.25);
+  --decoration:   rgba(22 24 48 / 0.15);          /* underline for prose links */
+  --decoration-hover: rgba(22 24 48 / 0.25);
+  --accent:       var(--plum-700);                /* the only chroma in the system */
+  --accent-soft:  rgba(118 34 99 / 0.09);         /* code chip backdrop, etc. */
+  --focus-ring:   var(--accent);
+
+  /* =========================================================
+     TYPE — Families
+     Sans is for UI and headings. Serif is for prose body
+     (every <p> and <li> inside an <article>). Mono is for
+     code (loaded for completeness — the live site relies on
+     Expressive Code's built-in monospace).
+     ========================================================= */
+  --font-sans:  "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* =========================================================
+     TYPE — Scale (Tailwind defaults, the actual sizes used)
+     ========================================================= */
+  --text-xs:   0.75rem;   /* 12px — footer */
+  --text-sm:   0.875rem;  /* 14px — card subtitle, back-to-prev */
+  --text-base: 1rem;      /* 16px — body, card title */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px — article h3 */
+  --text-2xl:  1.5rem;    /* 24px — article h2 */
+  --text-3xl:  1.875rem;  /* 30px — page title */
+  --text-4xl:  2.25rem;   /* 36px — hero */
+
+  --leading-tight:  1.25;
+  --leading-snug:   1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose:  1.75;     /* prose body */
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* =========================================================
+     SPACING & SHAPE
+     ========================================================= */
+  --radius-sm: 0.25rem;    /* code chips, small buttons */
+  --radius:    0.375rem;   /* `rounded` — back-to-prev */
+  --radius-lg: 0.5rem;     /* `rounded-lg` — content cards */
+  --radius-full: 9999px;   /* icon buttons, theme switcher */
+
+  --container: 640px;
+  --page-py:   8rem;
+
+  /* =========================================================
+     MOTION — interaction feedback only.
+     Hover/focus state changes transition at --dur-base.
+     There is no entrance animation, no stagger, no arrow draw.
+     ========================================================= */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast:   150ms; /* @kind other */
+  --dur-base:   300ms; /* @kind other */
+}
+
+/* Honor the OS "reduce motion" setting. With only hover/focus cross-fades
+   left in the system, this is a small surface — collapse every transition
+   and animation to a single frame so state changes are instant, not absent. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
+   DARK MODE — applied with `<html class="dark">` (matches
+   tailwind's `darkMode: ["class"]` config on the live site).
+   ========================================================= */
+html.dark {
+  --bg:           var(--night);
+  --bg-elevated:  rgba(228 230 248 / 0.05);
+  --bg-frost:     rgba(15 17 38 / 0.68);          /* header frosted-glass veil */
+  --bg-hover:     rgba(228 230 248 / 0.11);
+  --fg:           rgba(228 230 248 / 0.76);
+  --fg-strong:    var(--moon);
+  --fg-muted:     rgba(228 230 248 / 0.48);
+  --border:       rgba(228 230 248 / 0.16);
+  --border-hover: rgba(228 230 248 / 0.40);
+  --decoration:   rgba(228 230 248 / 0.22);
+  --decoration-hover: rgba(228 230 248 / 0.45);
+  --accent:       var(--plum-300);
+  --accent-soft:  rgba(208 136 179 / 0.13);
+  --focus-ring:   var(--accent);
+  color-scheme: dark;
+}
+
+/* =========================================================
+   SEMANTIC ELEMENT STYLES
+   Apply these by adding `.ds` to a container, or by using
+   the matching utility classes documented in README.md.
+   ========================================================= */
+.ds {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ds h1, .ds .h1 { font-family: var(--font-sans); font-weight: var(--weight-semibold); font-size: var(--text-4xl); line-height: var(--leading-tight); color: var(--fg-strong); letter-spacing: -0.01em; }
+.ds h2, .ds .h2 { font-family: var(--font-sans); font-weight: var(--weight-semibold); font-size: var(--text-2xl); line-height: var(--leading-snug); color: var(--fg-strong); }
+.ds h3, .ds .h3 { font-family: var(--font-sans); font-weight: var(--weight-semibold); font-size: var(--text-xl); line-height: var(--leading-snug); color: var(--fg-strong); }
+.ds h4, .ds .h4 { font-family: var(--font-sans); font-weight: var(--weight-semibold); font-size: var(--text-lg); color: var(--fg-strong); }
+
+/* Prose body — paragraphs and list items inside articles
+   are SERIF. Headings and inline UI stay sans. */
+.ds .prose p,
+.ds .prose li,
+.ds article p,
+.ds article li {
+  font-family: var(--font-serif);
+  line-height: var(--leading-loose);
+  color: var(--fg);
+}
+
+.ds .prose em,
+.ds article em { font-style: italic; }
+
+.ds .prose strong,
+.ds article strong { font-weight: var(--weight-semibold); color: var(--fg-strong); }
+
+/* Inline code — no surrounding backticks (the live site
+   strips the ones Tailwind Typography adds). */
+.ds code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--fg-strong);
+}
+.ds :where(code)::before,
+.ds :where(code)::after { content: none; }
+
+/* Prose links — underlined, sans serif inside an otherwise
+   serif paragraph, hover bumps decoration + text to full. */
+.ds .prose a,
+.ds article a {
+  font-family: var(--font-sans);
+  color: currentColor;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--decoration);
+  transition: color var(--dur-base) var(--ease-in-out), text-decoration-color var(--dur-base) var(--ease-in-out);
+}
+.ds .prose a:hover,
+.ds article a:hover {
+  color: var(--fg-strong);
+  text-decoration-color: var(--decoration-hover);
+}
+
+/* Meta — dates, footer */
+.ds .meta,
+.ds time,
+.ds footer { font-size: var(--text-sm); color: var(--fg-muted); }
+
+/* Focus — same blue ring everywhere */
+.ds :focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* No page-load entrance animation. Content appears immediately.
+   (The legacy `.animate` / `.show` pattern has been removed.) */

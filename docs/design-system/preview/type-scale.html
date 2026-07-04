@@ -1,0 +1,28 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Type scale" subtitle="12 → 36px · Inter Semibold" viewport="700x320" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Type scale</title>
+<style>
+  .scale { display: flex; flex-direction: column; }
+  .scale .r { display: grid; grid-template-columns: 80px 1fr 70px; gap: 14px; align-items: baseline; padding: 6px 0; }
+  .scale .r + .r { border-top: 1px dashed var(--border); }
+  .scale .name { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); }
+  .scale .px { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); text-align: right; }
+  .scale .sample { font-family: var(--font-sans); color: var(--fg-strong); font-weight: 600; letter-spacing: -0.005em; line-height: 1.1; }
+</style>
+</head>
+<body>
+  <div class="scale">
+    <div class="r"><div class="name">text-4xl</div><div class="sample" style="font-size:36px;">Page title</div><div class="px">36 / 2.25rem</div></div>
+    <div class="r"><div class="name">text-3xl</div><div class="sample" style="font-size:30px;">Section header</div><div class="px">30 / 1.875rem</div></div>
+    <div class="r"><div class="name">text-2xl</div><div class="sample" style="font-size:24px;">Article h2</div><div class="px">24 / 1.5rem</div></div>
+    <div class="r"><div class="name">text-xl</div><div class="sample" style="font-size:20px;">Article h3</div><div class="px">20 / 1.25rem</div></div>
+    <div class="r"><div class="name">text-base</div><div class="sample" style="font-size:16px;">Body · card title</div><div class="px">16 / 1rem</div></div>
+    <div class="r"><div class="name">text-sm</div><div class="sample" style="font-size:14px; font-weight:500;">Card subtitle · BackToPrev</div><div class="px">14 / 0.875rem</div></div>
+    <div class="r"><div class="name">text-xs</div><div class="sample" style="font-size:12px; font-weight:500;">Footer · meta</div><div class="px">12 / 0.75rem</div></div>
+  </div>
+</body>
+</html>

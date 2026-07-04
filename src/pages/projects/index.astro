@@ -12,8 +12,6 @@ const projects = await getPublishedCollection("projects");
 const ogData = getListOGData(
   PROJECTS.TITLE,
   PROJECTS.DESCRIPTION,
-  "projects",
-  projects.length,
   Astro.url.toString(),
   Astro.site?.toString() || ""
 );
@@ -22,10 +20,10 @@ const ogData = getListOGData(
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION} ogData={ogData}>
   <Container>
     <div class="space-y-10">
-      <h1 class="animate font-semibold text-black dark:text-white">
+      <h1 class="font-semibold text-fg-strong">
         Projects
       </h1>
-      <ul class="animate flex flex-col gap-4">
+      <ul class="flex flex-col gap-4">
         {
           projects.map((project) => (
             <li>

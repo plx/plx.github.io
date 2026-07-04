@@ -22,43 +22,27 @@ export interface OpenGraphData {
   };
 }
 
-interface TailgraphParams {
-  title: string;
-  subtitle?: string;
-  author?: string;
-  theme?: "light" | "dark";
-  backgroundImage?: string;
-  logo?: string;
+// Social cards use the static, on-brand stippled OG art. The site
+// previously generated per-post cards via Tailgraph on a gradient
+// background, which the design system explicitly rules out.
+const OG_IMAGE = "og-image.png";
+
+function brandImage(siteUrl: string, file: string): string {
+  return siteUrl ? new URL(file, siteUrl).toString() : `/${file}`;
 }
 
 /**
- * Generate a Tailgraph URL for dynamic OG images
+ * Resolve the OG image for an entry, honoring per-entry overrides:
+ * a custom `ogImage` wins; `noOgImage` opts out entirely; otherwise the
+ * static brand image is used.
  */
-export function generateTailgraphURL(params: TailgraphParams): string {
-  const baseURL = "https://tailgraph.com/api/v1/og";
-  const searchParams = new URLSearchParams();
-  
-  searchParams.set("title", params.title);
-  
-  if (params.subtitle) {
-    searchParams.set("subtitle", params.subtitle);
-  }
-  
-  if (params.author) {
-    searchParams.set("author", params.author);
-  }
-  
-  searchParams.set("theme", params.theme || "dark");
-  
-  if (params.backgroundImage) {
-    searchParams.set("backgroundImage", params.backgroundImage);
-  }
-  
-  if (params.logo) {
-    searchParams.set("logo", params.logo);
-  }
-  
-  return `${baseURL}?${searchParams.toString()}`;
+function resolveEntryImage(
+  data: { ogImage?: string; noOgImage?: boolean },
+  siteUrl: string
+): { image?: string } {
+  if (data.ogImage) return { image: data.ogImage };
+  if (data.noOgImage) return {};
+  return { image: brandImage(siteUrl, OG_IMAGE) };
 }
 
 /**
@@ -71,22 +55,7 @@ export function getPostOGData(
 ): OpenGraphData {
   const ogTitle = stripMarkdown(post.data.ogTitle || post.data.title);
   const ogDescription = post.data.ogDescription || post.data.description;
-
-  let ogImage = post.data.ogImage;
-  if (!ogImage && !post.data.noOgImage) {
-    ogImage = generateTailgraphURL({
-      title: stripMarkdown(post.data.cardTitle || post.data.title),
-      subtitle: post.data.date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      }),
-      author: "plx",
-      theme: "dark",
-      backgroundImage: "gradient",
-      logo: `${siteUrl}/default-og-image.jpg`
-    });
-  }
+  const { image } = resolveEntryImage(post.data, siteUrl);
 
   return {
     title: ogTitle,
@@ -94,7 +63,7 @@ export function getPostOGData(
     type: "article",
     url,
     siteName: SITE.NAME,
-    image: ogImage,
+    image,
     imageAlt: post.data.ogImageAlt || `${ogTitle} - Blog Post`,
     article: {
       publishedTime: post.data.date,
@@ -119,18 +88,7 @@ export function getBriefOGData(
 ): OpenGraphData {
   const ogTitle = stripMarkdown(brief.data.ogTitle || brief.data.title);
   const ogDescription = brief.data.ogDescription || brief.data.description;
-
-  let ogImage = brief.data.ogImage;
-  if (!ogImage && !brief.data.noOgImage) {
-    ogImage = generateTailgraphURL({
-      title: stripMarkdown(brief.data.cardTitle || brief.data.title),
-      subtitle: stripMarkdown(category?.titlePrefix || category?.displayName || "Brief"),
-      author: "plx",
-      theme: "dark",
-      backgroundImage: "gradient",
-      logo: `${siteUrl}/default-og-image.jpg`
-    });
-  }
+  const { image } = resolveEntryImage(brief.data, siteUrl);
 
   return {
     title: ogTitle,
@@ -138,7 +96,7 @@ export function getBriefOGData(
     type: "article",
     url,
     siteName: SITE.NAME,
-    image: ogImage,
+    image,
     imageAlt: brief.data.ogImageAlt || `${ogTitle} - Brief`,
     article: {
       publishedTime: brief.data.date,
@@ -162,18 +120,7 @@ export function getProjectOGData(
 ): OpenGraphData {
   const ogTitle = stripMarkdown(project.data.ogTitle || project.data.title);
   const ogDescription = project.data.ogDescription || project.data.description;
-
-  let ogImage = project.data.ogImage;
-  if (!ogImage && !project.data.noOgImage) {
-    ogImage = generateTailgraphURL({
-      title: stripMarkdown(project.data.title),
-      subtitle: "Project",
-      author: "plx",
-      theme: "dark",
-      backgroundImage: "gradient",
-      logo: `${siteUrl}/default-og-image.jpg`
-    });
-  }
+  const { image } = resolveEntryImage(project.data, siteUrl);
 
   return {
     title: ogTitle,
@@ -181,7 +128,7 @@ export function getProjectOGData(
     type: "website",
     url,
     siteName: SITE.NAME,
-    image: ogImage,
+    image,
     imageAlt: project.data.ogImageAlt || `${ogTitle} - Project`,
     twitter: {
       card: "summary_large_image"
@@ -195,28 +142,16 @@ export function getProjectOGData(
 export function getListOGData(
   title: string,
   description: string,
-  pageType: "blog" | "briefs" | "projects",
-  itemCount: number,
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  const subtitle = `${itemCount} ${pageType === "blog" ? "posts" : pageType}`;
-  
-  const ogImage = generateTailgraphURL({
-    title,
-    subtitle,
-    theme: "dark",
-    backgroundImage: "gradient",
-    logo: `${siteUrl}/default-og-image.jpg`
-  });
-  
   return {
     title: `${title} | ${SITE.NAME}`,
     description,
     type: "website",
     url,
     siteName: SITE.NAME,
-    image: ogImage,
+    image: brandImage(siteUrl, OG_IMAGE),
     imageAlt: `${title} - ${SITE.NAME}`,
     twitter: {
       card: "summary_large_image"
@@ -231,21 +166,13 @@ export function getHomeOGData(
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  const ogImage = generateTailgraphURL({
-    title: SITE.NAME,
-    subtitle: "Technical writing and projects",
-    theme: "dark",
-    backgroundImage: "gradient",
-    logo: `${siteUrl}/default-og-image.jpg`
-  });
-  
   return {
     title: SITE.NAME,
     description: "Technical writing on Swift, performance optimization, and software engineering",
     type: "website",
     url,
     siteName: SITE.NAME,
-    image: ogImage,
+    image: brandImage(siteUrl, OG_IMAGE),
     imageAlt: SITE.NAME,
     twitter: {
       card: "summary_large_image"

@@ -1,0 +1,58 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Layout & container" subtitle="640px single-column · py-32 · no grids" viewport="700x230" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Layout & container</title>
+<style>
+  body { padding: 22px 28px; }
+  .layout {
+    display: flex; gap: 16px; align-items: stretch;
+  }
+  .viewport {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background:
+      linear-gradient(90deg, transparent 0, transparent 80px, rgba(0,0,0,.05) 80px, rgba(0,0,0,.05) calc(100% - 80px), transparent calc(100% - 80px));
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+  .viewport::before, .viewport::after {
+    content: ""; position: absolute; top: 12px; bottom: 12px; width: 1px;
+    background: var(--border);
+  }
+  .viewport::before { left: 80px; }
+  .viewport::after  { right: 80px; }
+  .viewport .col {
+    position: absolute; left: 80px; right: 80px; top: 14px; bottom: 14px;
+    display: flex; flex-direction: column; gap: 8px; padding: 10px 12px;
+    background: var(--bg);
+  }
+  .viewport .col .line { height: 8px; border-radius: 4px; background: var(--bg-hover); }
+  .viewport .col .h { height: 12px; width: 60%; background: rgba(0,0,0,.5); }
+  .legend { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); display:flex; flex-direction: column; gap: 4px; justify-content: center; }
+  .legend b { color: var(--fg-strong); font-family: var(--font-sans); font-weight: 600; font-size: 11px; }
+</style>
+</head>
+<body>
+  <div class="layout">
+    <div class="viewport">
+      <div class="col">
+        <div class="line h"></div>
+        <div class="line" style="width:90%"></div>
+        <div class="line" style="width:80%"></div>
+        <div class="line" style="width:95%"></div>
+        <div class="line" style="width:70%"></div>
+      </div>
+    </div>
+    <div class="legend">
+      <div><b>Container</b>max-w-screen-sm<br>640px · px-5</div>
+      <div><b>Main</b>py-32 · single column</div>
+      <div><b>No grids</b>posts stack vertically</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Code block" subtitle="Expressive-code · github-light theme" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Code block</title>
+<style>
+  body { padding: 22px 28px; }
+  .ec {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .ec .frame {
+    display: flex; align-items: center; gap: 6px;
+    background: #f6f8fa;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-sans); font-size: 12px; color: #57606a;
+  }
+  .ec .frame .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .ec pre { margin: 0; padding: 10px 12px; color: #1f2328; white-space: pre; overflow-x: auto; }
+  .k  { color: #cf222e; }
+  .s  { color: #0a3069; }
+  .c  { color: #6e7781; font-style: italic; }
+  .fn { color: #8250df; }
+  .ty { color: #953800; }
+  .caption { margin-top: 8px; font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); }
+</style>
+</head>
+<body>
+  <div class="ec">
+    <div class="frame">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span style="margin-left:6px;">swift · github-light</span>
+    </div>
+<pre><span class="c">// lazy — flows through the entire chain</span>
+<span class="k">let</span> badgeIDsToPrint <span class="k">=</span> registrations
+  .<span class="fn">lazy</span>
+  .<span class="fn">flatMap</span>(\.attendees)
+  .<span class="fn">filter</span>(\.isBadgeRequired)
+  .<span class="fn">map</span>(\.badgeID)</pre>
+  </div>
+  <div class="caption">expressive-code · themes: github-dark · github-light · stays in the bg color of the page</div>
+</body>
+</html>

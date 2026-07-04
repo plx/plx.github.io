@@ -1,0 +1,138 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Brand image" subtitle="Stippled plum fade — matches favicon, light + dark" viewport="700x180" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Brand Image</title>
+<style>
+  .bi {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .tile {
+    width: 144px;
+    height: 144px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: block;
+  }
+  .tile svg { display: block; width: 100%; height: 100%; }
+  .tile-lbl {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--fg-muted);
+    letter-spacing: 0.02em;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+  .meta h3 {
+    font-family: var(--font-sans);
+    font-weight: var(--weight-semibold);
+    font-size: 14px;
+    margin: 0;
+    color: var(--fg-strong);
+  }
+  .meta p {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--fg);
+    max-width: 360px;
+  }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+</style>
+</head>
+<body>
+  <div class="bi">
+    <div class="stack">
+      <div class="tile" id="tile-light"></div>
+      <div class="tile-lbl">light · plum on paper</div>
+    </div>
+    <div class="stack">
+      <div class="tile" id="tile-dark"></div>
+      <div class="tile-lbl">dark · plum-300 on night</div>
+    </div>
+    <div class="meta">
+      <h3>The one piece of brand imagery</h3>
+      <p>A fading stipple-dot field — same engraving language as the favicon and OG card. Dense plum ink at the top thins to bare paper at the bottom. Light and dark variants share identical geometry on opposite surfaces.</p>
+      <div class="row">
+        <span class="tag">stippled · plum</span>
+        <span class="tag">fade-down · linear</span>
+        <span class="tag">square 1:1</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  function mulberry32(seed) {
+    return function () {
+      let t = (seed += 0x6d2b79f5);
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Stipple-dot brand mark. Same algorithm family as og-final.jsx /
+  // favicon: seeded mulberry32, linear density falloff from top to bottom.
+  // Tuned for a 144-unit square (matches favicon canonical size).
+  function buildSvg({ bg, ink, accent, seed }) {
+    const W = 144, H = 144;
+    const cols = 56, rows = 56;
+    const topProb = 1.0;
+    const rng = mulberry32(seed);
+
+    let dots = '';
+    for (let r = 0; r < rows; r++) {
+      const yNorm = r / rows;
+      const y = yNorm * H;
+      const density = Math.max(0, 1 - yNorm); // linear falloff
+      for (let c = 0; c < cols; c++) {
+        if (rng() > density * topProb) continue;
+        const x  = (c / cols) * W + (rng() - 0.5) * 3.2;
+        const yj = y + (rng() - 0.5) * 2.8;
+        const rad = (0.55 + rng() * 0.7);
+        // ~6% chance of becoming a brighter "reserve" dot up in the dense band
+        const isHi = yNorm < 0.35 && rng() < 0.06;
+        const fill = isHi ? accent : ink;
+        dots += `<circle cx="${x.toFixed(2)}" cy="${yj.toFixed(2)}" r="${rad.toFixed(2)}" fill="${fill}"/>`;
+      }
+    }
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">`
+         + `<rect width="${W}" height="${H}" fill="${bg}"/>`
+         + dots
+         + `</svg>`;
+  }
+
+  document.getElementById('tile-light').innerHTML = buildSvg({
+    bg:     '#f6f6fa',
+    ink:    '#762263',
+    accent: '#3a0e30',
+    seed:   8472
+  });
+  document.getElementById('tile-dark').innerHTML = buildSvg({
+    bg:     '#0f1126',
+    ink:    '#d088b3',
+    accent: '#f0eafa',
+    seed:   8472
+  });
+})();
+</script>
+</body>
+</html>

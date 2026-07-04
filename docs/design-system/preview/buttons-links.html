@@ -1,0 +1,82 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Buttons & links" subtitle="BackToPrev · prose link · focus ring" viewport="700x220" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_card.css">
+<title>Buttons & links</title>
+<style>
+  body { padding: 22px 28px; }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .row + .row { margin-top: 14px; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); min-width: 110px; }
+
+  /* BackToPrev — borderless. Static left-chevron + label.
+     Color shifts from soft `--fg` to strong on hover; no chrome,
+     no arrow draw. */
+  .back {
+    position: relative; display: inline-flex; align-items: center;
+    padding: 4px 4px 4px 24px;
+    margin-left: -4px;                 /* keep the visual edge flush with siblings */
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-family: var(--font-sans); font-size: 14px;
+    color: var(--fg);
+    transition: color var(--dur-base) var(--ease-in-out);
+  }
+  .back:hover { color: var(--fg-strong); }
+  .back svg { position: absolute; left: 4px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Prose link — unchanged */
+  .plink {
+    font-family: var(--font-serif); font-size: 14px; color: var(--fg);
+  }
+  .plink a {
+    font-family: var(--font-sans);
+    color: currentColor; text-decoration: underline; text-underline-offset: 2px;
+    text-decoration-color: var(--decoration);
+    transition: color .3s, text-decoration-color .3s;
+  }
+  .plink a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+  /* :focus-visible — lighter weight.
+     1px ring in plum at reduced strength, still meets WCAG 2.4.7
+     contrast for keyboard focus while feeling less screamy. */
+  .focusring {
+    display: inline-block; padding: 6px 14px;
+    border-radius: var(--radius);
+    font-family: var(--font-sans); font-size: 14px; color: var(--fg);
+    background: rgba(22 24 48 / 0.045);   /* half of --bg-hover (0.09) */
+    outline: 1px solid rgba(118 34 99 / 0.55);
+    outline-offset: 2px;
+  }
+
+  .note {
+    font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted);
+    margin-left: 4px;
+  }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="lbl">BackToPrev</div>
+    <a class="back" href="javascript:void(0)">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 5 12 12 19"></polyline>
+      </svg>
+      back to briefs
+    </a>
+    <span class="note">no border · static chevron · color shift on hover</span>
+  </div>
+  <div class="row">
+    <div class="lbl">Prose link</div>
+    <div class="plink">Read about <a href="javascript:void(0)">meso-optimization</a> over here.</div>
+  </div>
+  <div class="row">
+    <div class="lbl">:focus-visible</div>
+    <span class="focusring">1px outline · plum @ 55% · offset-2</span>
+    <span class="note">keyboard-nav only — light but visible</span>
+  </div>
+</body>
+</html>
