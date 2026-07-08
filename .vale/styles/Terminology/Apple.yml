@@ -1,0 +1,19 @@
+extends: substitution
+message: "Use '%s' instead of '%s'."
+level: error
+ignorecase: false
+swap:
+  '\b(ios|IOS|Ios)\b': iOS
+  '\b(?:ipad|IPad|Ipad|IPAD)(?![ -]?[oO][sS]\b)\b': iPad
+  '\b((?:ipad|IPad|Ipad|IPAD)[ -]?[oO][sS]|iPad(?:[ -][oO][sS]|os|Os|oS))\b': iPadOS
+  '\b(iphone|IPhone|Iphone|IPHONE)\b': iPhone
+  '\b(mac[ -]?os|MacOS|Mac-OS|MAC[ -]?OS)\b': macOS
+  '\b(watch[ -]?os|watch[ -]OS|Watch[ -]?OS|Watch[ -]?os|WATCH[ -]?OS)\b': watchOS
+  '\b(tv[ -]?os|tv[ -]OS|TV[ -]?OS|Tv[ -]?OS)\b': tvOS
+  '\b(vision[ -]?os|vision[ -]OS|Vision[ -]?OS|Vision[ -]?os|VISION[ -]?OS)\b': visionOS
+  '\b(xcode|XCode|XCODE)\b': Xcode
+  '\b(swift[ -]?ui|swift[ -]?UI|Swift[ -]UI|Swift[ -]?Ui|SWIFT[ -]?UI)\b': SwiftUI
+  '\b(objective[ -]?c|Objective C|Objective-c|ObjectiveC|OBJECTIVE[ -]?C)\b': Objective-C
+  '\b(app\s+store|App\s+store|app\s+Store|APP\s+STORE)\b': App Store
+  '\b(test\s*flight|Test\s+Flight|Testflight|TEST\s*FLIGHT)\b': TestFlight
+  '\b(apple\s+silicon|Apple\s+Silicon|APPLE\s+SILICON)\b': Apple silicon

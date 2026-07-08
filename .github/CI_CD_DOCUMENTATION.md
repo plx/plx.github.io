@@ -13,6 +13,10 @@ This repository implements comprehensive quality gates to ensure code quality an
 All pull requests to `main` undergo automated validation:
 
 - **Linting** - Code style and quality checks via ESLint
+- **Unit Tests** - Vitest coverage for TypeScript utilities
+- **Spell Checking** - Source and generated HTML spelling checks via CSpell
+- **Prose Linting** - Article terminology and style checks via Vale
+- **Vale Fixture Tests** - Terminology rule fixtures that assert expected pass/fail behavior
 - **Type Checking** - TypeScript validation via `astro check`
 - **Build Verification** - Ensures the site builds successfully
 - **Link Validation** - Checks all internal links are valid
@@ -32,7 +36,9 @@ Custom Node.js script that:
 **Usage:**
 ```bash
 npm run validate:links      # Run link validation
-npm run validate:all        # Run all validation (lint, build, links)
+npm run lint:prose          # Run Vale prose linting
+npm run test:vale           # Run Vale terminology fixture tests
+npm run validate:all        # Run validation (lint, prose, Vale fixtures, build, links)
 ```
 
 ### 3. Deployment Workflow
@@ -84,7 +90,7 @@ Edit files, add content, modify styles, etc.
 
 ### 3. Test Locally
 ```bash
-npm run validate:all  # Run all checks locally
+npm run test:ci  # Run all CI checks locally
 ```
 
 ### 4. Create Pull Request

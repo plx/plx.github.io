@@ -21,8 +21,10 @@ Some key commands are:
 - just spellcheck-html: checks spelling in built HTML output
 - just lint: runs ESLint on all files
 - just lint-fix: auto-fixes ESLint issues where possible
+- just lint-prose: runs Vale on article content
+- just test-vale: verifies Vale terminology fixture behavior
 - just validate-feed: builds the site then validates the RSS feed XML (well-formedness + namespaces, via xmllint)
-- just validate: runs all validation checks (lint + spellcheck + build + links + feed)
+- just validate: runs all validation checks (lint + spellcheck + prose + Vale fixtures + build + links + feed)
 
 ## Key Technical Decisions
 

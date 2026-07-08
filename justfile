@@ -113,7 +113,15 @@ lint-fix:
 lint-markdown:
     npm run lint:markdown
 
-# Validate: runs all validation checks (lint + unit tests + spellcheck + build + links + feed)
+# Lint-prose: runs Vale on article content
+lint-prose:
+    npm run lint:prose
+
+# Test-vale: verifies Vale terminology fixture behavior
+test-vale:
+    npm run test:vale
+
+# Validate: runs all validation checks (lint + unit tests + spellcheck + prose + Vale fixtures + build + links + feed)
 validate:
     npm run validate:all
 
