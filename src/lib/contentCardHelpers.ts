@@ -22,7 +22,7 @@ function getStandardCardProps(
   return {
     title: displayTitle,
     subtitle: entry.data.description,
-    link: `/${entry.collection}/${entry.slug}`,
+    link: `/${entry.collection}/${entry.id}`,
     ...(options?.maxLines !== undefined && { maxLines: options.maxLines }),
     ...(options?.headingLevel !== undefined && { headingLevel: options.headingLevel }),
   };
@@ -54,7 +54,7 @@ function getStandardEntryProps(
     title: entry.data.cardTitle || entry.data.title,
     excerpt: entry.data.description,
     date: entry.data.date,
-    href: `/${entry.collection}/${entry.slug}`,
+    href: `/${entry.collection}/${entry.id}`,
   };
 }
 
@@ -71,7 +71,7 @@ export function getBlogEntryProps(entry: CollectionEntry<"blog">) {
  * card and feed-entry mappers.
  */
 function resolveBriefTitlePrefix(entry: CollectionEntry<"briefs">): string | undefined {
-  const categorySlug = extractCategoryFromSlug(entry.slug);
+  const categorySlug = extractCategoryFromSlug(entry.id);
   if (!categorySlug) return undefined;
   const category = getCategory(categorySlug, `src/content/briefs/${categorySlug}`);
   return category.titlePrefix || category.displayName;

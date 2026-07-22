@@ -46,14 +46,12 @@ const accessibleLabel = ariaLabel || (metaBits ? `${plainTitle} — ${metaBits}`
     <FormattedDate date={date} />
     {kindLabel && (
       <>
-        <span class="ex-meta-sep" aria-hidden="true">·</span>
-        <span>{kindLabel}</span>
+        {" "}<span class="ex-meta-sep" aria-hidden="true">·</span>{" "}<span>{kindLabel}</span>
       </>
     )}
     {renderedTitlePrefix && (
       <>
-        <span class="ex-meta-sep" aria-hidden="true">·</span>
-        <span set:html={renderedTitlePrefix}></span>
+        {" "}<span class="ex-meta-sep" aria-hidden="true">·</span>{" "}<span set:html={renderedTitlePrefix}></span>
       </>
     )}
   </div>

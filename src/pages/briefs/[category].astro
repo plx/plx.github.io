@@ -15,7 +15,7 @@ export async function getStaticPaths() {
   // Get unique categories from brief slugs
   const categories = new Set<string>();
   allBriefs.forEach(brief => {
-    const category = extractCategoryFromSlug(brief.slug);
+    const category = extractCategoryFromSlug(brief.id);
     if (category) {
       categories.add(category);
     }
@@ -27,7 +27,7 @@ export async function getStaticPaths() {
     props: {
       category,
       briefs: byDateDesc(
-        allBriefs.filter(brief => extractCategoryFromSlug(brief.slug) === category)
+        allBriefs.filter(brief => extractCategoryFromSlug(brief.id) === category)
       )
     }
   }));
