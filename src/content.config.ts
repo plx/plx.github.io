@@ -10,7 +10,10 @@ import { z } from "astro/zod";
 // `my-post/index.md` -> `my-post` — preserving the URLs the legacy
 // content-collections API produced.
 const stripIndexId = ({ entry }: { entry: string }): string =>
-  entry.replace(/\/index\.mdx?$/, "").replace(/\.mdx?$/, "");
+  entry
+    .replace(/\/index\.mdx?$/, "")
+    // Defensive fallback for a flat `<slug>.md` entry outside the folder convention.
+    .replace(/\.mdx?$/, "");
 
 // OpenGraph override fields shared by every collection.
 const ogFields = {
