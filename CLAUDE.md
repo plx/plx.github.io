@@ -28,9 +28,19 @@ Some key commands are:
 
 ## Key Technical Decisions
 
-- **Framework**: Astro with React integration
-- **Styling**: Tailwind CSS with Typography plugin
-- **Content**: MDX support for enhanced markdown
+- **Framework**: Astro 7 with React integration
+- **Styling**: Tailwind CSS v3 (Typography plugin), wired through `postcss.config.mjs`.
+  The old `@astrojs/tailwind` integration is gone (unsupported on Astro 7); PostCSS
+  runs `tailwindcss` + `autoprefixer` exactly as that integration did.
+- **Content**: Content Layer collections (`src/content.config.ts`, `glob()` loaders);
+  MDX support for enhanced markdown
+- **TypeScript**: TypeScript 7. The **native compiler** (`tsgo`, from
+  `@typescript/native-preview`) does the type-checking — `npm run typecheck`. Classic
+  `typescript@6` is still installed because the native compiler doesn't yet expose the
+  programmatic API that `astro check` and `typescript-eslint` rely on; those tools run
+  on 6.x. Keep the dated native-preview snapshot pinned and its lockfile entry refreshed
+  until TypeScript 7 is stable; remove `typescript@6` once those tools support the native
+  compiler.
 - **Build**: Static site generation to `dist/` folder
 - **Deployment**: GitHub Actions workflow deploys to GitHub Pages
 - **Site URL**: https://plx.github.io

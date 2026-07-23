@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { render, type CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
@@ -12,17 +12,17 @@ import { renderInlineMarkdown } from "@lib/markdown";
 export async function getStaticPaths() {
   const briefs = await getPublishedCollection("briefs");
   return briefs.map((brief) => ({
-    params: { slug: brief.slug },
+    params: { slug: brief.id },
     props: brief,
   }));
 }
 type Props = CollectionEntry<"briefs">;
 
 const brief = Astro.props;
-const { Content } = await brief.render();
+const { Content } = await render(brief);
 
-// Extract category from the slug
-const categorySlug = extractCategoryFromSlug(brief.slug);
+// Extract category from the id (matches the legacy `<category>/<name>` slug)
+const categorySlug = extractCategoryFromSlug(brief.id);
 const category = categorySlug ? getCategory(categorySlug, `src/content/briefs/${categorySlug}`) : null;
 const ogData = getBriefOGData(brief, category, Astro.url.toString(), Astro.site?.toString() || "");
 const renderedTitlePrefix = category?.titlePrefix ? renderInlineMarkdown(category.titlePrefix) : null;

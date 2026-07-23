@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { render, type CollectionEntry } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
@@ -13,14 +13,14 @@ import { renderInlineMarkdown } from "@lib/markdown";
 export async function getStaticPaths() {
   const projects = await getPublishedCollection("projects");
   return projects.map((project) => ({
-    params: { slug: project.slug },
+    params: { slug: project.id },
     props: project,
   }));
 }
 type Props = CollectionEntry<"projects">;
 
 const project = Astro.props;
-const { Content } = await project.render();
+const { Content } = await render(project);
 
 const ogData = getProjectOGData(project, Astro.url.toString(), Astro.site?.toString() || "");
 const renderedTitle = renderInlineMarkdown(project.data.title);
@@ -40,7 +40,7 @@ const renderedTitle = renderInlineMarkdown(project.data.title);
         </div>
         &bull;
         <div class="font-base text-sm">
-          {readingTime(project.body)}
+          {readingTime(project.body ?? "")}
         </div>
       </div>
       <h1 class="text-2xl font-semibold text-fg-strong" set:html={renderedTitle}></h1>

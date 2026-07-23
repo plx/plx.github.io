@@ -46,6 +46,9 @@ jobs:
       - name: Run Linting
         run: npm run lint
 
+      - name: Type Check (TypeScript 7)
+        run: npm run typecheck
+
       - name: Run Unit Tests
         run: npm run test:unit
 
