@@ -48,6 +48,8 @@ const blog = defineCollection({
 });
 
 const briefs = defineCollection({
+  // Keep the default ID generator: for flat `<category>/<name>.md` entries,
+  // Astro uses the same per-segment slug helper as legacy collections.
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/briefs" }),
   schema: z
     .object({

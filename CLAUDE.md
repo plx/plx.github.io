@@ -38,7 +38,8 @@ Some key commands are:
   `@typescript/native-preview`) does the type-checking — `npm run typecheck`. Classic
   `typescript@6` is still installed because the native compiler doesn't yet expose the
   programmatic API that `astro check` and `typescript-eslint` rely on; those tools run
-  on 6.x. Remove `typescript@6` once they support the native compiler.
+  on 6.x. Keep the dated native-preview snapshot and its lockfile entry refreshed until
+  TypeScript 7 is stable; remove `typescript@6` once those tools support the native compiler.
 - **Build**: Static site generation to `dist/` folder
 - **Deployment**: GitHub Actions workflow deploys to GitHub Pages
 - **Site URL**: https://plx.github.io
