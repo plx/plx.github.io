@@ -2,6 +2,7 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 // Astro 7 deprecated the `z` re-export from `astro:content`; import from astro/zod.
 import { z } from "astro/zod";
+import { stripIndexId } from "./lib/contentId";
 
 // Blog posts and projects are folders shaped as `<slug>/index.md`; briefs are
 // stored directly as `<category>/<name>.md`. The Content Layer glob loader
@@ -9,11 +10,6 @@ import { z } from "astro/zod";
 // (or `.md`) to keep folder-based entries on their bare slug — e.g.
 // `my-post/index.md` -> `my-post` — preserving the URLs the legacy
 // content-collections API produced.
-const stripIndexId = ({ entry }: { entry: string }): string =>
-  entry
-    .replace(/\/index\.mdx?$/, "")
-    // Defensive fallback for a flat `<slug>.md` entry outside the folder convention.
-    .replace(/\.mdx?$/, "");
 
 // OpenGraph override fields shared by every collection.
 const ogFields = {
