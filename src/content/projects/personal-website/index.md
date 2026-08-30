@@ -1,7 +1,7 @@
 ---
 title: "Astro Sphere"
 description: "Portfolio and blog build with astro."
-date: "August 11, 2025"
+date: "2025-08-11"
 demoURL: "https://plx.github.io"
 repoURL: "https://github.com/plx/plx.github.io"
 draft: true
@@ -45,4 +45,3 @@ The tl;dr here is: I made *four* independent attempts to vibe-code this site fro
 ### What Did Work: Vibe-Editing A Working Template
 
 ### Early Takeaways
-

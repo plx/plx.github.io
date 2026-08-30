@@ -107,15 +107,16 @@ article :where(code)::after {
   article :where(code):not(pre code) {
     @apply bg-accent-soft text-fg-strong rounded-sm;
     padding: 0 0.25rem;
+    overflow-wrap: anywhere;
   }
 }
 
 html #back-to-top {
-  @apply opacity-0 pointer-events-none;
+  @apply invisible opacity-0 pointer-events-none;
 }
 
 html.scrolled #back-to-top {
-  @apply opacity-100 pointer-events-auto;
+  @apply visible opacity-100 pointer-events-auto;
 }
 
 /* =========================================================
@@ -221,6 +222,7 @@ html.scrolled #back-to-top {
 .ex-excerpt code {
   font-family: var(--font-mono);
   font-size: 0.88em;
+  color: var(--fg-strong);
   background: var(--accent-soft);
   padding: 0 3px;
   border-radius: var(--radius-sm);

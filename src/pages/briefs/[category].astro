@@ -71,7 +71,7 @@ const ogData = getListOGData(
       <ul class="flex flex-col gap-4">
         {briefs.map((brief) => (
           <li>
-            <ContentCard {...getBriefCardProps(brief, false, { maxLines: 3 })} />
+            <ContentCard {...getBriefCardProps(brief, false, { maxLines: 3, headingLevel: 2 })} />
           </li>
         ))}
       </ul>

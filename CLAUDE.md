@@ -24,23 +24,22 @@ Some key commands are:
 - just lint-prose: runs Vale on article content
 - just test-vale: verifies Vale terminology fixture behavior
 - just validate-feed: builds the site then validates the RSS feed XML (well-formedness + namespaces, via xmllint)
-- just validate: runs all validation checks (lint + spellcheck + prose + Vale fixtures + build + links + feed)
+- just validate: runs full CI parity (linting, type/unit checks, build/content validation, and Chromium browser QA)
 
 ## Key Technical Decisions
 
-- **Framework**: Astro 7 with React integration
+- **Framework**: Astro 7 (no client-side UI framework; pages and components are Astro-native)
 - **Styling**: Tailwind CSS v3 (Typography plugin), wired through `postcss.config.mjs`.
   The old `@astrojs/tailwind` integration is gone (unsupported on Astro 7); PostCSS
   runs `tailwindcss` + `autoprefixer` exactly as that integration did.
 - **Content**: Content Layer collections (`src/content.config.ts`, `glob()` loaders);
   MDX support for enhanced markdown
-- **TypeScript**: TypeScript 7. The **native compiler** (`tsgo`, from
-  `@typescript/native-preview`) does the type-checking — `npm run typecheck`. Classic
-  `typescript@6` is still installed because the native compiler doesn't yet expose the
-  programmatic API that `astro check` and `typescript-eslint` rely on; those tools run
-  on 6.x. Keep the dated native-preview snapshot pinned and its lockfile entry refreshed
-  until TypeScript 7 is stable; remove `typescript@6` once those tools support the native
-  compiler.
+- **TypeScript**: The **native TypeScript 7 preview compiler** (`tsgo`, from
+  `@typescript/native-preview`) runs the additional application and Playwright checks.
+  Classic `typescript@6` remains installed because the published `astro check` and
+  `typescript-eslint` peer ranges do not yet accept TypeScript 7. Keep the preview
+  snapshot pinned and retain both checks until those upstream ranges move; the current
+  watch items are documented in `planning/major-migration-plan.md`.
 - **Build**: Static site generation to `dist/` folder
 - **Deployment**: GitHub Actions workflow deploys to GitHub Pages
 - **Site URL**: https://plx.github.io

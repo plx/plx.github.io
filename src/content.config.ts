@@ -3,6 +3,7 @@ import { glob } from "astro/loaders";
 // Astro 7 deprecated the `z` re-export from `astro:content`; import from astro/zod.
 import { z } from "astro/zod";
 import { stripIndexId } from "./lib/contentId";
+import { parseContentDate } from "./lib/contentDate";
 
 // Blog posts and projects are folders shaped as `<slug>/index.md`; briefs are
 // stored directly as `<category>/<name>.md`. The Content Layer glob loader
@@ -12,13 +13,25 @@ import { stripIndexId } from "./lib/contentId";
 // content-collections API produced.
 
 // OpenGraph override fields shared by every collection.
+const contentDate = z.union([z.date(), z.string()]).transform((value, context) => {
+  try {
+    return parseContentDate(value);
+  } catch (error) {
+    context.addIssue({
+      code: "custom",
+      message: error instanceof Error ? error.message : "Invalid content date",
+    });
+    return z.NEVER;
+  }
+});
+
 const ogFields = {
   ogTitle: z.string().optional(),
   ogDescription: z.string().optional(),
   ogImage: z.url().optional(),
   ogImageAlt: z.string().optional(),
   noOgImage: z.boolean().optional(),
-  modifiedDate: z.coerce.date().optional(),
+  modifiedDate: contentDate.optional(),
 };
 
 // Default `cardTitle` to `title` so consumers can rely on it always being set.
@@ -34,7 +47,7 @@ const blog = defineCollection({
       title: z.string(),
       cardTitle: z.string().optional(),
       description: z.string(),
-      date: z.coerce.date(),
+      date: contentDate,
       draft: z.boolean().optional(),
       // Opt a longer-form essay into the Tufte layout: a wider column with
       // numbered footnotes floated into a right-margin gutter as sidenotes
@@ -55,7 +68,7 @@ const briefs = defineCollection({
       title: z.string(),
       cardTitle: z.string().optional(),
       description: z.string(),
-      date: z.coerce.date(),
+      date: contentDate,
       draft: z.boolean().optional(),
       ...ogFields,
     })
@@ -69,7 +82,7 @@ const projects = defineCollection({
       title: z.string(),
       cardTitle: z.string().optional(),
       description: z.string(),
-      date: z.coerce.date(),
+      date: contentDate,
       draft: z.boolean().optional(),
       demoURL: z.url().optional(),
       repoURL: z.url().optional(),

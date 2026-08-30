@@ -1,17 +1,20 @@
 ---
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import Link from "@components/Link.astro";
-import { SITE, SOCIALS } from "@consts";
-import { getHomeOGData } from "@lib/opengraph";
+import SocialLinks from "@components/SocialLinks.astro";
+import { getListOGData } from "@lib/opengraph";
 
-const ogData = getHomeOGData(
+const title = "About";
+const description = "About Dispatches and its author";
+const ogData = getListOGData(
+  title,
+  description,
   Astro.url.toString(),
   Astro.site?.toString() || ""
 );
 ---
 
-<PageLayout title="About" description="About Dispatches and its author" ogData={ogData}>
+<PageLayout title={title} description={description} ogData={ogData}>
   <Container>
     <div class="space-y-10">
       <h1 class="font-semibold text-fg-strong">
@@ -37,15 +40,7 @@ const ogData = getHomeOGData(
           <h2 class="font-semibold text-fg-strong">Connect</h2>
           <article>
             <p class="mb-4">Feel free to reach out:</p>
-            <ul class="flex flex-wrap gap-2">
-              {SOCIALS.map(SOCIAL => (
-                <li class="flex gap-x-2 text-nowrap">
-                  <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
-                    {SOCIAL.NAME}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <SocialLinks />
           </article>
         </section>
       </div>

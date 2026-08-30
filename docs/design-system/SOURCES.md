@@ -1,5 +1,8 @@
 # Sources
 
+This is a historical inventory of the repository state used to create the
+design system. Some template leftovers listed below have since been removed.
+
 Files read from `plx/plx.github.io@main` while building this design system:
 
 - `README.md`

@@ -1,83 +1,61 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { sitemapRoutes } from "./helpers";
 
-test.describe("Responsive Design", () => {
-  const viewports = [
+test.describe("Responsive design", () => {
+  for (const viewport of [
     { name: "mobile", width: 375, height: 667 },
     { name: "tablet", width: 768, height: 1024 },
     { name: "desktop", width: 1920, height: 1080 },
-  ];
-
-  for (const viewport of viewports) {
-    test(`home page renders without horizontal scroll on ${viewport.name}`, async ({ page }) => {
-      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+  ]) {
+    test(`home page has no horizontal scroll on ${viewport.name}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
       await page.goto("/");
 
-      await expect(page.locator("body")).toBeVisible();
-
-      const hasHorizontalScroll = await page.evaluate(() => {
-        return document.documentElement.scrollWidth > document.documentElement.clientWidth;
-      });
-
-      expect(hasHorizontalScroll).toBeFalsy();
-    });
-
-    test(`navigation works on ${viewport.name}`, async ({ page }) => {
-      await page.setViewportSize({ width: viewport.width, height: viewport.height });
-      await page.goto("/");
-
-      const navLinks = page.locator("nav a, header a");
-      const navLinkCount = await navLinks.count();
-      expect(navLinkCount).toBeGreaterThan(0);
+      const dimensions = await page.evaluate(() => ({
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+      }));
+      expect(dimensions.scrollWidth).toBe(dimensions.clientWidth);
     });
   }
 
-  test("text is readable on mobile", async ({ page }) => {
+  for (const width of [320, 375]) {
+    test(`every HTML route reflows without document overflow at ${width}px`, async ({ page, request }) => {
+      await page.setViewportSize({ width, height: 667 });
+
+      for (const route of await sitemapRoutes(request)) {
+        await page.goto(route);
+        const dimensions = await page.evaluate(() => ({
+          clientWidth: document.documentElement.clientWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+        }));
+        expect(
+          dimensions.scrollWidth,
+          `${route} overflows a ${width}px viewport`,
+        ).toBe(dimensions.clientWidth);
+      }
+    });
+  }
+
+  test("body text remains readable on mobile", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
-    const bodyFontSize = await page.evaluate(() => {
-      const body = document.body;
-      const fontSize = window.getComputedStyle(body).fontSize;
-      return parseInt(fontSize);
-    });
-
+    const bodyFontSize = await page.locator("body").evaluate((body) =>
+      Number.parseFloat(window.getComputedStyle(body).fontSize),
+    );
     expect(bodyFontSize).toBeGreaterThanOrEqual(14);
   });
 
-  test("touch targets are appropriately sized on mobile", async ({ page }) => {
+  test("visible mobile buttons meet the site's 32px touch-target floor", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
-    const buttons = await page.locator("button").all();
-
-    for (const element of buttons) {
-      const box = await element.boundingBox();
-
-      if (box && box.width > 0 && box.height > 0) {
-        const minSize = 32;
-        expect(box.width).toBeGreaterThanOrEqual(minSize);
-        expect(box.height).toBeGreaterThanOrEqual(minSize);
-      }
+    for (const button of await page.getByRole("button").all()) {
+      if (!(await button.isVisible())) continue;
+      const box = await button.boundingBox();
+      expect(box?.width).toBeGreaterThanOrEqual(32);
+      expect(box?.height).toBeGreaterThanOrEqual(32);
     }
-  });
-
-  test("content reflows properly on narrow viewports", async ({ page }) => {
-    await page.setViewportSize({ width: 320, height: 568 });
-    await page.goto("/");
-
-    const overflowElements = await page.evaluate(() => {
-      const allElements = Array.from(document.querySelectorAll("*"));
-      return allElements
-        .filter((el) => {
-          const rect = el.getBoundingClientRect();
-          return rect.right > window.innerWidth;
-        })
-        .map((el) => ({
-          tag: el.tagName,
-          class: el.className,
-        }));
-    });
-
-    expect(overflowElements.length).toBeLessThan(3);
   });
 });

@@ -10,8 +10,8 @@ type CardOptions = {
 
 /**
  * Shared mapping for the base ContentCard props (title/subtitle/link + options).
- * Blog and project entries use it directly; briefs reuse it and layer their
- * category title prefix on top — see getBriefCardProps.
+ * Project entries use it directly; briefs reuse it and layer their category
+ * title prefix on top — see getBriefCardProps.
  */
 function getStandardCardProps(
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects"> | CollectionEntry<"briefs">,
@@ -26,13 +26,6 @@ function getStandardCardProps(
     ...(options?.maxLines !== undefined && { maxLines: options.maxLines }),
     ...(options?.headingLevel !== undefined && { headingLevel: options.headingLevel }),
   };
-}
-
-/**
- * Transform a blog entry into ContentCard props
- */
-export function getBlogCardProps(entry: CollectionEntry<"blog">, options?: CardOptions) {
-  return getStandardCardProps(entry, options);
 }
 
 /**

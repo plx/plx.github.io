@@ -97,14 +97,11 @@ const defaultOgData: OpenGraphData = ogData || {
 
   function init(event) {
     onScroll();
+    labelCodeRegions();
 
     const backToTop = document.getElementById("back-to-top");
     backToTop?.removeEventListener("click", handleScrollToTop);
     backToTop?.addEventListener("click", handleScrollToTop);
-
-    const backToPrev = document.getElementById("back-to-prev");
-    backToPrev?.removeEventListener("click", handleBackToPrev);
-    backToPrev?.addEventListener("click", handleBackToPrev);
 
     const skipLink = document.querySelector(".skip-link");
     skipLink?.removeEventListener("click", focusMainContent);
@@ -142,17 +139,12 @@ const defaultOgData: OpenGraphData = ogData || {
 
   function handleScrollToTop(event) {
     event.preventDefault();
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: reducedMotion ? "auto" : "smooth"
     });
-  }
-
-  function handleBackToPrev(event) {
-    if (window.history.length > 1) {
-      event.preventDefault();
-      window.history.back();
-    }
+    document.getElementById("main-content")?.focus({ preventScroll: true });
   }
 
   function focusMainContent() {
@@ -161,6 +153,17 @@ const defaultOgData: OpenGraphData = ogData || {
       if (main) {
         main.focus();
       }
+    });
+  }
+
+  // Expressive Code makes horizontally-scrollable blocks keyboard-focusable
+  // and exposes them as regions. Give each region a stable, unique name so
+  // multiple examples remain distinguishable to assistive technology.
+  function labelCodeRegions() {
+    document.querySelectorAll(".expressive-code pre").forEach((block, index) => {
+      const language = block.getAttribute("data-language");
+      const languageLabel = language ? ` (${language})` : "";
+      block.setAttribute("aria-label", `Code example ${index + 1}${languageLabel}`);
     });
   }
 
@@ -197,7 +200,7 @@ const defaultOgData: OpenGraphData = ogData || {
 
     applyThemeColor(dark);
 
-    window.getComputedStyle(css).opacity;
+    void window.getComputedStyle(css).opacity;
     document.head.removeChild(css);
   }
 

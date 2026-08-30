@@ -40,9 +40,9 @@ There's also an **About** page in the nav.
   Files read while building this system are listed in `SOURCES.md`.
 - **Live site:** https://plx.github.io
 - **Template lineage:** [Astro Nano](https://github.com/markhorn-dev/astro-nano)
-  (Tailwind, MIT). Several files (`BlockQuote`, `CallToAction`, `ExternalLink`)
-  are still leftover boilerplate from an earlier template (`accessible-astro-starter`)
-  and are *not* active on the live site — they're noted but not modeled.
+  (Tailwind, MIT). Unused boilerplate components from the earlier
+  `accessible-astro-starter` template have been removed; the historical source
+  inventory notes the files that existed when this design system was created.
 
 ---
 
@@ -402,11 +402,9 @@ The set used on the live site is *tiny*:
 | Right-arrow (line + chevron) | `ContentCard` static affordance | custom (lucide-ish) |
 | Left-arrow (line + chevron) | `BackToPrev` static affordance | custom mirror of above |
 
-`astro-icon` *is* installed in the project and a couple of *unused*
-template components (`BlockQuote`, `ExternalLink`, `CallToAction`) reference
-`lucide:quote`, `lucide:external-link`, `lucide:arrow-right` — but none of
-them actually render on the live pages. Treat lucide as the implicit
-"if we needed more icons, we'd use these" library.
+The earlier template's unused icon components and `astro-icon` dependency have
+been removed. Treat Lucide as the implicit "if we needed more icons, we'd use
+these" visual library, while keeping the live site's tiny icon set inline.
 
 ### Substitutions for this design system
 

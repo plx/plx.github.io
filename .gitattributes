@@ -1,0 +1,3 @@
+# A historical cache-key delimiter embedded a NUL in this TypeScript file.
+# Keep source diffs reviewable while the textual replacement lands.
+src/lib/category.ts text diff

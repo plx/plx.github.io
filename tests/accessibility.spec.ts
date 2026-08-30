@@ -1,84 +1,80 @@
-import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
+import { axeViolationSummary, representativeRoutes } from "./helpers";
 
 test.describe("Accessibility", () => {
-  test("home page has proper heading structure", async ({ page }) => {
-    await page.goto("/");
+  for (const theme of ["light", "dark"] as const) {
+    for (const route of representativeRoutes) {
+      test(`${route} has no automatic accessibility violations in ${theme} mode`, async ({ page }) => {
+        await page.addInitScript((preference) => {
+          window.localStorage.setItem("theme", preference);
+        }, theme);
+        await page.goto(route);
+        if (theme === "dark") {
+          await expect(page.locator("html")).toHaveClass(/\bdark\b/);
+        } else {
+          await expect(page.locator("html")).not.toHaveClass(/\bdark\b/);
+        }
 
-    const h1Count = await page.locator("h1").count();
-    expect(h1Count).toBe(1);
+        // Expressive Code adds tabindex only to code blocks that actually
+        // overflow. Its ResizeObserver settles asynchronously after layout.
+        await page.waitForFunction(() =>
+          [...document.querySelectorAll<HTMLElement>(".expressive-code pre")]
+            .every((block) => block.scrollWidth <= block.clientWidth || block.tabIndex === 0),
+        );
 
-    const headingLevels = await page.evaluate(() => {
-      const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6"));
-      return headings.map((h) => parseInt(h.tagName.substring(1)));
-    });
-
-    expect(headingLevels.length).toBeGreaterThan(0);
-
-    for (let i = 1; i < headingLevels.length; i++) {
-      const levelDiff = headingLevels[i] - headingLevels[i - 1];
-      expect(levelDiff).toBeLessThanOrEqual(1);
+        const results = await new AxeBuilder({ page }).analyze();
+        expect(results.violations, axeViolationSummary(results.violations)).toEqual([]);
+      });
     }
-  });
+  }
 
-  test("all images have alt text", async ({ page }) => {
-    await page.goto("/");
+  test("representative pages have one h1 and do not skip heading levels", async ({ page }) => {
+    for (const route of representativeRoutes) {
+      await page.goto(route);
+      await expect(page.locator("h1"), `${route} should have one h1`).toHaveCount(1);
 
-    const images = await page.locator("img").all();
-    for (const img of images) {
-      const alt = await img.getAttribute("alt");
-      expect(alt).toBeDefined();
-    }
-  });
-
-  test("links have descriptive text", async ({ page }) => {
-    await page.goto("/");
-
-    const links = await page.locator("a").all();
-    for (const link of links) {
-      const text = await link.textContent();
-      const ariaLabel = await link.getAttribute("aria-label");
-      const title = await link.getAttribute("title");
-
-      expect(
-        (text && text.trim().length > 0) ||
-        (ariaLabel && ariaLabel.trim().length > 0) ||
-        (title && title.trim().length > 0),
-      ).toBeTruthy();
-    }
-  });
-
-  test("page has proper language attribute", async ({ page }) => {
-    await page.goto("/");
-
-    const htmlLang = await page.locator("html").getAttribute("lang");
-    expect(htmlLang).toBe("en");
-  });
-
-  test("skip to content link exists", async ({ page }) => {
-    await page.goto("/");
-
-    const skipLink = page.locator("a.skip-link, a[href=\"#main-content\"]").first();
-    const skipLinkExists = await skipLink.count() > 0;
-
-    if (skipLinkExists) {
-      const href = await skipLink.getAttribute("href");
-      const targetId = href?.replace("#", "");
-      if (targetId) {
-        const target = page.locator(`#${targetId}`);
-        await expect(target).toBeAttached();
+      const levels = await page.locator("h1, h2, h3, h4, h5, h6").evaluateAll((headings) =>
+        headings.map((heading) => Number(heading.tagName.slice(1))),
+      );
+      for (let index = 1; index < levels.length; index += 1) {
+        expect(
+          levels[index] - levels[index - 1],
+          `${route} skips from h${levels[index - 1]} to h${levels[index]}`,
+        ).toBeLessThanOrEqual(1);
       }
     }
   });
 
-  test("no duplicate IDs on page", async ({ page }) => {
+  test("skip link is the first focusable control and moves focus to main", async ({ page }) => {
     await page.goto("/");
+    const skipLink = page.getByRole("link", { name: "Skip to main content" });
+    const firstFocusable = page.locator([
+      "a[href]",
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      "[tabindex]:not([tabindex=\"-1\"])",
+    ].join(", ")).first();
 
-    const ids = await page.evaluate(() => {
-      const elements = Array.from(document.querySelectorAll("[id]"));
-      return elements.map((el) => el.id);
-    });
+    await expect(skipLink).toHaveCount(1);
+    await expect(firstFocusable).toHaveClass(/\bskip-link\b/);
+    await skipLink.focus();
+    await expect(skipLink).toBeFocused();
+    await expect(skipLink).toBeVisible();
 
-    const uniqueIds = new Set(ids);
-    expect(ids.length).toBe(uniqueIds.size);
+    await skipLink.press("Enter");
+    await expect(page.locator("#main-content")).toBeFocused();
+  });
+
+  test("external social links announce the new browsing context", async ({ page }) => {
+    await page.goto("/");
+    await expect(
+      page.getByRole("link", { name: "Dispatches on github (opens in new window)" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Dispatches on linkedin (opens in new window)" }),
+    ).toBeVisible();
   });
 });
