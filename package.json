@@ -81,7 +81,7 @@
     "@cspell/dict-npm": "^5.2.47",
     "@cspell/dict-typescript": "^3.2.3",
     "@playwright/test": "^1.62.1",
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.4.0",
     "@vvago/vale": "^3.17.1",
     "cspell": "^10.1.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
