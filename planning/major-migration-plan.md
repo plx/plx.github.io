@@ -1,8 +1,47 @@
 # Major-Version Migration Plan
 
-As of the April 2026 refresh (PR #30), the site is running the newest in-range versions of every direct dependency, and two safe pre-1.0 majors (`sharp`, `markdownlint-cli2`) have been bumped. The remaining cross-major upgrades need their own migration work. This document lists them, calls out the hard compatibility constraints found in each package's npm `peerDependencies` / `engines`, and proposes an order.
+As of the August 2026 quality sweep, the Node 24, Astro 7, ESLint 10,
+TypeScript 6, CSpell 10, Sharp 0.35, and markdownlint-cli2 0.23 migrations are
+complete. Dependabot now keeps compatible npm and GitHub Actions updates moving;
+the remaining cross-major work is intentionally limited to the watch items below.
 
-## Hard compatibility facts (from npm metadata)
+## Current status and watch items
+
+### `eslint-plugin-jsx-a11y` peer override
+
+The Astro flat accessibility preset uses `eslint-plugin-jsx-a11y@6.10.2`, whose
+published peer range still stops at ESLint 9. ESLint 10 is working with the
+plugin in this repository, so `package.json#overrides` temporarily supplies the
+project's ESLint version and the lint configuration has a regression test.
+
+This is a compatibility bridge, not a permanent dependency policy. Watch for a
+plugin release that declares ESLint 10 support; when one lands, remove the
+override, refresh the lockfile, and run `npm run lint` plus `npm run test:unit`.
+Do not allow Dependabot to remove or broaden the override without that check.
+
+### TypeScript 7
+
+Classic `typescript@6` remains necessary for `astro check` and
+`@typescript-eslint`, whose published peer ranges do not yet accept TypeScript
+7. The separate `@typescript/native-preview` package supplies `tsgo` for the
+additional application and Playwright checks. Upgrade the classic compiler only
+after both upstream peer ranges include TypeScript 7, then reevaluate whether
+the preview package and dual-check setup are still necessary.
+
+### Tailwind CSS 4
+
+Tailwind CSS 3 and `tailwind-merge` 2 remain deliberate. Move to Tailwind 4 and
+`tailwind-merge` 3 together in a focused visual-migration PR, including the
+PostCSS/Vite integration and CSS-first theme changes. Validate every responsive
+layout and both color schemes with Playwright before merging.
+
+## Historical migration plan (April 2026)
+
+The original plan is retained below for decision history. Version statements in
+this section describe the repository at that time and are not current-status
+guidance.
+
+### Hard compatibility facts (from npm metadata)
 
 These are the *explicit* constraints published in the registry — not speculation based on issue trackers or blog posts.
 
@@ -26,7 +65,7 @@ These are the *explicit* constraints published in the registry — not speculati
 
 Node 25 is currently installed; all upgrades above are satisfied by it.
 
-## Logical grouping
+### Logical grouping
 
 The constraints collapse naturally into four independent tracks:
 
@@ -40,7 +79,7 @@ The constraints collapse naturally into four independent tracks:
 
 Nothing in tracks 1–3 is mutually exclusive; they just each want focused testing. There's no "A blocks B" chain between tracks — for example, Astro 6 does not require Tailwind 4 (and indeed keeping Tailwind 3 during the Astro-6 PR makes that PR smaller).
 
-## Suggested order
+### Suggested order
 
 **Step 0 — quick wins (single small PR, ~30 min)**
 - Bump `astro-seo` to v1.
@@ -71,7 +110,7 @@ Rationale for this ordering: **do lint/TS → Astro 6 → Tailwind 4**, not the 
 
 If you'd rather minimize total risk per PR: do Step 0, then Tailwind 4 on top of Astro 5 (`@astrojs/tailwind@6` still supports Astro 3/4/5, so you swap integrations without touching the framework), then Astro 6, then Step 1 last. That trades "more PRs" for "each PR changes fewer axes at once." My recommendation is the first order — TS/lint first gives earlier type-check feedback that pays off during the Astro-6 migration.
 
-## Aside: is `cspell` 9 → 10 independent?
+### Aside: is `cspell` 9 → 10 independent?
 
 **Yes, fully independent** of every other upgrade. Evidence:
 

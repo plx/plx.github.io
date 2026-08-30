@@ -59,7 +59,7 @@
   --bg-hover:     rgba(22 24 48 / 0.09);          /* card hover */
   --fg:           rgba(22 24 48 / 0.62);          /* default body — soft ink */
   --fg-strong:    var(--ink);                     /* headings, code, focus */
-  --fg-muted:     rgba(22 24 48 / 0.61);          /* nav dividers, meta */
+  --fg-muted:     rgba(22 24 48 / 0.62);          /* nav dividers, meta */
   --border:       rgba(22 24 48 / 0.13);          /* card / button outline */
   --border-hover: rgba(22 24 48 / 0.25);
   --decoration:   rgba(22 24 48 / 0.15);          /* underline for prose links */
@@ -146,7 +146,7 @@ html.dark {
   --bg-hover:     rgba(228 230 248 / 0.11);
   --fg:           rgba(228 230 248 / 0.76);
   --fg-strong:    var(--moon);
-  --fg-muted:     rgba(228 230 248 / 0.48);
+  --fg-muted:     rgba(228 230 248 / 0.51);
   --border:       rgba(228 230 248 / 0.16);
   --border-hover: rgba(228 230 248 / 0.40);
   --decoration:   rgba(228 230 248 / 0.22);

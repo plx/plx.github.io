@@ -1,5 +1,5 @@
 import type { CollectionEntry } from "astro:content";
-import { SITE } from "@consts";
+import { SITE } from "../consts";
 import { stripMarkdown } from "./markdown";
 
 export interface OpenGraphData {
@@ -45,6 +45,24 @@ function resolveEntryImage(
   return { image: brandImage(siteUrl, OG_IMAGE) };
 }
 
+type BaseOpenGraphData = Pick<
+  OpenGraphData,
+  "title" | "description" | "type" | "url" | "image" | "imageAlt"
+>;
+
+function createOpenGraphData(data: BaseOpenGraphData): OpenGraphData {
+  return {
+    ...data,
+    title: stripMarkdown(data.title),
+    description: stripMarkdown(data.description),
+    imageAlt: data.imageAlt ? stripMarkdown(data.imageAlt) : undefined,
+    siteName: SITE.NAME,
+    twitter: {
+      card: data.image ? "summary_large_image" : "summary",
+    },
+  };
+}
+
 /**
  * Get OpenGraph data for a blog post
  */
@@ -58,22 +76,20 @@ export function getPostOGData(
   const { image } = resolveEntryImage(post.data, siteUrl);
 
   return {
-    title: ogTitle,
-    description: ogDescription,
-    type: "article",
-    url,
-    siteName: SITE.NAME,
-    image,
-    imageAlt: post.data.ogImageAlt || `${ogTitle} - Blog Post`,
+    ...createOpenGraphData({
+      title: ogTitle,
+      description: ogDescription,
+      type: "article",
+      url,
+      image,
+      imageAlt: post.data.ogImageAlt || `${ogTitle} - Blog Post`,
+    }),
     article: {
       publishedTime: post.data.date,
       modifiedTime: post.data.modifiedDate,
       author: "plx",
-      section: "Blog"
+      section: "Blog",
     },
-    twitter: {
-      card: "summary_large_image"
-    }
   };
 }
 
@@ -91,22 +107,20 @@ export function getBriefOGData(
   const { image } = resolveEntryImage(brief.data, siteUrl);
 
   return {
-    title: ogTitle,
-    description: ogDescription,
-    type: "article",
-    url,
-    siteName: SITE.NAME,
-    image,
-    imageAlt: brief.data.ogImageAlt || `${ogTitle} - Brief`,
+    ...createOpenGraphData({
+      title: ogTitle,
+      description: ogDescription,
+      type: "article",
+      url,
+      image,
+      imageAlt: brief.data.ogImageAlt || `${ogTitle} - Brief`,
+    }),
     article: {
       publishedTime: brief.data.date,
       modifiedTime: brief.data.modifiedDate,
       author: "plx",
-      section: category?.displayName || "Briefs"
+      section: category?.displayName || "Briefs",
     },
-    twitter: {
-      card: "summary_large_image"
-    }
   };
 }
 
@@ -122,18 +136,14 @@ export function getProjectOGData(
   const ogDescription = project.data.ogDescription || project.data.description;
   const { image } = resolveEntryImage(project.data, siteUrl);
 
-  return {
+  return createOpenGraphData({
     title: ogTitle,
     description: ogDescription,
     type: "website",
     url,
-    siteName: SITE.NAME,
     image,
     imageAlt: project.data.ogImageAlt || `${ogTitle} - Project`,
-    twitter: {
-      card: "summary_large_image"
-    }
-  };
+  });
 }
 
 /**
@@ -145,18 +155,14 @@ export function getListOGData(
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  return {
+  return createOpenGraphData({
     title: `${title} | ${SITE.NAME}`,
     description,
     type: "website",
     url,
-    siteName: SITE.NAME,
     image: brandImage(siteUrl, OG_IMAGE),
     imageAlt: `${title} - ${SITE.NAME}`,
-    twitter: {
-      card: "summary_large_image"
-    }
-  };
+  });
 }
 
 /**
@@ -166,16 +172,12 @@ export function getHomeOGData(
   url: string,
   siteUrl: string
 ): OpenGraphData {
-  return {
+  return createOpenGraphData({
     title: SITE.NAME,
     description: "Technical writing on Swift, performance optimization, and software engineering",
     type: "website",
     url,
-    siteName: SITE.NAME,
     image: brandImage(siteUrl, OG_IMAGE),
     imageAlt: SITE.NAME,
-    twitter: {
-      card: "summary_large_image"
-    }
-  };
+  });
 }

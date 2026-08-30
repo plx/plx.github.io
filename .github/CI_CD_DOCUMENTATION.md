@@ -13,15 +13,18 @@ This repository implements comprehensive quality gates to ensure code quality an
 All pull requests to `main` undergo automated validation:
 
 - **Linting** - Code style and quality checks via ESLint
+- **Markdown Linting** - Structural checks for Markdown and MDX content
 - **Unit Tests** - Vitest coverage for TypeScript utilities
 - **Spell Checking** - Source and generated HTML spelling checks via CSpell
 - **Prose Linting** - Article terminology and style checks via Vale
 - **Vale Fixture Tests** - Terminology rule fixtures that assert expected pass/fail behavior
-- **Type Checking** - TypeScript validation via `astro check`
+- **Type Checking** - Native TypeScript checks plus `astro check`
 - **Build Verification** - Ensures the site builds successfully
 - **Link Validation** - Checks all internal links are valid
+- **Feed Validation** - Checks RSS XML and namespace correctness
+- **Browser QA** - Runs Chromium behavior, responsive, and accessibility checks
 
-The workflow provides automatic PR comments with validation results.
+Results appear in GitHub's native `Validate PR` required check.
 
 ### 2. Link Validation
 
@@ -38,7 +41,7 @@ Custom Node.js script that:
 npm run validate:links      # Run link validation
 npm run lint:prose          # Run Vale prose linting
 npm run test:vale           # Run Vale terminology fixture tests
-npm run validate:all        # Run validation (lint, prose, Vale fixtures, build, links)
+npm run validate:all        # Run static validation plus Chromium browser QA
 ```
 
 ### 3. Deployment Workflow
@@ -49,6 +52,16 @@ Automatically deploys to GitHub Pages when changes are pushed to `main`:
 - Builds the site with `npm run build`
 - Uploads artifacts to GitHub Pages
 - Only runs after all PR checks have passed (when branch protection is enabled)
+- Grants Pages and OIDC write permissions only to the deploy job
+
+### 4. Dependency Maintenance
+
+**File:** `.github/dependabot.yml`
+
+Dependabot checks npm and GitHub Actions weekly. It groups compatible npm
+minor/patch updates and all GitHub Actions updates while leaving npm majors as
+focused migration PRs. Workflow actions remain pinned to full commit SHAs;
+Dependabot updates those pins as new releases are selected.
 
 ## 🔐 Branch Protection Setup
 
@@ -100,7 +113,7 @@ git push origin feature/my-feature
 ```
 
 ### 5. Automated Validation
-PR validation workflow automatically runs and reports results.
+The PR validation workflow automatically runs and reports a native required check.
 
 ### 6. Merge
 Once checks pass and PR is approved, merge to main.
@@ -116,15 +129,16 @@ Changes are automatically deployed to GitHub Pages.
 - [ ] Asset optimization checks
 
 ### Phase 3: Quality Improvements
-- [ ] Accessibility testing (axe-core)
+- [x] Accessibility testing (axe-core + Playwright)
 - [ ] SEO validation
 - [ ] Performance budgets (Lighthouse CI)
-- [ ] Content validation (frontmatter requirements)
+- [x] Content validation (Astro/Zod frontmatter schemas)
 
 ### Phase 4: Advanced Features
 - [ ] Preview deployments for PRs
 - [ ] Visual regression testing
-- [ ] Spell checking
+- [x] Spell checking
+- [x] Automated dependency updates
 - [ ] Security scanning
 
 ## 🛠️ Troubleshooting

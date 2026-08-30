@@ -14,17 +14,18 @@ This repository uses a modular GitHub Actions workflow architecture to ensure co
 - Accepts optional `checkout-ref` input for specific git references
 - Performs all validation steps:
   - Linting (ESLint)
+  - Markdown linting
+  - TypeScript checking
   - Unit tests
   - Spell checking (source files)
   - Prose linting (Vale)
   - Vale fixture tests
-  - TypeScript checking and Astro build
+  - Astro check and production build
   - Spell checking (generated HTML)
   - Internal link validation
+  - RSS feed validation
+  - Chromium browser and accessibility QA
   - Upload pages artifact for deployment
-
-**Outputs**:
-- `artifact-uploaded`: Boolean indicating if the build artifact was successfully created
 
 ### 2. `.github/workflows/deploy.yml`
 **Purpose**: Deploy the site to GitHub Pages
@@ -48,9 +49,8 @@ This repository uses a modular GitHub Actions workflow architecture to ensure co
 
 **Features**:
 - Uses the same build workflow as deployment (ensures parity)
-- Provides detailed status comments on PRs
 - Acts as a complete dry-run of the deployment process
-- Reports all validation results clearly
+- Reports results through GitHub's native required check
 
 ## Key Design Decisions
 
@@ -65,12 +65,15 @@ Multiple safeguards prevent accidental deployment:
 
 ### 3. Complete PR Validation
 PRs undergo the exact same validation as deployment, including:
-- All linting and type checking
+- ESLint, Markdown linting, and type checking
+- Unit tests
 - Spell checking (both source and generated HTML)
 - Prose linting
 - Vale fixture tests
 - Full site build
 - Link validation
+- RSS feed validation
+- Chromium browser and accessibility QA
 
 This prevents the "passes CI but fails deployment" scenario.
 
@@ -98,6 +101,14 @@ This prevents the "passes CI but fails deployment" scenario.
 ### Adding New Validation Steps
 Add new validation steps to `build.yml` only. They will automatically be included in both PR validation and deployment.
 
+### Dependency Updates
+
+Dependabot checks npm and GitHub Actions weekly via `.github/dependabot.yml`. Compatible
+npm minor/patch updates and GitHub Actions updates are grouped to reduce PR
+noise; npm major upgrades remain separate so their migration risk is explicit.
+Action references stay pinned to full commit SHAs, with release-version comments
+for reviewability.
+
 ### Modifying Deployment Conditions
 Edit the `if` condition in the `deploy` job of `deploy.yml`. Current logic:
 ```yaml
@@ -109,20 +120,20 @@ if: |
 ### Debugging Workflow Issues
 1. Check the workflow run logs in GitHub Actions tab
 2. Use `workflow_dispatch` to manually test workflows
-3. The PR validation comment provides a summary of what checks ran
+3. Inspect the `Validate PR` required check for the failing validation step
 
 ## Security Considerations
 
-- Deployment requires `pages: write` and `id-token: write` permissions (only in deploy.yml)
-- PR validation has minimal permissions:
-  - `contents: read` for checking out code
-  - `pull-requests: write` for posting status comments
-  - No write access to Pages (follows principle of least privilege)
+- Deployment grants `pages: write` and `id-token: write` only to the deploy job
+- Build and PR validation have only `contents: read`
+- Checkout credentials are not persisted after source retrieval
+- Third-party and GitHub-authored actions are pinned to audited commit SHAs
 - The `configure-pages` action was removed as it's not needed (we don't use its outputs)
 - Concurrency groups prevent race conditions during deployment
 - Branch protection rules should be configured to require PR validation before merge
 
 ### Permission Model
-- **PR Validation**: Read-only access (can't modify repository or deploy)
-- **Deployment**: Write access only when pushing to main branch
+- **PR Validation**: Read-only access (cannot modify the repository or deploy)
+- **Build**: Read-only access, including when called by the deployment workflow
+- **Deployment**: Pages/OIDC write access only in the conditional deploy job
 - **Manual Workflow**: Deployment only allowed from main branch with explicit flag

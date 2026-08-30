@@ -1,9 +1,7 @@
 import { defineConfig } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-
-import react from "@astrojs/react";
-
 import expressiveCode from "astro-expressive-code";
 
 import rehypeSidenotes from "./src/lib/rehype-sidenotes.mjs";
@@ -15,14 +13,13 @@ export default defineConfig({
   markdown: {
     // Tufte sidenotes for blog posts that opt in via `sidenotes: true`.
     // No-ops on every other page (see src/lib/rehype-sidenotes.mjs).
-    rehypePlugins: [rehypeSidenotes],
+    processor: unified({ rehypePlugins: [rehypeSidenotes] }),
   },
   integrations: [
     sitemap(),
-    react(),
     expressiveCode({
       themes: ["github-dark", "github-light"]
     }),
-    mdx()
+    mdx(),
   ],
 });

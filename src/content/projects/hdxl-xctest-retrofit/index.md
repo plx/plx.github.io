@@ -1,7 +1,7 @@
 ---
 title: "XCTest Retrofit"
 description: "Streamlined migration from `XCTest` to Swift Testing."
-date: "July 25, 2025"
+date: "2025-07-25"
 repoURL: "https://github.com/plx/hdxl-xctest-retrofit/"
 ---
 

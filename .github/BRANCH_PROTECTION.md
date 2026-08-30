@@ -76,9 +76,9 @@ Test the protection by:
 The following GitHub Actions workflows provide status checks:
 
 ### Currently Implemented
-- **PR Validation** (`validate`): Runs linting, type checking, and build verification
+- **PR Validation** (`validate`): Runs linting, type and unit checks, production build,
+  content/feed validation, and Chromium accessibility/browser QA
 
 ### Planned Additions
-- **Link Checker**: Validates internal and external links
-- **Accessibility Tests**: Automated a11y testing
+- **External Link Checker**: Extends the existing internal link and fragment validation
 - **Performance Budget**: Lighthouse CI checks

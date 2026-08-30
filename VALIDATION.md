@@ -10,6 +10,10 @@ To run all CI checks locally (exactly as they run in GitHub Actions):
 npm run test:ci
 ```
 
+The parity run expects dependencies, Playwright's Chromium browser, and
+`xmllint` to be installed. `just setup` installs the locked npm dependencies
+and Playwright browsers and reports if `xmllint` is unavailable.
+
 For a more verbose version with progress indicators:
 
 ```bash
@@ -25,7 +29,15 @@ npm run lint        # Check for issues
 npm run lint:fix    # Auto-fix where possible
 ```
 
-### 2. Spell Checking
+### 2. Markdown Linting
+
+Checks Markdown and MDX structure without changing prose:
+
+```bash
+npm run lint:markdown
+```
+
+### 3. Spell Checking
 
 #### Source Files
 Checks markdown, TypeScript, and Astro files:
@@ -45,31 +57,60 @@ npm run spellcheck:html
 npm run spellcheck:all
 ```
 
-### 3. Prose Linting
+### 4. Prose Linting
 Checks article content for Vale style and terminology rules:
 ```bash
 npm run lint:prose
 ```
 
-### 4. Vale Fixture Tests
+### 5. Vale Fixture Tests
 Checks that Vale terminology fixtures fail and pass as expected:
 ```bash
 npm run test:vale
 ```
 
-### 5. Build
+### 6. Unit Tests
+
+Runs Vitest coverage for application utilities and validation helpers:
+
+```bash
+npm run test:unit
+```
+
+### 7. Build
 Generates the static site:
 ```bash
 npm run build
 ```
 
-### 6. Link Validation
+### 8. Link Validation
 Checks for broken internal links (requires build first):
 ```bash
 npm run validate:links
 ```
 
-### 7. All Validations
+### 9. Feed Validation
+
+Checks the generated RSS feed for XML and namespace errors (requires a build
+and `xmllint`):
+
+```bash
+npm run validate:feed
+```
+
+### 10. Browser QA
+
+Runs the Chromium suite used in CI, including accessibility and responsive
+behavior checks:
+
+```bash
+npm run qa:ci
+```
+
+Use `npm run qa` when you want the full local Chromium, Firefox, WebKit, and
+mobile-project suite.
+
+### 11. All Validations
 Runs everything in sequence:
 ```bash
 npm run validate:all
@@ -82,13 +123,17 @@ npm run test:ci
 
 The GitHub Actions workflow runs these exact same checks:
 1. Linting (`npm run lint`)
-2. Unit tests (`npm run test:unit`)
-3. Source spell check (`npm run spellcheck`)
-4. Prose lint (`npm run lint:prose`)
-5. Vale fixture tests (`npm run test:vale`)
-6. Build (`npm run build`)
-7. HTML spell check (`npm run spellcheck:html`)
-8. Link validation (`npm run validate:links`)
+2. Markdown linting (`npm run lint:markdown`)
+3. Type checking (`npm run typecheck`)
+4. Unit tests (`npm run test:unit`)
+5. Source spell check (`npm run spellcheck`)
+6. Prose lint (`npm run lint:prose`)
+7. Vale fixture tests (`npm run test:vale`)
+8. Build (`npm run build`)
+9. HTML spell check (`npm run spellcheck:html`)
+10. Link validation (`npm run validate:links`)
+11. RSS feed validation (`npm run validate:feed`)
+12. Chromium browser QA (`npm run qa:ci`)
 
 ## Troubleshooting
 
@@ -155,7 +200,8 @@ To ensure local development matches CI:
 
 1. Always use the npm scripts rather than direct commands
 2. Run `npm run test:ci` before pushing
-3. Keep dependencies up to date with `npm ci` (not `npm install`)
+3. Install the locked dependency graph with `npm ci`; use reviewed Dependabot
+   PRs (or an intentional `npm install`) when updating the lockfile
 4. If CI fails but local passes, check for:
    - Missing files in git
    - Different Node.js versions

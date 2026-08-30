@@ -1,51 +1,51 @@
 ---
-import { SEO } from "astro-seo";
 import type { OpenGraphData } from "@lib/opengraph";
+import { stripMarkdown } from "@lib/markdown";
 
 interface Props {
   data: OpenGraphData;
 }
 
 const { data } = Astro.props;
-
-// Build OpenGraph tags
-const openGraph = {
-  basic: {
-    title: data.title,
-    type: data.type,
-    image: data.image || "",
-    url: data.url,
-  },
-  optional: {
-    description: data.description,
-    siteName: data.siteName,
-  },
-  image: data.image ? {
-    url: data.image,
-    alt: data.imageAlt || data.title,
-  } : undefined,
-  article: data.type === "article" && data.article ? {
-    publishedTime: data.article.publishedTime?.toISOString(),
-    modifiedTime: data.article.modifiedTime?.toISOString(),
-    authors: data.article.author ? [data.article.author] : undefined,
-    section: data.article.section,
-  } : undefined,
-};
-
-// Build Twitter Card tags
-const twitter = {
-  card: data.twitter?.card || "summary_large_image",
-  creator: data.twitter?.creator,
-  title: data.title,
-  description: data.description,
-  image: data.image,
-  imageAlt: data.imageAlt || data.title,
-};
+const title = stripMarkdown(data.title);
+const description = stripMarkdown(data.description);
+const imageAlt = data.imageAlt ? stripMarkdown(data.imageAlt) : title;
 ---
 
-<SEO
-  title={data.title}
-  description={data.description}
-  openGraph={openGraph}
-  twitter={twitter}
-/>
+<meta property="og:title" content={title} />
+<meta property="og:type" content={data.type} />
+<meta property="og:url" content={data.url} />
+<meta property="og:description" content={description} />
+<meta property="og:site_name" content={data.siteName} />
+
+{data.image && (
+  <>
+    <meta property="og:image" content={data.image} />
+    <meta property="og:image:url" content={data.image} />
+    <meta property="og:image:alt" content={imageAlt} />
+  </>
+)}
+
+{data.type === "article" && data.article && (
+  <>
+    {data.article.publishedTime && (
+      <meta property="article:published_time" content={data.article.publishedTime.toISOString()} />
+    )}
+    {data.article.modifiedTime && (
+      <meta property="article:modified_time" content={data.article.modifiedTime.toISOString()} />
+    )}
+    {data.article.author && <meta property="article:author" content={data.article.author} />}
+    {data.article.section && <meta property="article:section" content={data.article.section} />}
+  </>
+)}
+
+<meta name="twitter:card" content={data.twitter?.card || (data.image ? "summary_large_image" : "summary")} />
+{data.twitter?.creator && <meta name="twitter:creator" content={data.twitter.creator} />}
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{data.image && (
+  <>
+    <meta name="twitter:image" content={data.image} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+  </>
+)}

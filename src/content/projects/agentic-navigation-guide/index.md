@@ -2,7 +2,7 @@
 title: "Agentic Navigation Guide"
 cardTitle: "Keep your CLAUDE.md content accurate."
 description: "Keep your CLAUDE.md content accurate."
-date: "August 2, 2025"
+date: "2025-08-02"
 repoURL: "https://github.com/plx/agentic-navigation-guide/"
 draft: true
 ---
