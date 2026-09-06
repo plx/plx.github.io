@@ -36,6 +36,9 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Check Agent Skills
+        run: npm run check:skills
+
       - name: Run Linting
         run: npm run lint
 

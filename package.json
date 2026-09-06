@@ -26,6 +26,8 @@
     "preview:network": "astro preview --host",
     "preview:qa": "node scripts/serve-dist.js",
     "astro": "astro",
+    "check:skills": "node scripts/sync-agent-skills.js --check",
+    "check:lsp": "astro sync && node scripts/check-agent-lsp.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:markdown": "markdownlint-cli2 \"src/content/**/*.{md,mdx}\"",
@@ -36,11 +38,11 @@
     "spellcheck:all": "npm run spellcheck && npm run build && npm run spellcheck:html",
     "validate:links": "node scripts/validate-links.js",
     "validate:feed": "node scripts/validate-feed.js",
-    "validate:static": "npm run lint && npm run lint:markdown && npm run typecheck && npm run test:unit && npm run spellcheck && npm run lint:prose && npm run test:vale && npm run build && npm run spellcheck:html && npm run validate:links && npm run validate:feed",
+    "validate:static": "npm run check:skills && npm run lint && npm run lint:markdown && npm run typecheck && npm run test:unit && npm run spellcheck && npm run lint:prose && npm run test:vale && npm run build && npm run spellcheck:html && npm run validate:links && npm run validate:feed",
     "validate:all": "npm run validate:static && npm run qa:ci",
     "test:unit": "vitest run",
     "test:ci": "npm run validate:all",
-    "test:ci:verbose": "echo '🔍 Running CI validation locally...' && npm run lint && echo '✓ Linting passed' && npm run lint:markdown && echo '✓ Markdown lint passed' && npm run typecheck && echo '✓ Type check (TypeScript 7) passed' && npm run test:unit && echo '✓ Unit tests passed' && npm run spellcheck && echo '✓ Source spell check passed' && npm run lint:prose && echo '✓ Prose lint passed' && npm run test:vale && echo '✓ Vale fixture tests passed' && npm run build && echo '✓ Build succeeded' && npm run spellcheck:html && echo '✓ HTML spell check passed' && npm run validate:links && echo '✓ Link validation passed' && npm run validate:feed && echo '✓ Feed validation passed' && npm run qa:ci && echo '✓ Browser QA passed' && echo '✅ All CI checks passed!'",
+    "test:ci:verbose": "echo '🔍 Running CI validation locally...' && npm run check:skills && npm run lint && echo '✓ Linting passed' && npm run lint:markdown && echo '✓ Markdown lint passed' && npm run typecheck && echo '✓ Type check (TypeScript 7) passed' && npm run test:unit && echo '✓ Unit tests passed' && npm run spellcheck && echo '✓ Source spell check passed' && npm run lint:prose && echo '✓ Prose lint passed' && npm run test:vale && echo '✓ Vale fixture tests passed' && npm run build && echo '✓ Build succeeded' && npm run spellcheck:html && echo '✓ HTML spell check passed' && npm run validate:links && echo '✓ Link validation passed' && npm run validate:feed && echo '✓ Feed validation passed' && npm run qa:ci && echo '✓ Browser QA passed' && echo '✅ All CI checks passed!'",
     "qa": "playwright test --ignore-snapshots",
     "qa:ci": "playwright test --project=chromium --ignore-snapshots",
     "qa:headed": "playwright test --headed --ignore-snapshots",
@@ -87,6 +89,8 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "globals": "^17.11.0",
     "markdownlint-cli2": "^0.23.2",
+    "pyright": "1.1.413",
+    "typescript-language-server": "6.0.0",
     "vitest": "^4.1.11"
   }
 }

@@ -146,7 +146,7 @@ inline below ~880px). **Existing posts keep the default** 640px column with
 footnotes collected at the bottom (brand-styled).
 
 **To opt a post in:** set `sidenotes: true` in its frontmatter (blog collection
-only — see `src/content/config.ts`). The author still writes standard markdown
+only — see `src/content.config.ts`). The author still writes standard markdown
 footnotes (`[^1]`); the `src/lib/rehype-sidenotes.mjs` plugin relocates each
 footnote inline next to its reference (as `<sup class="fnref">` + `.sidenote`) and
 removes the bottom section. The `.post-blog` / `.sidenote` / `.marginalia` styles
@@ -177,8 +177,8 @@ CSS but not yet emitted — a hook for future use.
 The handoff's `README.md` §Motion is **authoritative**: the page-load fade-up
 (700ms) and 150ms stagger are **removed** — content paints immediately; only
 300ms hover/focus cross-fades remain and chevrons are static. The bundle's
-`_ds_manifest.json` "motion" card and the original `SKILL.md` still describe the
-old "700ms fade-up · 150ms stagger" — that text is **stale**. This repo follows
+`_ds_manifest.json` "motion" card still describes the old "700ms fade-up · 150ms
+stagger" — that text is **stale**. This repo follows
 the README: no entrance animation. The legacy `.animate` / `.show` CSS, old
 `Head.astro` `animate()` script, and existing `class="animate"` call sites were
 removed during migration.

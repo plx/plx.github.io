@@ -22,6 +22,15 @@ npm run test:ci:verbose
 
 ## Individual Validation Commands
 
+### Agent Skill Mirrors
+
+`npm run check:skills` checks that the portable skills and their Claude copies
+agree. Edit `.agents/skills/`, then run `just skills-sync` to refresh the copies.
+This check runs in CI and the full local validation commands.
+
+`just lsp-check` separately exercises the local language servers; see
+[agent tooling](docs/agent-tooling.md). It is a setup check, outside site CI.
+
 ### 1. Linting (ESLint)
 Checks code style and catches common errors:
 ```bash
@@ -121,7 +130,9 @@ npm run test:ci
 
 ## CI/CD Workflow
 
-The GitHub Actions workflow runs these exact same checks:
+The GitHub Actions workflow checks agent skill mirrors (`npm run check:skills`),
+then runs these same site checks:
+
 1. Linting (`npm run lint`)
 2. Markdown linting (`npm run lint:markdown`)
 3. Type checking (`npm run typecheck`)

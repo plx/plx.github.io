@@ -51,7 +51,7 @@ There's also an **About** page in the nav.
 ```
 .
 ├── README.md                  ← you are here
-├── SKILL.md                   ← Agent Skill entry point (Claude Code-compatible)
+├── SKILL.md                   ← Pointer to the maintained Dispatches design skill
 ├── SOURCES.md                 ← exact files read from the upstream repo
 ├── colors_and_type.css        ← CSS variables: colors, type, motion, shape
 │
