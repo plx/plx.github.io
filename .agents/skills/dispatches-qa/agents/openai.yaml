@@ -1,0 +1,3 @@
+interface:
+  display_name: "Dispatches QA"
+  short_description: "Review browser behavior and accessibility"

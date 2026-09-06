@@ -35,5 +35,10 @@ pnpm-debug.log*
 /playwright/.cache/
 .playwright-mcp/
 
+# Personal agent settings and workspace notes
+.claude/settings.local.json
+CLAUDE.local.md
+.context/
+
 # Design-system handoff archive (unpacked form lives in docs/design-system/)
 Dispatches Design System-handoff.zip

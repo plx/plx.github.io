@@ -78,12 +78,26 @@ clean:
 # Install: installs dependencies
 install:
     npm ci
+    npm run astro -- sync
 
 # Setup: full project setup including dependencies and Playwright browsers
 setup:
     npm ci
+    npm run astro -- sync
     npx playwright install
     @command -v xmllint >/dev/null 2>&1 || echo "⚠️  xmllint not found — needed for 'just validate-feed'. macOS ships it; on Debian/Ubuntu run 'sudo apt-get install -y libxml2-utils'."
+
+# Refresh Claude skill copies from the portable skills
+skills-sync:
+    node scripts/sync-agent-skills.js
+
+# Check that portable and Claude skills agree
+skills-check:
+    node scripts/sync-agent-skills.js --check
+
+# Exercise the repository's TypeScript and Python language servers
+lsp-check:
+    npm run check:lsp
 
 # Spellcheck: checks spelling in source files
 spellcheck:
